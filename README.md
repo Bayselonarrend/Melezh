@@ -1,5 +1,6 @@
 
-![image](https://github.com/user-attachments/assets/3839ac42-bd51-488d-9f77-f9373b8afd43)
+![cover](/media/cover_s.png)
+
 
 
 # Melezh

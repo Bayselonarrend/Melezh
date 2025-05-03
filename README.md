@@ -5,8 +5,8 @@
 
 # Melezh
 
-[![OpenIntegrations](media/addon.svg)]([https://github.com/EvilBeaver/OneScript](https://github.com/Bayselonarrend/OpenIntegrations))
-[![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript))
+[![OpenIntegrations](media/addon.svg)](https://github.com/Bayselonarrend/OpenIntegrations)
+[![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript)
 
 
 Аддон CLI версии Открытого пакета интеграций, позволяющий запускать ОПИ в режиме сервера для удаленного вызова любых процедур и функций из его набора

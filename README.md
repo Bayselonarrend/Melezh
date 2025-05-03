@@ -32,10 +32,10 @@
 
 ```powershell
 
-melezh СоздатьПроект --path R:\test_proj.melezh
-melezh ДобавитьОбработчикЗапросов --proj R:\test_proj.melezh --lib telegram --func ОтправитьТекстовоеСообщение --method GET
+melezh СоздатьПроект                 --path R:\test_proj.melezh
+melezh ДобавитьОбработчикЗапросов    --proj R:\test_proj.melezh --lib telegram --func ОтправитьТекстовоеСообщение --method GET
 melezh УстановитьАргументОбработчика --proj R:\test_proj.melezh --handler 42281f11b --arg token --value "***" --strict true
-melezh ЗапуститьПроект --port 7788 --proj R:\test_proj.melezh
+melezh ЗапуститьПроект               --proj R:\test_proj.melezh --port 7788
 
 ```
 

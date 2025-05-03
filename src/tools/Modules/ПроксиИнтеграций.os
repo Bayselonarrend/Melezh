@@ -1,10 +1,6 @@
-// OneScript: ./OInt/core/Modules/OPI_ПроксиИнтеграций.os
-// Lib: Методы прокси интеграций
-// CLI: proxy
-
 // MIT License
 
-// Copyright (c) 2023 Anton Tsitavets
+// Copyright (c) 2025 Anton Tsitavets
 
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal

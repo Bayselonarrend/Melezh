@@ -1,100 +1,75 @@
 <!DOCTYPE html>
-<html lang="ru" x-data="{ activeTab: 'dashboard', sidebarOpen: false }">
+<html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <title>Alpine.js Пример</title>
-  <script src="js/tailwind.js"></script>
-  <script type="module" src="js/alpine.js"></script>
+  <title>Консоль | Melezh</title>
+  <link rel="stylesheet" href="/css/custom-tailwind.css" />
+  <script src="/js/tailwind.js"></script>
+  <script type="module" src="/js/components/app.js"></script>
+  <script type="module" src="/js/components/views-registry.js"></script>
+  <script type="module" src="/js/alpine.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
-
+<body class="bg-gray-100 text-gray-900" x-data="app()">
   <!-- Mobile sidebar toggle -->
   <div class="flex md:hidden bg-white p-4 shadow-md items-center justify-between">
     <h1 class="text-xl font-bold">Мой Дашборд</h1>
-    <button @click="sidebarOpen = !sidebarOpen" class="text-gray-600">
+    <button @click="toggleSidebar()" class="text-gray-600">
       ☰
     </button>
   </div>
 
   <div class="flex h-screen">
-    <!-- Sidebar -->
-    <aside :class="{'hidden': !sidebarOpen}" class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10">
+    <aside 
+      x-data="sidebar()" 
+      x-show="isSidebarOpen" 
+      @click.away="if (isMobile()) closeSidebar()"
+      class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10 fixed md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out"
+      :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}"
+    >
       <h2 class="text-lg font-semibold border-b pb-2">Навигация</h2>
       <nav class="space-y-2">
-        <a href="#" @click="activeTab = 'dashboard'" :class="{'bg-blue-100 text-blue-700': activeTab === 'dashboard'}" class="block px-3 py-2 rounded hover:bg-gray-200 transition">Главная</a>
-        <a href="#" @click="activeTab = 'jobs'" :class="{'bg-blue-100 text-blue-700': activeTab === 'jobs'}" class="block px-3 py-2 rounded hover:bg-gray-200 transition">Задачи</a>
-        <a href="#" @click="activeTab = 'settings'" :class="{'bg-blue-100 text-blue-700': activeTab === 'settings'}" class="block px-3 py-2 rounded hover:bg-gray-200 transition">Настройки</a>
+        <a href="#" @click="loadView('dashboard'); if (isMobile()) closeSidebar()" 
+           :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}" 
+           class="block px-3 py-2 rounded hover:bg-gray-200 transition">Главная</a>
+        <a href="#" @click="loadView('handlers'); if (isMobile()) closeSidebar()" 
+           :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}" 
+           class="block px-3 py-2 rounded hover:bg-gray-200 transition">Обработчики</a>
       </nav>
+
+      <!-- Sidebar Footer -->
+      <div class="mt-auto pt-6 border-t space-y-2">
+        <button @click="logout()" type="button" class="flex items-center justify-between w-full bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition">
+          <span>Выход</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
+      </div>
     </aside>
 
     <!-- Main Content -->
-    <main class="flex-1 p-6 overflow-auto bg-gray-50">
-
-      <!-- Conditional rendering based on activeTab -->
-      <template x-if="activeTab === 'dashboard'">
-        <div>
-          <h1 class="text-2xl font-bold mb-4">Главная</h1>
-          <p class="mb-4">Добро пожаловать в ваш дашборд. Здесь можно отображать статистику или активные задачи.</p>
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <div class="bg-white p-4 rounded shadow text-center">
-              <div class="text-3xl font-bold">24</div>
-              <div>Активные задачи</div>
-            </div>
-            <div class="bg-white p-4 rounded shadow text-center">
-              <div class="text-3xl font-bold">15</div>
-              <div>Выполненные</div>
-            </div>
-            <div class="bg-white p-4 rounded shadow text-center">
-              <div class="text-3xl font-bold">3</div>
-              <div>Сбои</div>
-            </div>
-          </div>
+    <main class="flex-1 p-6 overflow-auto bg-gray-50 mt-16 md:mt-0">
+      <!-- Индикатор загрузки -->
+      <div x-show="isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mb-4"></div>
+          <p x-text="loadingMessage" class="text-gray-700"></p>
         </div>
-      </template>
-
-      <template x-if="activeTab === 'jobs'">
-        <div>
-          <h1 class="text-2xl font-bold mb-4">Задачи</h1>
-          <div class="bg-white p-4 rounded shadow">
-            <ul class="space-y-2">
-              <li class="flex justify-between items-center border-b pb-2">
-                <span>Build Project A</span>
-                <span class="text-green-600">Success</span>
-              </li>
-              <li class="flex justify-between items-center border-b pb-2">
-                <span>Deploy to Staging</span>
-                <span class="text-yellow-600">In Progress</span>
-              </li>
-              <li class="flex justify-between items-center">
-                <span>Run Tests</span>
-                <span class="text-red-600">Failed</span>
-              </li>
-            </ul>
-          </div>
-        </div>
-      </template>
-
-      <template x-if="activeTab === 'settings'">
-        <div>
-          <h1 class="text-2xl font-bold mb-4">Настройки</h1>
-          <form class="bg-white p-4 rounded shadow space-y-4">
-            <div>
-              <label class="block text-sm font-medium mb-1">Имя пользователя</label>
-              <input type="text" class="w-full border rounded px-3 py-2" placeholder="Ваше имя">
-            </div>
-            <div>
-              <label class="block text-sm font-medium mb-1">Email</label>
-              <input type="email" class="w-full border rounded px-3 py-2" placeholder="email@example.com">
-            </div>
-            <button type="submit" class="mt-2 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-              Сохранить
-            </button>
-          </form>
-        </div>
-      </template>
-
+      </div>
+      
+      <!-- Оверлей для мобильного меню -->
+      <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()" 
+           class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
+      
+      <!-- Контейнер для ошибок -->
+      <div x-show="errorMessage && !isLoading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
+        <p x-text="errorMessage"></p>
+        <button @click="errorMessage = ''" class="mt-2 text-red-600 hover:text-red-800">Закрыть</button>
+      </div>
+      
+      <!-- Динамический контейнер для контента -->
+      <div id="view-container" x-html="currentView"></div>
     </main>
   </div>
-
 </body>
 </html>

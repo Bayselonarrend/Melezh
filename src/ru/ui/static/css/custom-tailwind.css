@@ -1,0 +1,16 @@
+:root {
+  --green: #002B28;
+  --green-light: #97b9b7;
+}
+
+.bg-green-600{
+    background-color: var(--green) !important;
+}
+
+.focus\:ring-green-500:focus {
+      --tw-ring-color: var(--green) !important;
+}
+
+.bg-green-100{
+  background-color: var(--green-light) !important; 
+}

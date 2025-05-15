@@ -72,6 +72,37 @@ async toggleHandlerStatus(handler) {
   }
 },
 
+async editHandler(handler) {
+  // Запрашиваем полные данные с сервера
+  const formData = new URLSearchParams();
+  formData.append('key', handler.key);
+
+  try {
+    const response = await fetch('/api/getHandler', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded'
+      },
+      body: formData
+    });
+
+    if (!response.ok) throw new Error('Ошибка загрузки данных');
+
+    const result = await response.json();
+
+    if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+
+    // Сохраняем данные в Alpine.store или передаем в форму как объект
+    window.handlerToEdit = result.data;
+
+    // Переходим к форме
+    window.location.hash = '#handler-form';
+  } catch (error) {
+    console.error('Ошибка при получении обработчика:', error);
+    this.errorMessage = error.message;
+  }
+},
+
 addNewHandler() {
   window.location.hash = '#handler-form';
 }

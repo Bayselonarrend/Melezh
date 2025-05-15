@@ -17,9 +17,51 @@ export const handlerFormView = () => ({
   isArgsLoading: false,
   argsErrorMessage: '',
 
-  async init() {
+async init() {
+  // Если есть данные для редактирования
+  if (window.handlerToEdit) {
+    // Загружаем библиотеки сначала
     await this.loadLibraries();
-  },
+
+    // Теперь библиотеки точно загружены
+    this.formData = { ...window.handlerToEdit };
+
+    // Загружаем функции для этой библиотеки
+    await this.loadFunctions(this.formData.library);
+
+    // Устанавливаем функцию
+    this.formData.function = window.handlerToEdit.function;
+
+await this.loadArgs(this.formData.library, this.formData.function);
+
+    // Проставляем значения из handlerToEdit.args
+    this.args = this.args.map(arg => {
+      const savedArg = window.handlerToEdit.args.find(a => a.arg === arg.name.replace(/^--/, ''));
+
+      if (savedArg) {
+        return {
+          ...arg,
+          active: true, // если аргумент есть в данных — он активен
+          value: savedArg.value || '',
+          strict: savedArg.strict == 1 || false
+        };
+      } else {
+        return {
+          ...arg,
+          active: false,
+          value: '',
+          strict: false
+        };
+      }
+    });
+
+    window.handlerToEdit = null;
+
+  } else {
+    // Обычная загрузка при создании нового обработчика
+    await this.loadLibraries();
+  }
+},
 
   async loadLibraries() {
     try {
@@ -81,32 +123,42 @@ export const handlerFormView = () => ({
     }
   },
 
-  async submitForm() {
-    this.errorMessage = '';
-    this.isLoading = true;
+async submitForm() {
+  this.errorMessage = '';
+  this.isLoading = true;
 
-    try {
-      const response = await fetch('/api/createHandler', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(this.formData)
-      });
+  try {
+    // Подготовка данных: добавляем args к formData
+    const activeArgs = this.args
+      .filter(arg => arg.active)
+      .map(({ name, value, strict }) => ({ name, value, strict }));
 
-      if (!response.ok) throw new Error('Ошибка сервера');
+    const payload = {
+      ...this.formData,
+      args: activeArgs
+    };
 
-      const result = await response.json();
-      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+    const response = await fetch('/api/createHandler', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    });
 
-      window.location.hash = '#handlers';
-    } catch (error) {
-      console.error('Ошибка при создании обработчика:', error);
-      this.errorMessage = error.message;
-    } finally {
-      this.isLoading = false;
-    }
-  },
+    if (!response.ok) throw new Error('Ошибка сервера');
+
+    const result = await response.json();
+    if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+
+    window.location.hash = '#handlers';
+  } catch (error) {
+    console.error('Ошибка при создании обработчика:', error);
+    this.errorMessage = error.message;
+  } finally {
+    this.isLoading = false;
+  }
+},
 
     async loadArgs(libraryName, functionName) {
     this.args = [];

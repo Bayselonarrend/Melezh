@@ -1,60 +1,93 @@
 <div x-data="handlersView" x-init="init()">
-  <div class="space-y-4">
-    <div class="flex justify-between items-center">
-      <h2 class="text-2xl font-bold">Список обработчиков</h2>
+  <div class="flex space-x-4 items-center mb-4">
+    <!-- Иконка шестерёнки -->
+    <div class="text-gray-400">
+
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+</svg>
+
+    </div>
+
+    <!-- Заголовок и описание -->
+    <div class="space-y-1 w-full">
+      <h2 class="text-2xl font-bold">Панель обработчиков</h2>
+      <p>Список всех доступных обработчиков</p>
+    </div>
+
+    <!-- Кнопки справа -->
+    <div class="flex space-x-2">
+      <!-- Кнопка добавления -->
+      <button @click="addNewHandler"
+              class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+        </svg>
+      </button>
+
+      <!-- Кнопка обновления -->
       <button @click="loadHandlers()" 
-              class="px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
+              class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition"
               :disabled="isLoading">
-        <span x-show="!isLoading">Обновить</span>
-        <span x-show="isLoading">Загрузка...</span>
+        <svg xmlns="http://www.w3.org/2000/svg" 
+             class="h-5 w-5" 
+             :class="{'animate-spin': isLoading}"
+             fill="none" 
+             viewBox="0 0 24 24" 
+             stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+        </svg>
       </button>
     </div>
-    
-    <div x-show="isLoading" class="flex justify-center py-4">
-      <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-blue-500"></div>
-    </div>
-    
-    <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-      <p x-text="errorMessage"></p>
-    </div>
-    
-    <div x-show="!isLoading && handlers.length > 0" class="overflow-x-auto">
-      <table class="min-w-full bg-white rounded-lg overflow-hidden">
-        <thead class="bg-gray-100">
+  </div>
+
+  <hr class="mb-4">
+
+  <!-- Остальная часть остаётся без изменений -->
+  <div x-show="isLoading" class="flex justify-center py-4">
+    <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+  </div>
+
+  <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+    <p x-text="errorMessage"></p>
+  </div>
+
+  <div x-show="!isLoading && handlers.length > 0" class="overflow-x-auto">
+    <table class="min-w-full bg-white rounded-lg overflow-hidden">
+      <thead class="bg-gray-100">
+        <tr>
+          <th class="py-2 px-4 text-left">Ключ</th>
+          <th class="py-2 px-4 text-left">Метод</th>
+          <th class="py-2 px-4 text-left">Библиотека</th>
+          <th class="py-2 px-4 text-left">Функция</th>
+          <th class="py-2 px-4 text-left">Статус</th>
+        </tr>
+      </thead>
+      <tbody class="divide-y divide-gray-200">
+        <template x-for="handler in handlers" :key="handler.key">
           <tr>
-            <th class="py-2 px-4 text-left">Ключ</th>
-            <th class="py-2 px-4 text-left">Метод</th>
-            <th class="py-2 px-4 text-left">Библиотека</th>
-            <th class="py-2 px-4 text-left">Функция</th>
-            <th class="py-2 px-4 text-left">Статус</th>
+            <td class="py-1 px-4" x-text="handler.key"></td>
+            <td class="py-1 px-4" x-text="handler.method"></td>
+            <td class="py-1 px-4" x-text="handler.library"></td>
+            <td class="py-1 px-4" x-text="handler.function"></td>
+            <td class="py-1 px-4">
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" 
+                       @change="toggleHandlerStatus(handler)"
+                       :checked="handler.active == 1"
+                       class="sr-only peer">
+                <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600"></div>
+                <span class="ml-2 text-sm font-medium" ></span>
+              </label>
+            </td>
           </tr>
-        </thead>
-        <tbody class="divide-y divide-gray-200">
-          <template x-for="handler in handlers" :key="handler.key">
-            <tr>
-              <td class="py-1 px-4" x-text="handler.key"></td>
-              <td class="py-1 px-4" x-text="handler.method"></td>
-              <td class="py-1 px-4" x-text="handler.library"></td>
-              <td class="py-1 px-4" x-text="handler.function"></td>
-              <td class="py-1 px-4">
-                <label class="relative inline-flex items-center cursor-pointer">
-                  <input type="checkbox" 
-                         @change="toggleHandlerStatus(handler)"
-                         :checked="handler.active == 1"
-                         class="sr-only peer">
-                  <div class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
-                  <span class="ml-2 text-sm font-medium" x-text="handler.active == 1 ? 'Активен' : 'Неактивен'"></span>
-                </label>
-              </td>
-            </tr>
-          </template>
-        </tbody>
-      </table>
-    </div>
-    
-    <div x-show="!isLoading && handlers.length === 0 && !errorMessage" 
-         class="bg-blue-100 border-l-4 border-blue-500 text-blue-700 p-4">
-      <p>Нет доступных обработчиков</p>
-    </div>
+        </template>
+      </tbody>
+    </table>
+  </div>
+
+  <div x-show="!isLoading && handlers.length === 0 && !errorMessage" 
+       class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
+    <p>Нет доступных обработчиков</p>
   </div>
 </div>

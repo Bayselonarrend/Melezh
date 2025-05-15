@@ -1,25 +1,44 @@
-<div x-data="dashboardView" x-init="init()">
-  <div class="space-y-4">
-    <h2 class="text-2xl font-bold">Главная панель</h2>
-    <p>Добро пожаловать в ваш дашборд!</p>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold">Статистика</h3>
-        <p class="mt-2">Здесь будет ваша статистика</p>
-      </div>
-      
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold">Уведомления</h3>
-        <p class="mt-2">Новых уведомлений нет</p>
-      </div>
-      
-      <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold">Быстрые действия</h3>
-        <button @click="refreshData()" class="mt-2 px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600">
-          Обновить данные
-        </button>
-      </div>
+<div x-data="dashboardView()">
+  <div class="flex space-x-4 items-center mb-6">
+    <!-- Иконка -->
+    <div class="text-gray-400">
+      <!-- Пример SVG-иконки: Dashboard / Home -->
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h12m-6 12h12" />
+      </svg>
+    </div>
+
+    <!-- Текст -->
+    <div class="space-y-1">
+      <h2 class="text-2xl font-bold">Главная панель</h2>
+      <p>Добро пожаловать в ваш дашборд!</p>
+    </div>
+  </div>
+
+  <hr class="mb-6">
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h3 class="font-semibold">Статистика</h3>
+      <p class="mt-2">Здесь будет ваша статистика</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h3 class="font-semibold">Уведомления</h3>
+      <p class="mt-2">Новых уведомлений нет</p>
+    </div>
+    <div class="bg-white p-4 rounded-lg shadow">
+      <h3 class="font-semibold">Быстрые действия</h3>
+      <button class="mt-2 px-3 py-1 bg-blue-500 text-white rounded">Действие</button>
     </div>
   </div>
 </div>
+
+<script>
+document.addEventListener('alpine:init', () => {
+  Alpine.data('dashboardView', () => ({
+    init() {
+      console.log('Dashboard view initialized');
+    }
+  }));
+});
+</script>

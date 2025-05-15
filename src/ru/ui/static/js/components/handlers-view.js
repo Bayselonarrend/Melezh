@@ -70,6 +70,10 @@ async toggleHandlerStatus(handler) {
     // Восстанавливаем предыдущее состояние тумблера при ошибке
     handler.active = handler.active == 1 ? 0 : 1;
   }
+},
+
+addNewHandler() {
+  window.location.hash = '#handler-form';
 }
 
 });

@@ -1,0 +1,81 @@
+<!-- /views/handler-form.html -->
+<div x-data="handlerFormView">
+  <div class="flex space-x-4 items-center mb-4">
+    <!-- Иконка формы -->
+    <div class="text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+      </svg>
+    </div>
+
+    <!-- Заголовок и описание -->
+    <div class="space-y-1 w-full">
+      <h2 class="text-2xl font-bold">Новый обработчик</h2>
+      <p>Заполните форму для создания нового обработчика.</p>
+    </div>
+  </div>
+
+  <hr class="mb-4">
+
+  <!-- Форма -->
+  <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-2xl">
+    <!-- Сообщение об ошибке -->
+    <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+      <p x-text="errorMessage"></p>
+    </div>
+
+    <!-- Поле ключа -->
+    <div>
+      <label for="key" class="block text-sm font-medium text-gray-700">Ключ</label>
+      <input type="text" id="key" x-model="formData.key" required
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+    </div>
+
+    <!-- Поле метода -->
+    <div>
+      <label for="method" class="block text-sm font-medium text-gray-700">Метод</label>
+      <select id="method" x-model="formData.method" required
+              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+        <option value="">Выберите метод</option>
+        <option value="GET">GET</option>
+        <option value="POST">POST</option>
+        <option value="PUT">PUT</option>
+        <option value="DELETE">DELETE</option>
+      </select>
+    </div>
+
+    <!-- Поле библиотеки -->
+    <div>
+      <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
+      <input type="text" id="library" x-model="formData.library" required
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+    </div>
+
+    <!-- Поле функции -->
+    <div>
+      <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
+      <input type="text" id="function" x-model="formData.function" required
+             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+    </div>
+
+    <!-- Кнопки -->
+    <div class="flex space-x-4 pt-4">
+      <button type="submit"
+              class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+              :disabled="isLoading">
+        <span x-show="!isLoading">Сохранить</span>
+        <span x-show="isLoading">
+          <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          </svg>
+        </span>
+      </button>
+      <button type="button" @click="cancel"
+              class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+              :disabled="isLoading">
+        Отмена
+      </button>
+    </div>
+  </form>
+</div>

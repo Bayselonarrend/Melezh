@@ -1,6 +1,8 @@
 :root {
   --green: #002B28;
-  --green-light: #97b9b7;
+  --green-bright: #477a77;
+  --green-light: #acc4c2;
+  --green-active: #68a5a1;
 }
 
 .bg-green-600{
@@ -13,4 +15,12 @@
 
 .bg-green-100{
   background-color: var(--green-light) !important; 
+}
+
+.bg-green-500{
+  background-color: var(--green-bright) !important;
+}
+
+.peer:checked ~ .peer-checked\:bg-green-600{
+  background-color: var(--green-bright) !important;
 }

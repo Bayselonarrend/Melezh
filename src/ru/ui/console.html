@@ -10,9 +10,8 @@
   <script type="module" src="/js/alpine.js"></script>
 </head>
 <body class="bg-gray-100 text-gray-900" x-data="app()">
-  <!-- Mobile sidebar toggle -->
   <div class="flex md:hidden bg-white p-4 shadow-md items-center justify-between">
-    <h1 class="text-xl font-bold">Мой Дашборд</h1>
+    <h1 class="text-xl font-bold">Melezh</h1>
     <button @click="toggleSidebar()" class="text-gray-600">
       ☰
     </button>
@@ -26,15 +25,26 @@
       class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10 fixed md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out"
       :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}"
     >
-      <h2 class="text-lg font-semibold border-b pb-2">Навигация</h2>
-      <nav class="space-y-2">
-        <a href="#" @click="loadView('dashboard'); if (isMobile()) closeSidebar()" 
-           :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}" 
-           class="block px-3 py-2 rounded hover:bg-gray-200 transition">Главная</a>
-        <a href="#" @click="loadView('handlers'); if (isMobile()) closeSidebar()" 
-           :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}" 
-           class="block px-3 py-2 rounded hover:bg-gray-200 transition">Обработчики</a>
-      </nav>
+      
+    <h1 class="flex items-center justify-between text-lg font-semibold border-b pb-2 w-full">
+      <span style="font-size: 25px;">Melezh</span>
+      <img src="/img/ico_g.png" alt="Логотип" class="h-8 w-auto">
+    </h1>
+
+<nav class="space-y-2">
+  <a href="#dashboard"
+     @click.prevent="setActiveTab('dashboard')"
+     :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}"
+     class="block px-3 py-2 rounded hover:bg-gray-200 transition">
+    Главная
+  </a>
+  <a href="#handlers"
+     @click.prevent="setActiveTab('handlers')"
+     :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}"
+     class="block px-3 py-2 rounded hover:bg-gray-200 transition">
+    Обработчики
+  </a>
+</nav>
 
       <!-- Sidebar Footer -->
       <div class="mt-auto pt-6 border-t space-y-2">

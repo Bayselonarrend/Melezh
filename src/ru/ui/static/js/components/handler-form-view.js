@@ -13,6 +13,9 @@ export const handlerFormView = () => ({
   functions: [],
   isLibrariesLoading: true,
   isFunctionsLoading: false,
+  args: [],
+  isArgsLoading: false,
+  argsErrorMessage: '',
 
   async init() {
     await this.loadLibraries();
@@ -102,6 +105,52 @@ export const handlerFormView = () => ({
       this.errorMessage = error.message;
     } finally {
       this.isLoading = false;
+    }
+  },
+
+    async loadArgs(libraryName, functionName) {
+    this.args = [];
+    this.argsErrorMessage = '';
+    this.isArgsLoading = true;
+
+    try {
+      const formData = new URLSearchParams();
+      formData.append('library', libraryName);
+      formData.append('function', functionName);
+
+      const response = await fetch('/api/getArgs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded'
+        },
+        body: formData
+      });
+
+      if (!response.ok) throw new Error('Ошибка сети');
+
+      const result = await response.json();
+
+      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+
+      this.args = result.data.map(arg => ({
+        ...arg,
+        value: '',
+        strict: false,
+        active: false
+      }));
+    } catch (error) {
+      console.error('Ошибка загрузки аргументов:', error);
+      this.argsErrorMessage = error.message;
+    } finally {
+      this.isArgsLoading = false;
+    }
+  },
+
+  onFunctionChange(functionName) {
+    if (functionName && this.formData.library) {
+      this.loadArgs(this.formData.library, functionName);
+    } else {
+      this.args = [];
     }
   },
 

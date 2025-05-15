@@ -18,92 +18,150 @@
   <hr class="mb-4">
 
   <!-- Форма -->
-  <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-2xl">
-    <!-- Сообщение об ошибке -->
-    <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-      <p x-text="errorMessage"></p>
-    </div>
+  <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-5xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
 
-    <!-- Поле ключа -->
-    <div>
-      <label for="key" class="block text-sm font-medium text-gray-700">Ключ</label>
-      <input type="text" id="key" x-model="formData.key" required
-             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-    </div>
+      <!-- Основная форма -->
+      <div class="space-y-4 md:col-span-2">
+        <!-- Сообщение об ошибке -->
+        <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+          <p x-text="errorMessage"></p>
+        </div>
 
-    <!-- Поле метода -->
-    <div>
-      <label for="method" class="block text-sm font-medium text-gray-700">Метод</label>
-      <select id="method" x-model="formData.method" required
-              class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-        <option value="">Выберите метод</option>
-        <option value="GET">GET</option>
-        <option value="FORM">POST (Form)</option>
-        <option value="JSON">POST (JSON)</option>
-      </select>
-    </div>
+        <!-- Поле ключа -->
+        <div>
+          <label for="key" class="block text-sm font-medium text-gray-700">Ключ</label>
+          <input type="text" id="key" x-model="formData.key" required
+                 class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+        </div>
 
-    <!-- Поле библиотеки -->
-<div>
-  <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
+        <!-- Поле метода -->
+        <div>
+          <label for="method" class="block text-sm font-medium text-gray-700">Метод</label>
+          <select id="method" x-model="formData.method" required
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
+            <option value="">Выберите метод</option>
+            <option value="GET">GET</option>
+            <option value="FORM">POST (Form)</option>
+            <option value="JSON">POST (JSON)</option>
+          </select>
+        </div>
 
-  <div x-show="isLibrariesLoading" class="mt-1">
-    Загрузка...
-  </div>
+        <!-- Поле библиотеки -->
+        <div>
+          <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
+          <div x-show="isLibrariesLoading" class="mt-1">Загрузка...</div>
+          <select id="library"
+                  x-model="formData.library"
+                  :disabled="isLibrariesLoading || isLoading"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
+                  @change="onLibraryChange(formData.library)">
+            <option value="">Выберите библиотеку</option>
+            <template x-for="lib in libraries" :key="lib.name">
+              <option :value="lib.name" x-text="lib.title"></option>
+            </template>
+          </select>
+        </div>
 
-  <select id="library"
-          x-model="formData.library"
-          required
-          :disabled="isLibrariesLoading || isLoading"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
-          @change="onLibraryChange(formData.library)"
-  >
-    <option value="">Выберите библиотеку</option>
+        <!-- Поле функции -->
+        <div>
+          <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
+          <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
+          <select id="function"
+                  x-model="formData.function"
+                  :disabled="!formData.library || isFunctionsLoading"
+                  @change="onFunctionChange(formData.function)"
+                  class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
+                  :class="{ 'bg-gray-100 cursor-not-allowed': !formData.library || isFunctionsLoading }">
+            <option value="">Выберите функцию</option>
+            <template x-for="func in functions" :key="func.name">
+              <option :value="func.name" x-text="func.title"></option>
+            </template>
+          </select>
+        </div>
 
-    <template x-for="lib in libraries" :key="lib.name">
-      <option :value="lib.name" class="flex items-center">
-        <span x-text="lib.title"></span>
-      </option>
-    </template>
-  </select>
-</div>
+        <!-- Кнопки -->
+        <div class="flex space-x-4 pt-4">
+          <button type="submit"
+                  class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
+                  :disabled="isLoading">
+            <span x-show="!isLoading">Сохранить</span>
+            <span x-show="isLoading">
+              <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+            </span>
+          </button>
+          <button type="button" @click="cancel"
+                  class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
+                  :disabled="isLoading">
+            Отмена
+          </button>
+        </div>
+      </div>
 
-    <!-- Поле функции -->
-<div>
-  <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
+      <!-- Блок аргументов справа -->
+      <div class="md:col-span-3">
+        <!-- Пустое состояние -->
+        <div x-show="args.length === 0 && !isArgsLoading && !argsErrorMessage"
+             class="p-6 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-gray-400">
 
-  <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
-
-  <select id="function"
-          x-model="formData.function"
-          :disabled="!formData.library || isFunctionsLoading"
-          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
-          :class="{ 'bg-gray-100 cursor-not-allowed': !formData.library || isFunctionsLoading }">
-    <option value="">Выберите функцию</option>
-    <template x-for="func in functions" :key="func.name">
-      <option :value="func.name" x-text="func.title"></option>
-    </template>
-  </select>
-</div>
-
-    <!-- Кнопки -->
-    <div class="flex space-x-4 pt-4">
-      <button type="submit"
-              class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
-              :disabled="isLoading">
-        <span x-show="!isLoading">Сохранить</span>
-        <span x-show="isLoading">
-          <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-            <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-            <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12 mx-auto mb-2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
-        </span>
-      </button>
-      <button type="button" @click="cancel"
-              class="px-4 py-2 bg-gray-300 text-gray-700 rounded hover:bg-gray-400 transition"
-              :disabled="isLoading">
-        Отмена
-      </button>
+
+          <p class="text-sm">После выбора функции здесь будет перечень аргументов</p>
+        </div>
+
+        <!-- Индикатор загрузки -->
+        <div x-show="isArgsLoading" class="p-6 bg-gray-50 border border-gray-300 rounded-lg text-center">
+          Загрузка аргументов...
+        </div>
+
+        <!-- Сообщение об ошибке -->
+        <div x-show="argsErrorMessage" class="p-6 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">
+          <p x-text="argsErrorMessage"></p>
+        </div>
+
+        <!-- Список аргументов -->
+        <div x-show="args.length > 0 && !isArgsLoading && !argsErrorMessage"
+            class="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-4">
+          <h3 class="font-semibold text-gray-700">Аргументы функции</h3>
+          <div class="text-xs text-gray-500 mb-2">Настройте параметры по умолчанию, которые будут использоваться в обработчике</div>
+
+          <template x-for="arg in args" :key="arg.name">
+            <div class="flex flex-col sm:flex-row items-start gap-2 p-2 hover:bg-gray-100 rounded">
+              <!-- Активность + имя аргумента -->
+              <label class="inline-flex items-center mt-1 sm:mt-0 w-full sm:w-auto" style="min-width: 13ch;">
+                <input type="checkbox" x-model="arg.active" class="form-checkbox h-4 w-4 text-green-600">
+                <span class="ml-2 text-sm truncate" x-text="arg.name"></span>
+              </label>
+
+              <!-- Описание и значение -->
+              <div class="flex-1 min-w-0 space-y-1">
+                <!-- Описание -->
+                <div class="text-xs text-gray-500 break-words" x-text="arg.description"></div>
+
+                <!-- Поле ввода значения -->
+                <input type="text"
+                      x-model="arg.value"
+                      placeholder="Значение по умолчанию"
+                      :disabled="!arg.active"
+                      class="w-full px-2 py-1 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-green-500 disabled:bg-gray-100 disabled:text-gray-500"
+                      x-bind:class="{'bg-gray-100': !arg.active}">
+              </div>
+
+              <!-- strict -->
+              <label class="inline-flex items-center mt-1 sm:mt-0 whitespace-nowrap">
+                <input type="checkbox" x-model="arg.strict" :disabled="!arg.active" class="form-checkbox h-4 w-4 text-blue-600">
+                <span class="ml-2 text-sm">Строгий</span>
+                <span class="ml-1 text-gray-400" title="Строгие аргументы нельзя перезаписать данными из запроса">?</span>
+              </label>
+            </div>
+          </template>
+        </div>
+      </div>
     </div>
   </form>
 </div>

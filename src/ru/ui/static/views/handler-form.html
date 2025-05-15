@@ -38,25 +38,53 @@
               class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
         <option value="">Выберите метод</option>
         <option value="GET">GET</option>
-        <option value="POST">POST</option>
-        <option value="PUT">PUT</option>
-        <option value="DELETE">DELETE</option>
+        <option value="FORM">POST (Form)</option>
+        <option value="JSON">POST (JSON)</option>
       </select>
     </div>
 
     <!-- Поле библиотеки -->
-    <div>
-      <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
-      <input type="text" id="library" x-model="formData.library" required
-             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-    </div>
+<div>
+  <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
+
+  <div x-show="isLibrariesLoading" class="mt-1">
+    Загрузка...
+  </div>
+
+  <select id="library"
+          x-model="formData.library"
+          required
+          :disabled="isLibrariesLoading || isLoading"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
+          @change="onLibraryChange(formData.library)"
+  >
+    <option value="">Выберите библиотеку</option>
+
+    <template x-for="lib in libraries" :key="lib.name">
+      <option :value="lib.name" class="flex items-center">
+        <span x-text="lib.title"></span>
+      </option>
+    </template>
+  </select>
+</div>
 
     <!-- Поле функции -->
-    <div>
-      <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
-      <input type="text" id="function" x-model="formData.function" required
-             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-    </div>
+<div>
+  <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
+
+  <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
+
+  <select id="function"
+          x-model="formData.function"
+          :disabled="!formData.library || isFunctionsLoading"
+          class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
+          :class="{ 'bg-gray-100 cursor-not-allowed': !formData.library || isFunctionsLoading }">
+    <option value="">Выберите функцию</option>
+    <template x-for="func in functions" :key="func.name">
+      <option :value="func.name" x-text="func.title"></option>
+    </template>
+  </select>
+</div>
 
     <!-- Кнопки -->
     <div class="flex space-x-4 pt-4">

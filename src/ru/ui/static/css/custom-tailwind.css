@@ -5,22 +5,41 @@
   --green-active: #68a5a1;
 }
 
-.bg-green-600{
-    background-color: var(--green) !important;
+.bg-green-600 {
+  background-color: var(--green) !important;
 }
 
 .focus\:ring-green-500:focus {
-      --tw-ring-color: var(--green) !important;
+  --tw-ring-color: var(--green) !important;
 }
 
-.bg-green-100{
-  background-color: var(--green-light) !important; 
+.bg-green-100 {
+  background-color: var(--green-light) !important;
 }
 
-.bg-green-500{
+.bg-green-500 {
   background-color: var(--green-bright) !important;
 }
 
-.peer:checked ~ .peer-checked\:bg-green-600{
+.peer:checked~.peer-checked\:bg-green-600 {
   background-color: var(--green-bright) !important;
+}
+
+.word-break {
+  word-break: break-all;
+}
+.whitespace-pre-wrap {
+  white-space: pre-wrap; /* Сохраняет пробелы и переносы */
+}
+.break-words {
+  overflow-wrap: break-word;
+}
+
+.truncate {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.whitespace-normal {
+  white-space: normal;
 }

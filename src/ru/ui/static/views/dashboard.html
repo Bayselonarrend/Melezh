@@ -3,7 +3,8 @@
     <!-- Иконка -->
     <div class="text-gray-400">
       <!-- Пример SVG-иконки: Dashboard / Home -->
-      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-12 h-12">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-12 h-12">
         <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h12m-6 12h12" />
       </svg>
     </div>
@@ -34,11 +35,11 @@
 </div>
 
 <script>
-document.addEventListener('alpine:init', () => {
-  Alpine.data('dashboardView', () => ({
-    init() {
-      console.log('Dashboard view initialized');
-    }
-  }));
-});
+  document.addEventListener('alpine:init', () => {
+    Alpine.data('dashboardView', () => ({
+      init() {
+        console.log('Dashboard view initialized');
+      }
+    }));
+  });
 </script>

@@ -3,10 +3,11 @@ export const handlerFormView = () => ({
     key: '',
     method: '',
     library: '',
-    function: ''
+    function: '',
+    originalKey: ''
   },
-  errorMessage: '',
   isLoading: false,
+  isEditMode: false,
 
   // Списки
   libraries: [],
@@ -17,66 +18,62 @@ export const handlerFormView = () => ({
   isArgsLoading: false,
   argsErrorMessage: '',
 
-async init() {
-  // Если есть данные для редактирования
-  if (window.handlerToEdit) {
-    // Загружаем библиотеки сначала
-    await this.loadLibraries();
+  async init() {
+    if (window.handlerToEdit) {
+      this.isEditMode = true;
 
-    // Теперь библиотеки точно загружены
-    this.formData = { ...window.handlerToEdit };
+      await this.loadLibraries();
 
-    // Загружаем функции для этой библиотеки
-    await this.loadFunctions(this.formData.library);
+      this.formData = {
+        key: window.handlerToEdit.key,
+        method: window.handlerToEdit.method,
+        library: window.handlerToEdit.library,
+        function: window.handlerToEdit.function,
+        originalKey: window.handlerToEdit.key
+      };
 
-    // Устанавливаем функцию
-    this.formData.function = window.handlerToEdit.function;
+      await this.loadFunctions(this.formData.library);
 
-await this.loadArgs(this.formData.library, this.formData.function);
+      this.formData.function = window.handlerToEdit.function;
+      await this.loadArgs(this.formData.library, this.formData.function);
 
-    // Проставляем значения из handlerToEdit.args
-    this.args = this.args.map(arg => {
-      const savedArg = window.handlerToEdit.args.find(a => a.arg === arg.name.replace(/^--/, ''));
+      this.args = this.args.map(arg => {
+        const savedArg = window.handlerToEdit.args.find(a => a.arg === arg.arg.replace(/^--/, ''));
 
-      if (savedArg) {
-        return {
-          ...arg,
-          active: true, // если аргумент есть в данных — он активен
-          value: savedArg.value || '',
-          strict: savedArg.strict == 1 || false
-        };
-      } else {
-        return {
-          ...arg,
-          active: false,
-          value: '',
-          strict: false
-        };
-      }
-    });
+        if (savedArg) {
+          return {
+            ...arg,
+            active: true,
+            value: savedArg.value || '',
+            strict: savedArg.strict == 1 || false
+          };
+        } else {
+          return {
+            ...arg,
+            active: false,
+            value: '',
+            strict: false
+          };
+        }
+      });
 
-    window.handlerToEdit = null;
-
-  } else {
-    // Обычная загрузка при создании нового обработчика
-    await this.loadLibraries();
-  }
-},
+      window.handlerToEdit = null;
+    } else {
+      await this.loadLibraries();
+    }
+  },
 
   async loadLibraries() {
     try {
       const response = await fetch('/api/getLibraries');
-
       if (!response.ok) throw new Error('Ошибка сети');
-
       const result = await response.json();
-
       if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
 
       this.libraries = result.data || [];
     } catch (error) {
       console.error('Ошибка загрузки библиотек:', error);
-      this.errorMessage = `Не удалось загрузить библиотеки: ${error.message}`;
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
     } finally {
       this.isLibrariesLoading = false;
     }
@@ -108,7 +105,7 @@ await this.loadArgs(this.formData.library, this.formData.function);
       this.functions = result.data || [];
     } catch (error) {
       console.error('Ошибка загрузки функций:', error);
-      this.errorMessage = `Не удалось загрузить функции: ${error.message}`;
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Не удалось загрузить функции: ${error.message}` } }));
     } finally {
       this.isFunctionsLoading = false;
     }
@@ -123,46 +120,54 @@ await this.loadArgs(this.formData.library, this.formData.function);
     }
   },
 
-async submitForm() {
-  this.errorMessage = '';
-  this.isLoading = true;
+  async submitForm() {
+    this.isLoading = true;
 
-  try {
-    // Подготовка данных: добавляем args к formData
-    const activeArgs = this.args
-      .filter(arg => arg.active)
-      .map(({ name, value, strict }) => ({ name, value, strict }));
+    try {
+      const activeArgs = this.args
+        .filter(arg => arg.active)
+        .map(({ arg, value, strict }) => ({ arg, value, strict }));
 
-    const payload = {
-      ...this.formData,
-      args: activeArgs
-    };
+      const payload = {
+        key: this.formData.key,
+        method: this.formData.method,
+        library: this.formData.library,
+        function: this.formData.function,
+        originalKey: this.formData.originalKey || null,
+        args: activeArgs
+      };
 
-    const response = await fetch('/api/createHandler', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(payload)
-    });
+      const url = this.isEditMode ? '/api/editHandler' : '/api/createHandler';
 
-    if (!response.ok) throw new Error('Ошибка сервера');
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
 
-    const result = await response.json();
-    if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+      const result = await response.json();
+      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
 
-    window.location.hash = '#handlers';
-  } catch (error) {
-    console.error('Ошибка при создании обработчика:', error);
-    this.errorMessage = error.message;
-  } finally {
-    this.isLoading = false;
-  }
-},
+      // Успех!
+      window.dispatchEvent(new CustomEvent('show-success', {
+        detail: { message: 'Успешно сохранено!' }
+      }));
 
-    async loadArgs(libraryName, functionName) {
+      window.location.hash = '#handlers';
+      
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: error.message }
+      }));
+    } finally {
+      this.isLoading = false;
+    }
+  },
+
+  async loadArgs(libraryName, functionName) {
     this.args = [];
-    this.argsErrorMessage = '';
     this.isArgsLoading = true;
 
     try {
@@ -178,8 +183,6 @@ async submitForm() {
         body: formData
       });
 
-      if (!response.ok) throw new Error('Ошибка сети');
-
       const result = await response.json();
 
       if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
@@ -192,7 +195,7 @@ async submitForm() {
       }));
     } catch (error) {
       console.error('Ошибка загрузки аргументов:', error);
-      this.argsErrorMessage = error.message;
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка загрузки аргументов: ${error.message}` } }));
     } finally {
       this.isArgsLoading = false;
     }
@@ -208,5 +211,19 @@ async submitForm() {
 
   cancel() {
     window.location.hash = '#handlers';
+  },
+
+  async generateNewKey() {
+    try {
+      const response = await fetch('/api/getNewKey');
+      if (!response.ok) throw new Error('Ошибка сети');
+
+      const result = await response.json();
+      if (!result.result) throw new Error(result.error || 'Не удалось получить ключ');
+
+      this.formData.key = result.data;
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка генерации ключа: ${error.message}` } }));
+    }
   }
 });

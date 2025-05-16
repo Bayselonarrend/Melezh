@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
   <meta charset="UTF-8">
   <title>Консоль | Melezh</title>
@@ -7,9 +8,13 @@
   <script src="/js/tailwind.js"></script>
   <script type="module" src="/js/components/app.js"></script>
   <script type="module" src="/js/components/views-registry.js"></script>
+  <script type="module" src="/js/components/message-toast.js"></script>
+  <script type="module" src="/js/components/delete-confirm.js"></script>
   <script type="module" src="/js/alpine.js"></script>
 </head>
+
 <body class="bg-gray-100 text-gray-900" x-data="app()">
+
   <div class="flex md:hidden bg-white p-4 shadow-md items-center justify-between">
     <h1 class="text-xl font-bold">Melezh</h1>
     <button @click="toggleSidebar()" class="text-gray-600">
@@ -18,40 +23,36 @@
   </div>
 
   <div class="flex h-screen">
-    <aside 
-      x-data="sidebar()" 
-      x-show="isSidebarOpen" 
-      @click.away="if (isMobile()) closeSidebar()"
+    <aside x-data="sidebar()" x-show="isSidebarOpen" @click.away="if (isMobile()) closeSidebar()"
       class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10 fixed md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out"
-      :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}"
-    >
-      
-    <h1 class="flex items-center justify-between text-lg font-semibold border-b pb-2 w-full">
-      <span style="font-size: 25px;">Melezh</span>
-      <img src="/img/ico_g.png" alt="Логотип" class="h-8 w-auto">
-    </h1>
+      :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}">
 
-<nav class="space-y-2">
-  <a href="#dashboard"
-     @click.prevent="setActiveTab('dashboard')"
-     :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}"
-     class="block px-3 py-2 rounded hover:bg-gray-200 transition">
-    Главная
-  </a>
-  <a href="#handlers"
-     @click.prevent="setActiveTab('handlers')"
-     :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}"
-     class="block px-3 py-2 rounded hover:bg-gray-200 transition">
-    Обработчики
-  </a>
-</nav>
+      <h1 class="flex items-center justify-between text-lg font-semibold border-b pb-2 w-full">
+        <span style="font-size: 25px;">Melezh</span>
+        <img src="/img/ico_g.png" alt="Логотип" class="h-8 w-auto">
+      </h1>
+
+      <nav class="space-y-2">
+        <a href="#dashboard" @click.prevent="setActiveTab('dashboard')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}"
+          class="block px-3 py-2 rounded hover:bg-gray-200 transition">
+          Главная
+        </a>
+        <a href="#handlers" @click.prevent="setActiveTab('handlers')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}"
+          class="block px-3 py-2 rounded hover:bg-gray-200 transition">
+          Обработчики
+        </a>
+      </nav>
 
       <!-- Sidebar Footer -->
       <div class="mt-auto pt-6 border-t space-y-2">
-        <button @click="logout()" type="button" class="flex items-center justify-between w-full bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition">
+        <button @click="logout()" type="button"
+          class="flex items-center justify-between w-full bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition">
           <span>Выход</span>
           <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
           </svg>
         </button>
       </div>
@@ -66,20 +67,48 @@
           <p x-text="loadingMessage" class="text-gray-700"></p>
         </div>
       </div>
-      
+
       <!-- Оверлей для мобильного меню -->
-      <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()" 
-           class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
-      
+      <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()"
+        class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
+
       <!-- Контейнер для ошибок -->
       <div x-show="errorMessage && !isLoading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
         <p x-text="errorMessage"></p>
         <button @click="errorMessage = ''" class="mt-2 text-red-600 hover:text-red-800">Закрыть</button>
       </div>
-      
+
       <!-- Динамический контейнер для контента -->
       <div id="view-container" x-html="currentView"></div>
     </main>
   </div>
+
+  <!-- Глобальное уведомление об ошибках -->
+  <div x-data="errorToast()" x-show="messages.length > 0" class="fixed bottom-4 right-4 z-50 w-80 max-w-full space-y-2">
+
+    <template x-for="message in messages" :key="message.id">
+      <div :class="{
+        'bg-red-50 border-l-4 border-red-500': message.type === 'error',
+        'bg-green-50 border-l-4 border-green-500': message.type === 'success'
+      }"
+        class="relative flex items-center border-l-4 shadow-md rounded-md mb-2 overflow-hidden break-words animate-fade-in"
+        style="word-break: break-word;">
+
+        <!-- Контент -->
+        <div class="px-3 py-2 text-sm text-gray-700 whitespace-normal break-words flex flex-col">
+          <span x-text="message.text"></span>
+          <span class="text-xs text-gray-400 mt-1" x-text="message.time"></span>
+        </div>
+
+        <!-- Кнопка закрытия -->
+        <button @click="remove(message.id)" type="button"
+          class="absolute top-1 right-1 p-1 text-gray-400 hover:text-gray-600 transition">
+          ✕
+        </button>
+      </div>
+    </template>
+  </div>
+
 </body>
+
 </html>

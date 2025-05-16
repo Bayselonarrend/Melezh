@@ -56,7 +56,7 @@ export const settingsPage = () => ({
       if (!result.success) throw new Error(result.message);
 
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: 'Настройки успешно сохранены' }
+        detail: { message: 'Настройки успешно сохранены!' }
       }));
 
     } catch (error) {

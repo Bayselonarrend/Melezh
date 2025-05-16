@@ -78,7 +78,7 @@
         <div>
           <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
           <div x-show="isLibrariesLoading" class="mt-1">Загрузка...</div>
-          <select id="library" x-model="formData.library" :disabled="isLibrariesLoading || isLoading"
+          <select id="library" x-model="formData.library" :disabled="isLibrariesLoading || isLoading" required
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
             @change="onLibraryChange(formData.library)">
             <option value="">Выберите библиотеку</option>
@@ -92,7 +92,7 @@
         <div>
           <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
           <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
-          <select id="function" x-model="formData.function" :disabled="!formData.library || isFunctionsLoading"
+          <select id="function" x-model="formData.function" :disabled="!formData.library || isFunctionsLoading" required
             @change="onFunctionChange(formData.function)"
             class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
             :class="{ 'bg-gray-100 cursor-not-allowed': !formData.library || isFunctionsLoading }">

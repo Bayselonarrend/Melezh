@@ -121,6 +121,34 @@ export const handlerFormView = () => ({
   },
 
   async submitForm() {
+
+    if (!this.formData.key.trim()) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: 'Поле "Ключ" обязательно для заполнения' }
+      }));
+      return;
+    }
+
+    if (!this.formData.method) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: 'Поле "Метод" обязательно для заполнения' }
+      }));
+      return;
+    }
+
+    if (!this.formData.library) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: 'Поле "Библиотека" обязательно для заполнения' }
+      }));
+      return;
+    }
+
+    if (!this.formData.function) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: 'Поле "Функция" обязательно для заполнения' }
+      }));
+      return;
+    }
     this.isLoading = true;
 
     try {

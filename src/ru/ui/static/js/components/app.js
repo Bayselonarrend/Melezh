@@ -19,6 +19,8 @@ document.addEventListener('alpine:init', () => {
     currentView: '',
     isLoading: false,
     loadingMessage: 'Загрузка...',
+    loginPassword: '',
+    loginError: false,
 
     init() {
       this.checkViewport();
@@ -62,6 +64,38 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
+async handleLoginSubmit() {
+      this.isLoading = true;
+      
+      try {
+        const response = await fetch('/ui/login', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+          },
+          body: new URLSearchParams({
+            password: this.loginPassword
+          })
+        });
+
+        const result = await handleFetchResponse(response);
+
+        if (result.success) {
+          window.location.href = '/ui';
+        } else {
+          window.dispatchEvent(new CustomEvent('show-error', {
+            detail: { message: result.message || 'Неверный пароль' }
+          }));
+        }
+      } catch (error) {
+        window.dispatchEvent(new CustomEvent('show-error', {
+          detail: { message: 'Ошибка сети. Попробуйте позже.' }
+        }));
+      } finally {
+        this.isLoading = false;
+      }
+    },
+    
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },

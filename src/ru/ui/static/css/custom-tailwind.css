@@ -1,11 +1,11 @@
 :root {
-  --green: #002B28;
+  --green: #477a77;
   --green-bright: #477a77;
   --green-light: #acc4c2;
   --green-active: #68a5a1;
 }
 
-.bg-green-600 {
+.bg-green-600,.text-green-500 {
   background-color: var(--green) !important;
 }
 

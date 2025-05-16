@@ -79,21 +79,39 @@
             </td>
 
             <!-- Кнопка редактирования -->
-            <td class="py-1 px-4">
-              <button @click="editHandler(handler)" class="text-grey-500 hover:text-grey-700 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-5 h-5">
-                  <path stroke-linecap="round" stroke-linejoin="round"
-                    d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-                </svg>
-              </button>
+            <td class="py-1 px-1">
+              <div class="flex items-center gap-1">
+                <!-- Кнопка редактирования -->
+                <div class="relative group">
+                  <button @click="editHandler(handler)"
+                    class="text-gray-500 hover:text-gray-700 transition p-1 rounded hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round"
+                        d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+                    </svg>
+                  </button>
+                  <span
+                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                    Редактировать
+                  </span>
+                </div>
 
-              <button @click="deleteHandler(handler)" type="button" class="text-red-500 hover:text-red-700 transition">
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                  stroke="currentColor" class="w-5 h-5">
-                  <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
+                <!-- Кнопка удаления -->
+                <div class="relative group">
+                  <button @click="deleteHandler(handler)" type="button"
+                    class="text-red-500 hover:text-red-700 transition p-1 rounded hover:bg-gray-100">
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                      stroke="currentColor" class="w-5 h-5">
+                      <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                  <span
+                    class="absolute bottom-full left-1/2 -translate-x-1/2 mb-1 hidden group-hover:block bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+                    Удалить
+                  </span>
+                </div>
+              </div>
             </td>
 
           </tr>
@@ -102,8 +120,7 @@
     </table>
   </div>
 
-  <div x-show="!isLoading && handlers.length === 0"
-    class="bg-green-100  text-green-700 p-4">
+  <div x-show="!isLoading && handlers.length === 0" class="bg-green-500  text-neutral-100 p-4">
     <p><b>Нет доступных обработчиков.</b> Вы можете создать новый обработчик, нажав значок "+" в правом верхнем углу</p>
   </div>
 </div>

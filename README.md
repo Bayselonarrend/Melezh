@@ -1,5 +1,5 @@
+![image](https://github.com/user-attachments/assets/81c3d9da-62f2-4f27-b913-e78af0274976)
 
-![cover](/media/cover_s.png)
 
 
 

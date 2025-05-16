@@ -129,7 +129,7 @@
       <!-- Блок аргументов справа -->
       <div class="md:col-span-3">
         <!-- Пустое состояние -->
-        <div x-show="args.length === 0 && !isArgsLoading && !argsErrorMessage"
+        <div x-show="args.length === 0 && !isArgsLoading"
           class="p-6 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-gray-400">
 
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -146,13 +146,8 @@
           Загрузка аргументов...
         </div>
 
-        <!-- Сообщение об ошибке -->
-        <div x-show="argsErrorMessage" class="p-6 bg-red-50 border border-red-200 text-red-600 rounded-lg text-center">
-          <p x-text="argsErrorMessage"></p>
-        </div>
-
         <!-- Список аргументов -->
-        <div x-show="args.length > 0 && !isArgsLoading && !argsErrorMessage"
+        <div x-show="args.length > 0 && !isArgsLoading"
           class="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-4">
           <h3 class="font-semibold text-gray-700">Аргументы функции</h3>
           <div class="text-xs text-gray-500 mb-2">Настройте параметры по умолчанию, которые будут использоваться в

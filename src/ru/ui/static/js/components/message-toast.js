@@ -19,7 +19,7 @@ document.addEventListener('alpine:init', () => {
       this.messages.unshift(message);
 
       // Автоматическое скрытие через 5 секунд
-      setTimeout(() => this.remove(message.id), 5000);
+      setTimeout(() => this.remove(message.id), 10000);
     },
 
     remove(id) {

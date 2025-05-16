@@ -6,10 +6,10 @@
   <title>Консоль | Melezh</title>
   <link rel="stylesheet" href="/css/custom-tailwind.css" />
   <script src="/js/tailwind.js"></script>
+  <script type="module" src="/js/error-fetch.js"></script>
   <script type="module" src="/js/components/app.js"></script>
   <script type="module" src="/js/components/views-registry.js"></script>
   <script type="module" src="/js/components/message-toast.js"></script>
-  <script type="module" src="/js/components/delete-confirm.js"></script>
   <script type="module" src="/js/alpine.js"></script>
 </head>
 
@@ -43,6 +43,11 @@
           class="block px-3 py-2 rounded hover:bg-gray-200 transition">
           Обработчики
         </a>
+        <a href="#settings" @click.prevent="setActiveTab('settings')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'settings'}"
+          class="block px-3 py-2 rounded hover:bg-gray-200 transition">
+          Настройки
+        </a>
       </nav>
 
       <!-- Sidebar Footer -->
@@ -71,12 +76,6 @@
       <!-- Оверлей для мобильного меню -->
       <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()"
         class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
-
-      <!-- Контейнер для ошибок -->
-      <div x-show="errorMessage && !isLoading" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-4">
-        <p x-text="errorMessage"></p>
-        <button @click="errorMessage = ''" class="mt-2 text-red-600 hover:text-red-800">Закрыть</button>
-      </div>
 
       <!-- Динамический контейнер для контента -->
       <div id="view-container" x-html="currentView"></div>

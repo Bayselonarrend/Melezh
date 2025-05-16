@@ -9,6 +9,7 @@
   background-color: var(--green) !important;
 }
 
+
 .focus\:ring-green-500:focus {
   --tw-ring-color: var(--green) !important;
 }

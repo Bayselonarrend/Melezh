@@ -46,9 +46,6 @@
     <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
   </div>
 
-  <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
-    <p x-text="errorMessage"></p>
-  </div>
 
   <div x-show="!isLoading && handlers.length > 0" class="overflow-x-auto">
     <table class="min-w-full bg-white rounded-lg overflow-hidden">
@@ -105,8 +102,8 @@
     </table>
   </div>
 
-  <div x-show="!isLoading && handlers.length === 0 && !errorMessage"
-    class="bg-green-100 border-l-4 border-green-500 text-green-700 p-4">
-    <p>Нет доступных обработчиков</p>
+  <div x-show="!isLoading && handlers.length === 0"
+    class="bg-green-100  text-green-700 p-4">
+    <p><b>Нет доступных обработчиков.</b> Вы можете создать новый обработчик, нажав значок "+" в правом верхнем углу</p>
   </div>
 </div>

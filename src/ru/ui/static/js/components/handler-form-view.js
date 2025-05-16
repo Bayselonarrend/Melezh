@@ -1,3 +1,5 @@
+import { handleFetchResponse } from '/js/error-fetch.js';
+
 export const handlerFormView = () => ({
   formData: {
     key: '',
@@ -16,7 +18,6 @@ export const handlerFormView = () => ({
   isFunctionsLoading: false,
   args: [],
   isArgsLoading: false,
-  argsErrorMessage: '',
 
   async init() {
     if (window.handlerToEdit) {
@@ -65,12 +66,13 @@ export const handlerFormView = () => ({
 
   async loadLibraries() {
     try {
-      const response = await fetch('/api/getLibraries');
-      if (!response.ok) throw new Error('Ошибка сети');
-      const result = await response.json();
-      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
 
+      const response = await fetch('/api/getLibraries');
+      const result = await handleFetchResponse(response);
+
+      if (!result.success) throw new Error(result.message);
       this.libraries = result.data || [];
+
     } catch (error) {
       console.error('Ошибка загрузки библиотек:', error);
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
@@ -96,13 +98,10 @@ export const handlerFormView = () => ({
         body: formData
       });
 
-      if (!response.ok) throw new Error('Ошибка сети');
-
-      const result = await response.json();
-
-      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
-
+      const result = await handleFetchResponse(response);
+      if (!result.success) throw new Error(result.message);
       this.functions = result.data || [];
+
     } catch (error) {
       console.error('Ошибка загрузки функций:', error);
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Не удалось загрузить функции: ${error.message}` } }));
@@ -116,6 +115,7 @@ export const handlerFormView = () => ({
       this.loadFunctions(libraryName);
     } else {
       this.functions = [];
+      this.args = [];
       this.formData.function = '';
     }
   },
@@ -147,8 +147,8 @@ export const handlerFormView = () => ({
         body: JSON.stringify(payload)
       });
 
-      const result = await response.json();
-      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+      const result = await handleFetchResponse(response);
+      if (!result.success) throw new Error(result.message);
 
       // Успех!
       window.dispatchEvent(new CustomEvent('show-success', {
@@ -156,7 +156,7 @@ export const handlerFormView = () => ({
       }));
 
       window.location.hash = '#handlers';
-      
+
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
         detail: { message: error.message }
@@ -183,9 +183,8 @@ export const handlerFormView = () => ({
         body: formData
       });
 
-      const result = await response.json();
-
-      if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+      const result = await handleFetchResponse(response);
+      if (!result.success) throw new Error(result.message);
 
       this.args = result.data.map(arg => ({
         ...arg,
@@ -193,6 +192,7 @@ export const handlerFormView = () => ({
         strict: false,
         active: false
       }));
+
     } catch (error) {
       console.error('Ошибка загрузки аргументов:', error);
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка загрузки аргументов: ${error.message}` } }));
@@ -215,13 +215,13 @@ export const handlerFormView = () => ({
 
   async generateNewKey() {
     try {
+
       const response = await fetch('/api/getNewKey');
-      if (!response.ok) throw new Error('Ошибка сети');
+      const result = await handleFetchResponse(response);
 
-      const result = await response.json();
-      if (!result.result) throw new Error(result.error || 'Не удалось получить ключ');
-
+      if (!result.success) throw new Error(result.message);
       this.formData.key = result.data;
+
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка генерации ключа: ${error.message}` } }));
     }

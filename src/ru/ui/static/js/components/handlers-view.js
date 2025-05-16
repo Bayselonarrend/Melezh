@@ -1,7 +1,8 @@
+import { handleFetchResponse } from '/js/error-fetch.js';
+
 export const handlersView = () => ({
   handlers: [],
   isLoading: false,
-  errorMessage: '',
 
   async init() {
     await this.loadHandlers();
@@ -9,18 +10,22 @@ export const handlersView = () => ({
 
   async loadHandlers() {
     this.isLoading = true;
-    this.errorMessage = '';
 
     try {
+
       const response = await fetch('/api/getHandlersList');
-      if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-      const data = await response.json();
-      if (!data.result) throw new Error(data.error || 'Неизвестная ошибка');
-      this.handlers = data.data || [];
+      const result = await handleFetchResponse(response);
+      if (!result.success) throw new Error(result.message);
+      this.handlers = result.data || [];
+
     } catch (error) {
+
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: `Ошибка загрузки обработчиков: ${error.message}` }
+      }));
       console.error('Ошибка загрузки обработчиков:', error);
-      this.errorMessage = error.message;
       this.handlers = [];
+
     } finally {
       this.isLoading = false;
     }
@@ -116,11 +121,9 @@ export const handlersView = () => ({
       body: formData
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error('Ошибка сети');
 
-        const result = await response.json();
-
-        if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
+        const result = await handleFetchResponse(response);
+        if (!result.success) throw new Error(result.message);
 
         // Удаляем из списка
         this.handlers = this.handlers.filter(h => h.key !== handler.key);

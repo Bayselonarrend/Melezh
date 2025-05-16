@@ -1,9 +1,12 @@
+import { handleFetchResponse } from '/js/error-fetch.js';
+
 document.addEventListener('alpine:init', () => {
   // === Маршруты: вкладки -> хэши ===
   const HASH_ROUTES = {
     dashboard: '#dashboard',
     handlers: '#handlers',
-    'handler-form': '#handler-form'
+    'handler-form': '#handler-form',
+    settings: '#settings'
   };
 
   // === Кэш для загруженных представлений ===
@@ -16,7 +19,6 @@ document.addEventListener('alpine:init', () => {
     currentView: '',
     isLoading: false,
     loadingMessage: 'Загрузка...',
-    errorMessage: '',
 
     init() {
       this.checkViewport();
@@ -89,7 +91,6 @@ document.addEventListener('alpine:init', () => {
     async loadView(viewName) {
       this.isLoading = true;
       this.loadingMessage = `Загрузка ${viewName}...`;
-      this.errorMessage = '';
 
       try {
         // Используем кэшированную версию, если есть
@@ -101,16 +102,18 @@ document.addEventListener('alpine:init', () => {
 
         const response = await fetch(`/views/${viewName}.html`);
 
-        if (!response.ok) {
-          throw new Error(`Ошибка HTTP: ${response.status}`);
+        if (!response.ok){
+          const result = await handleFetchResponse(response);
+          if (!result.success) throw new Error(result.message);
         }
 
         const html = await response.text();
         viewCache.set(viewName, html);
         this.currentView = html;
+
       } catch (error) {
         console.error(`Ошибка загрузки ${viewName}:`, error);
-        this.errorMessage = `Не удалось загрузить "${viewName}": ${error.message}`;
+        window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
         this.currentView = '';
       } finally {
         this.isLoading = false;

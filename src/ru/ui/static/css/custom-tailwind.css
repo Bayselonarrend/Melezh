@@ -5,7 +5,8 @@
   --green-active: #68a5a1;
 }
 
-.bg-green-600,.text-green-500 {
+.bg-green-600,
+.text-green-500 {
   background-color: var(--green) !important;
 }
 
@@ -29,9 +30,12 @@
 .word-break {
   word-break: break-all;
 }
+
 .whitespace-pre-wrap {
-  white-space: pre-wrap; /* Сохраняет пробелы и переносы */
+  white-space: pre-wrap;
+  /* Сохраняет пробелы и переносы */
 }
+
 .break-words {
   overflow-wrap: break-word;
 }
@@ -41,6 +45,19 @@
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
 .whitespace-normal {
   white-space: normal;
+}
+
+.table-events td {
+  padding: 0.75rem;
+}
+
+.tableEvents th {
+  background-color: #f9fafb;
+  color: #6b7280;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
 }

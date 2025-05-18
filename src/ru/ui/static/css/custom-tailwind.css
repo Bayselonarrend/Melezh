@@ -61,3 +61,14 @@
   font-weight: 600;
   text-transform: uppercase;
 }
+
+select option {
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+}
+
+select option img {
+  display: inline-block;
+  margin-right: 0.5rem;
+}

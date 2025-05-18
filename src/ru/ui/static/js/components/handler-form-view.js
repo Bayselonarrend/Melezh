@@ -253,5 +253,11 @@ export const handlerFormView = () => ({
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка генерации ключа: ${error.message}` } }));
     }
+  },
+
+  handleImageError(event) {
+    // Заменяем несуществующую иконку на заглушку
+    event.target.src = '/img/libs/default.png';
+    event.target.onerror = null; // Предотвращаем бесконечный цикл, если заглушка тоже не загрузится
   }
 });

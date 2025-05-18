@@ -44,63 +44,206 @@
         <!-- Поле ключа -->
         <div>
           <label for="key" class="block text-sm font-medium text-gray-700">Ключ</label>
-
           <div class="relative mt-1">
-            <!-- Поле ввода -->
             <input type="text" id="key" x-model="formData.key" required
               class="w-full px-3 py-2 pr-9 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-
-            <!-- Кнопка с иконкой внутри input -->
             <button @click="generateNewKey" type="button"
               class="absolute right-2 top-2 bottom-1 flex items-center justify-center w-6 h-6 text-gray-400 hover:text-gray-700 focus:outline-none">
               <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                 stroke="currentColor" class="w-5 h-5">
-                <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
               </svg>
             </button>
           </div>
         </div>
 
-
         <!-- Поле метода -->
         <div>
-          <label for="method" class="block text-sm font-medium text-gray-700">Метод</label>
-          <select id="method" x-model="formData.method" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500">
-            <option value="">Выберите метод</option>
-            <option value="GET">GET</option>
-            <option value="FORM">POST (Form)</option>
-            <option value="JSON">POST (JSON)</option>
-          </select>
+          <label class="block text-sm font-medium text-gray-700">Метод</label>
+          <div class="relative mt-1" x-data="{ open: false }">
+            <button type="button" @click="open = !open"
+              class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+              :class="{ 'text-gray-500': !formData.method }">
+              <span class="block truncate" x-text="formData.method || 'Выберите метод'"></span>
+              <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                    clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div x-show="open" @click.outside="open = false"
+              class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
+              <button type="button" @click="formData.method = 'GET'; open = false"
+                class="relative w-full text-left py-2 pl-3 pr-9 hover:bg-gray-100"
+                :class="{ 'bg-green-50': formData.method === 'GET' }">
+                <span class="block truncate">GET</span>
+                <span x-show="formData.method === 'GET'"
+                  class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+              <button type="button" @click="formData.method = 'FORM'; open = false"
+                class="relative w-full text-left py-2 pl-3 pr-9 hover:bg-gray-100"
+                :class="{ 'bg-green-50': formData.method === 'FORM' }">
+                <span class="block truncate">POST (Form)</span>
+                <span x-show="formData.method === 'FORM'"
+                  class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+              <button type="button" @click="formData.method = 'JSON'; open = false"
+                class="relative w-full text-left py-2 pl-3 pr-9 hover:bg-gray-100"
+                :class="{ 'bg-green-50': formData.method === 'JSON' }">
+                <span class="block truncate">POST (JSON)</span>
+                <span x-show="formData.method === 'JSON'"
+                  class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                  <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                    <path fill-rule="evenodd"
+                      d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                      clip-rule="evenodd" />
+                  </svg>
+                </span>
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Поле библиотеки -->
         <div>
-          <label for="library" class="block text-sm font-medium text-gray-700">Библиотека</label>
+          <label class="block text-sm font-medium text-gray-700">Библиотека</label>
           <div x-show="isLibrariesLoading" class="mt-1">Загрузка...</div>
-          <select id="library" x-model="formData.library" :disabled="isLibrariesLoading || isLoading" required
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
-            @change="onLibraryChange(formData.library)">
-            <option value="">Выберите библиотеку</option>
-            <template x-for="lib in libraries" :key="lib.name">
-              <option :value="lib.name" x-text="lib.title"></option>
-            </template>
-          </select>
+          <div class="relative mt-1" x-data="{ open: false }">
+            <button type="button" @click="open = !open" :disabled="isLibrariesLoading || isLoading"
+              class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+              :class="{ 'bg-gray-100': isLibrariesLoading || isLoading, 'text-gray-500': !formData.library }">
+              <span class="flex items-center">
+                <template x-if="formData.library">
+                  <img :src="`/img/libs/${formData.library.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
+                    @error="handleImageError">
+                </template>
+                <span class="block truncate" :class="{ 'ml-3': formData.library }"
+                  x-text="formData.library ? libraries.find(l => l.name === formData.library)?.title : 'Выберите библиотеку'"></span>
+              </span>
+              <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                    clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div x-show="open" @click.outside="open = false"
+              class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
+              <template x-for="lib in libraries" :key="lib.name">
+                <button type="button" @click="formData.library = lib.name; open = false; onLibraryChange(lib.name)"
+                  class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100 text-left"
+                  :class="{ 'bg-green-50': formData.library === lib.name }">
+                  <div class="flex items-center">
+                    <img :src="`/img/libs/${lib.name.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
+                      @error="handleImageError">
+                    <span class="ml-3 block truncate" x-text="lib.title"></span>
+                  </div>
+                  <span x-show="formData.library === lib.name"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </div>
         </div>
 
         <!-- Поле функции -->
         <div>
-          <label for="function" class="block text-sm font-medium text-gray-700">Функция</label>
+          <label class="block text-sm font-medium text-gray-700">Функция</label>
           <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
-          <select id="function" x-model="formData.function" :disabled="!formData.library || isFunctionsLoading" required
-            @change="onFunctionChange(formData.function)"
-            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500 bg-white"
-            :class="{ 'bg-gray-100 cursor-not-allowed': !formData.library || isFunctionsLoading }">
-            <option value="">Выберите функцию</option>
-            <template x-for="func in functions" :key="func.name">
-              <option :value="func.name" x-text="func.title"></option>
-            </template>
-          </select>
+          <div class="relative mt-1" x-data="{ open: false }">
+            <button type="button" @click="open = !open" :disabled="!formData.library || isFunctionsLoading"
+              class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+              :class="{ 'bg-gray-100': !formData.library || isFunctionsLoading, 'text-gray-500': !formData.function }">
+              <span class="block truncate"
+                x-text="formData.function ? functions.find(f => f.name === formData.function)?.title : 'Выберите функцию'"></span>
+              <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                    clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div x-show="open" @click.outside="open = false"
+              class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
+              <template x-for="func in functions" :key="func.name">
+                <button type="button" @click="formData.function = func.name; open = false; onFunctionChange(func.name)"
+                  class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100 text-left"
+                  :class="{ 'bg-green-50': formData.function === func.name }">
+                  <span class="block truncate" x-text="func.title"></span>
+                  <span x-show="formData.function === func.name"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </div>
+        </div>
+
+        <!-- Поле функции -->
+        <div>
+          <label class="block text-sm font-medium text-gray-700">Функция</label>
+          <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
+          <div class="relative mt-1" x-data="{ open: false }">
+            <button type="button" @click="open = !open" :disabled="!formData.library || isFunctionsLoading"
+              class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+              :class="{ 'bg-gray-100': !formData.library || isFunctionsLoading, 'text-gray-500': !formData.function }">
+              <span class="block truncate"
+                x-text="formData.function ? functions.find(f => f.name === formData.function)?.title : 'Выберите функцию'"></span>
+              <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                  <path fill-rule="evenodd"
+                    d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                    clip-rule="evenodd" />
+                </svg>
+              </span>
+            </button>
+            <div x-show="open" @click.outside="open = false"
+              class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-1 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
+              <template x-for="func in functions" :key="func.name">
+                <button type="button" @click="formData.function = func.name; open = false; onFunctionChange(func.name)"
+                  class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100"
+                  :class="{ 'bg-green-50': formData.function === func.name }">
+                  <span class="block truncate" x-text="func.title"></span>
+                  <span x-show="formData.function === func.name"
+                    class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                      <path fill-rule="evenodd"
+                        d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                        clip-rule="evenodd" />
+                    </svg>
+                  </span>
+                </button>
+              </template>
+            </div>
+          </div>
         </div>
 
         <!-- Кнопки -->
@@ -131,13 +274,11 @@
         <!-- Пустое состояние -->
         <div x-show="args.length === 0 && !isArgsLoading"
           class="p-6 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-gray-400">
-
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-12 h-12 mx-auto mb-2">
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
-
           <p class="text-sm">После выбора функции здесь будет перечень аргументов</p>
         </div>
 

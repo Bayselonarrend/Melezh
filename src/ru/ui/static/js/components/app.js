@@ -64,9 +64,9 @@ document.addEventListener('alpine:init', () => {
       }
     },
 
-async handleLoginSubmit() {
+    async handleLoginSubmit() {
       this.isLoading = true;
-      
+
       try {
         const response = await fetch('/ui/login', {
           method: 'POST',
@@ -95,7 +95,7 @@ async handleLoginSubmit() {
         this.isLoading = false;
       }
     },
-    
+
     toggleSidebar() {
       this.isSidebarOpen = !this.isSidebarOpen;
     },
@@ -123,20 +123,27 @@ async handleLoginSubmit() {
     },
 
     async loadView(viewName) {
-      this.isLoading = true;
-      this.loadingMessage = `Загрузка ${viewName}...`;
+      this.isLoading = true; // внутренний флаг начала загрузки
+      this.loadingMessage = 'Загрузка...';
+      this.shouldShowLoader = false; // пока не показываем индикатор
+
+      let showLoaderTimeout = null;
+
+      // Устанавливаем таймер: покажем loader через 500 мс
+      showLoaderTimeout = setTimeout(() => {
+        this.shouldShowLoader = true; // показываем индикатор только после 500 мс
+      }, 500);
 
       try {
-        // Используем кэшированную версию, если есть
         if (viewCache.has(viewName)) {
-          this.currentView = viewCache.get(viewName);
+          clearTimeout(showLoaderTimeout);
           this.isLoading = false;
+          this.currentView = viewCache.get(viewName);
           return;
         }
 
         const response = await fetch(`/views/${viewName}.html`);
-
-        if (!response.ok){
+        if (!response.ok) {
           const result = await handleFetchResponse(response);
           if (!result.success) throw new Error(result.message);
         }
@@ -150,9 +157,20 @@ async handleLoginSubmit() {
         window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
         this.currentView = '';
       } finally {
-        this.isLoading = false;
+        clearTimeout(showLoaderTimeout);
+
+        // Скрываем loader с задержкой, если он был показан
+        if (this.shouldShowLoader) {
+          setTimeout(() => {
+            this.isLoading = false;
+            this.shouldShowLoader = false;
+          }, 300); // плавное исчезновение
+        } else {
+          this.isLoading = false;
+        }
       }
     }
+
   }));
 
   // Компонент сайдбара

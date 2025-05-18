@@ -1,3 +1,17 @@
+@keyframes jump {
+  0%   { transform: translateY(0); }
+  25%  { transform: translateY(-15px); }
+  50%  { transform: translateY(0); }
+  75%  { transform: translateY(-10px); }
+  100% { transform: translateY(0); }
+}
+
+.jumping-image-container {
+  animation: jump 1s infinite;
+  width: 32px;
+  height: 32px;
+}
+
 :root {
   --green: #477a77;
   --green-bright: #477a77;

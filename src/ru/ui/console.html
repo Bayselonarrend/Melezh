@@ -118,9 +118,11 @@
     <!-- Main Content -->
     <main class="flex-1 p-6 overflow-auto bg-gray-50 mt-16 md:mt-0">
       <!-- Индикатор загрузки -->
-      <div x-show="isLoading" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+      <div x-show="shouldShowLoader" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
-          <div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-green-500 mb-4"></div>
+          <div class="jumping-image-container h-24 w-32 mb-4">
+            <img src="/img/ico_g.png" alt="Прыгающий индикатор" class="w-full h-full object-contain">
+          </div>
           <p x-text="loadingMessage" class="text-gray-700"></p>
         </div>
       </div>

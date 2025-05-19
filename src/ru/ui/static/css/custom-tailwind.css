@@ -86,3 +86,7 @@ select option img {
   display: inline-block;
   margin-right: 0.5rem;
 }
+
+img {
+  image-rendering: crisp-edges;
+}

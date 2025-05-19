@@ -1,23 +1,37 @@
 import { handleFetchResponse } from '/js/error-fetch.js';
 
+export const globalState = {
+  isInitialized: false
+};
+
 document.addEventListener('alpine:init', () => {
   // === Маршруты: вкладки -> хэши ===
   const HASH_ROUTES = {
     dashboard: '#dashboard',
     handlers: '#handlers',
     'handler-form': '#handler-form',
+    logs: '#logs',
     settings: '#settings'
   };
 
   // === Кэш для загруженных представлений ===
   const viewCache = new Map();
 
-  // Основное приложение
+  // === Вспомогательная функция получения активной вкладки из хэша ===
+  function getActiveTabFromHash(routes) {
+    const hash = window.location.hash.replace(/^#/, '').split('?')[0];
+    return Object.entries(routes).find(
+      ([_, routeValue]) => routeValue === `#${hash}`
+    )?.[0] || 'dashboard';
+  }
+
+  // === Основное приложение ===
   Alpine.data('app', () => ({
     isSidebarOpen: false,
     activeTab: 'dashboard',
     currentView: '',
     isLoading: false,
+    shouldShowLoader: false,
     loadingMessage: 'Загрузка...',
     loginPassword: '',
     loginError: false,
@@ -26,14 +40,9 @@ document.addEventListener('alpine:init', () => {
       this.checkViewport();
       window.addEventListener('resize', () => this.checkViewport());
 
-      // Считываем текущий хэш из URL
-      const hash = window.location.hash.replace(/^#/, '');
-      const tab = Object.entries(HASH_ROUTES).find(
-        ([_, value]) => value === `#${hash}`
-      )?.[0] || 'dashboard';
-
-      this.activeTab = tab;
-      this.loadView(tab);
+      // Получаем текущую вкладку из хэша
+      this.activeTab = getActiveTabFromHash(HASH_ROUTES);
+      this.loadView(this.activeTab);
 
       // Настройка маршрутизации
       this.setupRouter();
@@ -41,19 +50,16 @@ document.addEventListener('alpine:init', () => {
 
     setupRouter() {
       const handleRoute = () => {
-        const hash = window.location.hash.replace(/^#/, '');
-        const tab = Object.entries(HASH_ROUTES).find(
-          ([_, value]) => value === `#${hash}`
-        )?.[0] || 'dashboard';
+        const newTab = getActiveTabFromHash(HASH_ROUTES);
 
-        if (this.activeTab !== tab) {
-          this.activeTab = tab;
-          this.loadView(tab);
+        if (this.activeTab !== newTab) {
+          this.activeTab = newTab;
+          this.loadView(newTab);
         }
       };
 
       window.addEventListener('hashchange', handleRoute);
-      handleRoute();
+      handleRoute(); // запуск сразу для актуального состояния
     },
 
     checkViewport() {
@@ -123,15 +129,16 @@ document.addEventListener('alpine:init', () => {
     },
 
     async loadView(viewName) {
-      this.isLoading = true; // внутренний флаг начала загрузки
+      globalState.isInitialized = false;
+      this.isLoading = true;
       this.loadingMessage = 'Загрузка...';
-      this.shouldShowLoader = false; // пока не показываем индикатор
+      this.shouldShowLoader = false;
 
       let showLoaderTimeout = null;
 
       // Устанавливаем таймер: покажем loader через 500 мс
       showLoaderTimeout = setTimeout(() => {
-        this.shouldShowLoader = true; // показываем индикатор только после 500 мс
+        this.shouldShowLoader = true;
       }, 500);
 
       try {
@@ -159,21 +166,19 @@ document.addEventListener('alpine:init', () => {
       } finally {
         clearTimeout(showLoaderTimeout);
 
-        // Скрываем loader с задержкой, если он был показан
         if (this.shouldShowLoader) {
           setTimeout(() => {
             this.isLoading = false;
             this.shouldShowLoader = false;
-          }, 300); // плавное исчезновение
+          }, 300);
         } else {
           this.isLoading = false;
         }
       }
     }
-
   }));
 
-  // Компонент сайдбара
+  // === Компонент сайдбара ===
   Alpine.data('sidebar', () => ({
     logout() {
       const form = document.createElement('form');
@@ -183,5 +188,4 @@ document.addEventListener('alpine:init', () => {
       form.submit();
     }
   }));
-
 });

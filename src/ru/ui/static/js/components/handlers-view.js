@@ -58,7 +58,7 @@ export const handlersView = () => ({
 
       // Показываем успех через твой toast
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: `Статус обработчика "${handler.key}" изменён на ${newStatus === 1 ? 'активный' : 'неактивный'}` }
+        detail: { message: `Статус обработчика "${handler.key}" изменён на ${newStatus === 1 ? '"Активный"' : '"Неактивный"'}` }
       }));
     } catch (error) {
       console.error('Ошибка изменения статуса:', error);

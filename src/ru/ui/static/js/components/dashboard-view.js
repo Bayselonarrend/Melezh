@@ -19,9 +19,14 @@ export const dashboardView = () => ({
   requestsPerHour: 0,
   uptimeInterval: null,
 
+  isAdviceLoading: true,
+  advice: null,
+  adviceErrorMessage: '',
+
   async init() {
     await this.loadEvents();
     await this.loadSessionInfo();
+    await this.loadRandomAdvice();
   },
 
   async loadEvents() {
@@ -131,5 +136,34 @@ export const dashboardView = () => ({
     if (status >= 500) return 'Ошибка сервера';
     return 'Неизвестный статус';
   },
+
+  async loadRandomAdvice() {
+    try {
+      const response = await fetch('/api/getRandomAdvice');
+      const result = await handleFetchResponse(response);
+
+      if (!result.success) throw new Error(result.error || result.message);
+
+      this.advice = result.data;
+      this.adviceErrorMessage = '';
+    } catch (error) {
+      console.error('Ошибка загрузки совета:', error);
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: `Не удалось загрузить совет: ${error.message}` }
+      }));
+      this.adviceErrorMessage = error.message;
+      this.advice = null;
+    } finally {
+      this.isAdviceLoading = false;
+    }
+  },
+
+  async refreshData() {
+    await Promise.all([
+      this.loadEvents(),
+      this.loadSessionInfo(),
+      this.loadRandomAdvice(), // если совет реализован как часть dashboardView
+    ]);
+  }
 
 });

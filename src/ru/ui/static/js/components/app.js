@@ -1,7 +1,8 @@
 import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const globalState = {
-  isInitialized: false
+  isInitialized: false,
+  tooltipEl: null
 };
 
 document.addEventListener('alpine:init', () => {
@@ -53,6 +54,12 @@ document.addEventListener('alpine:init', () => {
         const newTab = getActiveTabFromHash(HASH_ROUTES);
 
         if (this.activeTab !== newTab) {
+
+          // Сбрасываем tooltip при смене вкладки
+          if (globalState.tooltipEl) {
+            globalState.tooltipEl.classList.remove('opacity-100');
+            globalState.tooltipEl.classList.add('opacity-0');
+          }
           this.activeTab = newTab;
           this.loadView(newTab);
         }
@@ -188,4 +195,55 @@ document.addEventListener('alpine:init', () => {
       form.submit();
     }
   }));
+
+
+  Alpine.directive('tooltip', (el, { expression }, { evaluate, cleanup }) => {
+    // Глобальный tooltip контейнер
+    let tooltipEl = document.getElementById('global-tooltip');
+
+    if (!tooltipEl) {
+      tooltipEl = document.createElement('div');
+      tooltipEl.id = 'global-tooltip';
+      tooltipEl.classList.add(
+        'fixed', 'z-50',
+        'bg-black', 'text-white',
+        'text-xs', 'py-1', 'px-2', 'rounded',
+        'max-w-xs', 'break-words',
+        'pointer-events-none',
+        'opacity-0', 'transition-opacity', 'duration-200'
+      );
+      tooltipEl.style.whiteSpace = 'normal';
+      tooltipEl.style.transform = 'translate(-50%, -8px)';
+      document.body.appendChild(tooltipEl);
+    }
+
+    globalState.tooltipEl = tooltipEl;
+
+    const showTooltip = (e) => {
+      const text = evaluate(expression);
+      const rect = e.target.getBoundingClientRect();
+      const tooltipWidth = 160;
+      const tooltipHeight = 32;
+
+      tooltipEl.textContent = text;
+      tooltipEl.style.top = `${rect.top + window.scrollY - tooltipHeight - 8}px`;
+      tooltipEl.style.left = `${rect.left + window.scrollX + rect.width / 2}px`;
+      tooltipEl.classList.remove('opacity-0');
+      tooltipEl.classList.add('opacity-100');
+    };
+
+    const hideTooltip = () => {
+      tooltipEl.classList.remove('opacity-100');
+      tooltipEl.classList.add('opacity-0');
+    };
+
+    el.addEventListener('mouseenter', showTooltip);
+    el.addEventListener('mouseleave', hideTooltip);
+
+    cleanup(() => {
+      el.removeEventListener('mouseenter', showTooltip);
+      el.removeEventListener('mouseleave', hideTooltip);
+    });
+  });
+
 });

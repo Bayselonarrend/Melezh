@@ -39,308 +39,104 @@
 //@skip-check object-module-export-variable
 
 #Use oint
+#Use "./internal"
+#Use "./internal/Classes/internal"
 
 #Region Variables
 
-Var ProjectPath Export;
-Var ProxyModule Export;
-Var OPIObject Export;
+Var ActionsProcessor;
+Var APIProcessor;
+Var UIProcessor;
+Var Logger;
+Var SettingsVault;
+Var SessionsHandler;
+Var SQLiteConnectionManager;
 
 #EndRegion
 
 #Region Internal
 
-Procedure MainHandle(Context, NextHandler) Export
+Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
 
-    Try
-        Result = ProcessRequest(Context);
-    Except
+    SQLiteConnectionManager = New("SQLiteConnectionManager");
+    SQLiteConnectionManager.Initialize(ProjectPath_);
 
-        Information = ErrorInfo();
-        Result = New Structure("result,error", False, Information.Description);
+    SettingsVault = New("SettingsVault");
+    SettingsVault.Initialize(SQLiteConnectionManager, ProxyModule_);
 
-        If StrFind(Information.SourceString, "Raise") = 0 Then
+    Logger = New("Logger");
+    Logger.Initialize(SettingsVault);
 
-            ModuleFile = New File(Information.ModuleName);
+    SessionsHandler = New ("SessionsHandler");
+    SessionsHandler.Initialize(SQLiteConnectionManager, SettingsVault);
 
-            ExceptionStructure = New Structure;
-            ExceptionStructure.Insert("module", ModuleFile.Name);
-            ExceptionStructure.Insert("row" , Information.LineNumber);
-            ExceptionStructure.Insert("code" , TrimAll(Information.SourceString));
+    ActionsProcessor = New("ActionsProcessor");
+    ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger);
 
-            Result.Insert("exception", ExceptionStructure);
+    APIProcessor = New("APIProcessor");
+    APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger);
 
-        EndIf;
-
-        Context.Response.StatusCode = 500;
-
-    EndTry;
-
-    JSON = OPI_Tools.JSONString(Result);
-
-    Context.Response.ContentType = "application/json;charset=UTF8";
-    Context.Response.Write(JSON);
+    UIProcessor = New("UIProcessor");
+    UIProcessor.Initialize(ServerPath_, SessionsHandler);
 
 EndProcedure
 
-Function ProcessRequest(Context)
+Procedure MainHandle(Context, NextHandler) Export
+
+    Try
+
+        Context.Response.Headers["Server"] = "Melezh/0.0.1 (Kestrel)";
+        
+        Result = ProcessRequest(Context, NextHandler);
+        
+    Except
+
+        Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+
+        If Context.Response.StatusCode = 200 Then
+            Context.Response.StatusCode = 500;
+        EndIf;
+
+    EndTry;
+
+    RunGarbageCollection();
+
+    If Result <> Undefined Then
+
+        If OPI_Tools.ThisIsCollection(Result) Then
+            Context.Response.WriteAsJson(Result);
+        Else
+
+            OPI_TypeConversion.GetBinaryData(Result, True, False);
+
+            DataWriter = New DataWriter(Context.Response.Body);
+            DataWriter.Write(Result);
+            DataWriter.Close();
+
+        EndIf;
+
+    EndIf;
+
+EndProcedure
+
+Function ProcessRequest(Context, NextHandler)
 
     Path = Context.Request.Path;
 
     Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
     Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
 
-    HandlerDescription = ProxyModule.GetRequestHandler(ProjectPath, Path);
-
-    If HandlerDescription["result"] Then
-
-        Handler = HandlerDescription["data"];
-        Handler = ?(TypeOf(Handler) = Type("Array"), Handler[0], Handler);
-
-        Result = PerformHandling(Context, Handler);
-
+    If StrStartsWith(Path, "api") Then
+        Result = APIProcessor.MainHandle(Context, Path);
+    ElsIf StrStartsWith(Path, "ui") Then
+        Result = UIProcessor.MainHandle(Context, Path);
+    ElsIf Not StrFind(Path, "/") Then
+        Result = ActionsProcessor.MainHandle(Context, Path);
     Else
-        Result = HandlingError(Context, 404, "Handler not found!");
+        Result = Toolbox.HandlingError(Context, 404, "Not Found");
     EndIf;
 
     Return Result;
-
-EndFunction
-
-#EndRegion
-
-#Region Private
-
-Function PerformHandling(Context, Handler)
-
-    Method = Upper(Context.Request.Method);
-    HandlersMethod = Upper(Handler["method"]);
-    CheckMethod = ?(HandlersMethod = "FORM", "POST", HandlersMethod);
-
-    If Not Method = CheckMethod Then
-        Return HandlingError(Context, 405, "Method " + Method + " is not available for this handler!");
-    EndIf;
-
-    If HandlersMethod = "GET" Then
-
-        Result = ExecuteGetProcessing(Context, Handler);
-
-    ElsIf HandlersMethod = "POST" Then
-
-        Result = ExecutePostProcessing(Context, Handler);
-
-    ElsIf HandlersMethod = "FORM" Then
-
-        Result = ExecuteFormDataProcessing(Context, Handler);
-
-    Else
-
-        Result = HandlingError(Context, 405, "Method " + Method + " is not available for this handler!");
-
-    EndIf;
-
-    Return Result;
-
-EndFunction
-
-Function ExecuteGetProcessing(Context, Handler)
-
-    Request = Context.Request;
-    Parameters = Request.Parameters;
-
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
-
-EndFunction
-
-Function ExecutePostProcessing(Context, Handler)
-
-    Request = Context.Request;
-
-    Body = Request.Body;
-    JSONReader = New JSONReader();
-    JSONReader.OpenStream(Body);
-
-    Parameters = ReadJSON(JSONReader, True);
-    JSONReader.Close();
-
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
-
-EndFunction
-
-Function ExecuteFormDataProcessing(Context, Handler)
-
-    #If Client Then
-        Raise "The method is not available on the client!";
-    #Else
-
-    Request = Context.Request;
-
-    If Not ValueIsFilled(Request.Form) Then
-        Raise "No form data found in the request!";
-    EndIf;
-
-    Parameters = SplitFormData(Request.Form);
-
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
-
-    #EndIf
-
-EndFunction
-
-Function PerformUniversalProcessing(Context, Handler, Parameters)
-
-    #If Client Then
-        Raise "The method is not available on the client!";
-    #Else
-
-    Arguments = Handler["args"];
-    Command = Handler["library"];
-    Method = Handler["function"];
-
-    TFArray = New Array;
-    ParametersBoiler = FormParameterBoiler(Arguments, Parameters);
-
-    For Each Parameter In ParametersBoiler Do
-
-        CurrentValue = Parameter.Value;
-        CurrentKey = Parameter.Key;
-
-        If TypeOf(CurrentValue) = Type("BinaryData") Then
-
-            //@skip-check missing-temporary-file-deletion
-            TFN = GetTempFileName();
-            CurrentValue.Write(TFN);
-
-            TFArray.Add(TFN);
-
-            ParametersBoiler.Insert(CurrentKey, TFN);
-
-        ElsIf TypeOf(CurrentValue) = Type("FormFile") Then
-
-            //@skip-check missing-temporary-file-deletion
-            TFN = GetTempFileName();
-
-            StreamOfFile = CurrentValue.OpenReadStream();
-            WriteStream = New FileStream(TFN, FileOpenMode.OpenOrCreate);
-
-            StreamOfFile.CopyTo(WriteStream);
-
-            StreamOfFile.Close();
-            WriteStream.Close();
-
-            TFArray.Add(TFN);
-
-            ParametersBoiler.Insert(CurrentKey, TFN);
-
-        Else
-            OPI_TypeConversion.GetLine(CurrentValue);
-            ParametersBoiler.Insert(CurrentKey, CurrentValue);
-        EndIf;
-
-    EndDo;
-
-    ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method);
-
-    Response = Undefined;
-
-    If ExecutionStructure["Error"] Then
-        Response = New Structure("result,error", False, "Error in the name of a command or handler function!");
-    Else
-
-        ExecutionText = ExecutionStructure["Result"];
-
-        Execute(ExecutionText);
-
-
-        Response = New Structure("result,data", True, Response);
-
-    EndIf;
-
-    Try
-
-        For Each TempFile In TFArray Do
-            DeleteFiles(TempFile);
-        EndDo;
-
-    Except
-        Message("Failed to delete temporary files!");
-    EndTry;
-
-    Return Response;
-
-    #EndIf
-
-EndFunction
-
-Function FormParameterBoiler(Arguments, Parameters)
-
-    StrictArgs = New Map;
-    NonStrictArgs = New Map;
-
-    For Each Argument In Arguments Do
-
-        Key = "--" + Argument["arg"];
-        Value = Argument["value"];
-        Value = ?(StrStartsWith(Value , """"), Right(Value, StrLen(Value) - 1), Value);
-        Value = ?(StrEndsWith(Value, """"), Left(Value , StrLen(Value) - 1), Value);
-
-        If Argument["strict"] = 1 Then
-            StrictArgs.Insert(Key, Value);
-        Else
-            NonStrictArgs.Insert(Key, Value);
-        EndIf;
-
-    EndDo;
-
-    ParametersBoiler = NonStrictArgs;
-
-    For Each Parameter In Parameters Do
-
-        Value = Parameter.Value;
-
-        If TypeOf(Value) = Type("String") Then
-            Value = ?(StrStartsWith(Value , """"), Right(Value, StrLen(Value) - 1), Value);
-            Value = ?(StrEndsWith(Value, """"), Left(Value , StrLen(Value) - 1), Value);
-        EndIf;
-
-        ParametersBoiler.Insert("--" + Parameter.Key, Value);
-
-    EndDo;
-
-    For Each Argument In StrictArgs Do
-        ParametersBoiler.Insert(Argument.Key, Argument.Value);
-    EndDo;
-
-    Return ParametersBoiler;
-
-EndFunction
-
-Function SplitFormData(Val Form) Export
-
-    DataMap = New Map;
-    Files = Form.Files;
-
-    For Each Field In Form Do
-
-        DataMap.Insert(Field.Key, Field.Value);
-
-    EndDo;
-
-    For Each File In Files Do
-
-        DataMap.Insert(File.Name, File);
-
-    EndDo;
-
-    Return DataMap;
-
-EndFunction
-
-Function HandlingError(Context, Code, Text)
-
-    Context.Response.StatusCode = Code;
-
-    Return New Structure("result,error", False, Text);
 
 EndFunction
 

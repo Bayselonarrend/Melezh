@@ -1,6 +1,6 @@
-<div x-data="dashboardView" x-init="init()">
+﻿<div x-data="dashboardView" x-init="init()">
   <div class="flex space-x-4 items-center mb-6">
-    <!-- Иконка -->
+    <!-- Icon -->
     <div class="text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -8,62 +8,62 @@
       </svg>
     </div>
 
-    <!-- Текст -->
+    <!-- Text -->
     <div class="space-y-1">
-      <h2 class="text-2xl font-bold">Главная панель</h2>
-      <p>Добро пожаловать в Melezh!</p>
+      <h2 class="text-2xl font-bold">Main panel</h2>
+      <p>Welcome to Melezh!</p>
     </div>
   </div>
 
   <hr class="mb-6">
 
   <div class="grid grid-cols-1 md:grid-cols-[40%_30%_28%] gap-4">
-    <!-- Статистика - 40% -->
+    <!-- Statistics - 40% -->
     <div class="bg-white p-4 rounded-lg shadow relative">
-      <h3 class="font-semibold">Статистика</h3>
+      <h3 class="font-semibold">Statistics</h3>
 
       <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 text-sm">
-        <!-- Успешные -->
+        <!-- Successful -->
         <div class="bg-green-50 p-2 rounded flex items-start gap-2 min-w-0">
           <span class="inline-block w-3 h-3 rounded-full bg-green-500 mt-1 cursor-help"
-            x-tooltip="'Успешные запросы (2xx)'"></span>
+            x-tooltip="'Successful запрowithы (2xx)'"></span>
           <div class="flex-1 min-w-0">
-            <span class="block break-words">Успешные (2xx)</span>
+            <span class="block break-words">Successful (2xx)</span>
           </div>
           <span class="font-medium text-green-700 whitespace-pre whitespace-pre-line text-right min-w-max"
             x-text="successCount"></span>
         </div>
 
-        <!-- Клиентские ошибки -->
+        <!-- Clientwithtoandе errors -->
         <div class="bg-yellow-50 p-2 rounded flex items-start gap-2 min-w-0">
           <span class="inline-block w-3 h-3 rounded-full bg-yellow-500 mt-1 cursor-help"
-            x-tooltip="'Клиентские ошибки (4xx)'"></span>
+            x-tooltip="'Client errors (4xx)'"></span>
           <div class="flex-1 min-w-0">
-            <span class="block break-words">Клиентские ошибки (4xx)</span>
+            <span class="block break-words">Client errors (4xx)</span>
           </div>
           <span class="font-medium text-yellow-700 whitespace-pre whitespace-pre-line text-right min-w-max"
             x-text="clientErrorCount"></span>
         </div>
 
-        <!-- Серверные ошибки -->
+        <!-- Hostные errors -->
         <div class="bg-red-50 p-2 rounded flex items-start gap-2 min-w-0">
           <span class="inline-block w-3 h-3 rounded-full bg-red-500 mt-1 cursor-help"
-            x-tooltip="'Серверные ошибки (5xx)'"></span>
+            x-tooltip="'Server errors (5xx)'"></span>
           <div class="flex-1 min-w-0">
-            <span class="block break-words">Серверные ошибки (5xx)</span>
+            <span class="block break-words">Server errors (5xx)</span>
           </div>
           <span class="font-medium text-red-700 whitespace-pre whitespace-pre-line text-right min-w-max"
             x-text="serverErrorCount"></span>
         </div>
       </div>
 
-      <!-- Легенда + кнопка обновления -->
+      <!-- Legend + button aboutbutinленandя -->
       <div class="mt-4 pt-3 border-t border-gray-200 text-xs text-gray-500 flex justify-between items-center">
-        <p>Данные на основе 30 последних событий текущего сеанса</p>
+        <p>Data based on the last 30 events of the current session</p>
 
-        <!-- Кнопка обновления -->
+        <!-- Button aboutbutinленandя -->
         <button @click="refreshData()" class="text-gray-400 hover:text-gray-600 focus:outline-none"
-          title="Обновить данные">
+          title="Обbutinandть Data">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-4 h-4">
             <path stroke-linecap="round" stroke-linejoin="round"
@@ -73,52 +73,52 @@
       </div>
     </div>
 
-    <!-- Информация о сервере -->
+    <!-- Server information -->
     <div class="bg-white p-4 rounded-lg shadow">
-      <h3 class="font-semibold">Информация о сервере</h3>
+      <h3 class="font-semibold">Server information</h3>
 
-      <!-- Загрузка -->
+      <!-- Upload -->
       <div x-show="isSessionLoading" class="text-center py-4 text-sm text-gray-500">
-        Загрузка...
+        Upload...
       </div>
 
-      <!-- Данные -->
+      <!-- Data -->
       <template x-if="!isSessionLoading && serverStartTime">
         <div class="mt-3 space-y-2 text-sm text-gray-700">
           <div>
-            <span class="font-medium">Старт сервера:</span>
+            <span class="font-medium">Server start:</span>
             <span x-text="new Date(serverStartTime).toLocaleString()" class="ml-1"></span>
           </div>
           <div>
-            <span class="font-medium">Аптайм:</span>
+            <span class="font-medium">Uptime:</span>
             <span x-text="uptime" class="ml-1 font-mono"></span>
           </div>
           <div>
-            <span class="font-medium">Обработано запросов:</span>
+            <span class="font-medium">Requests handled:</span>
             <span x-text="processedRequests" class="ml-1 font-mono"></span>
           </div>
           <div>
-            <span class="font-medium">Среднее в час:</span>
+            <span class="font-medium">Average per hour:</span>
             <span x-text="requestsPerHour" class="ml-1 font-mono"></span>
           </div>
         </div>
       </template>
     </div>
 
-    <!-- Быстрые действия - 30% -->
-    <!-- Совет дня -->
+    <!-- Fast actions - 30% -->
+    <!-- Advice days -->
     <div class="bg-white px-4 rounded-lg shadow h-full flex items-center">
 
-      <!-- Загрузка -->
+      <!-- Upload -->
       <div x-show="isAdviceLoading" class="text-center py-4 text-sm text-gray-500">
-        Загрузка совета...
+        Upload of advice...
       </div>
 
-      <!-- Совет -->
-      <template x-if="!isAdviceLoading &&  advice">
+      <!-- Advice -->
+      <template x-if="!isAdviceLoading && advice">
         <div class="mt-2 text-gray-700 italic">
           <h4 class="font-medium text-sm uppercase tracking-wide text-black-500 mb-2"
-            x-text="`Совет #` + advice.number">
+            x-text="`Advice #` + advice.number">
           </h4>
           <blockquote x-text="advice.text"></blockquote>
         </div>
@@ -126,43 +126,43 @@
     </div>
   </div>
 
-  <!-- Последние события -->
+  <!-- Recent events -->
   <div class="mt-8">
-    <h3 class="font-semibold text-lg mb-4">Последние события</h3>
+    <h3 class="font-semibold text-lg mb-4">Recent events</h3>
 
-    <!-- Загрузка -->
+    <!-- Upload -->
     <div x-show="isEventsLoading" class="bg-white p-6 rounded-lg shadow-md text-center">
-      Загрузка событий...
+      Upload events...
     </div>
 
-    <!-- Ошибка -->
+    <!-- Error -->
     <div x-show="eventsErrorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
       <p x-text="eventsErrorMessage"></p>
     </div>
 
-    <!-- Таблица событий -->
+    <!-- Table events -->
     <div x-show="!isEventsLoading && !eventsErrorMessage" class="bg-white p-4 rounded-lg shadow overflow-hidden">
       <table x-show="events.length > 0" class="min-w-full divide-y divide-gray-200">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Время</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Обработчик</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Метод / Тип</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Размер</th>
-            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Действия</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Time</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Handler</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method / Type</th>
+            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Size</th>
+            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
           <template x-for="event in events" :key="event.key">
             <tr class="hover:bg-gray-50">
-              <!-- Статус -->
+              <!-- Status -->
               <td class="px-4 py-2 whitespace-nowrap">
                 <span :class="{
                     'inline-block w-3 h-3 rounded-full bg-green-500': event.status >= 200 && event.status < 300,
                     'inline-block w-3 h-3 rounded-full bg-yellow-500': event.status >= 400 && event.status < 500,
                     'inline-block w-3 h-3 rounded-full bg-red-500': event.status >= 500
                   }" class="mr-2 cursor-help"
-                  x-tooltip="`Статус: ${event.status} — ${getStatusText(event.status)}`"></span>
+                  x-tooltip="`Status: ${event.status} — ${getStatusText(event.status)}`"></span>
                 <span x-text="new Date(event.date).toLocaleString()" class="text-sm text-gray-700"></span>
               </td>
 
@@ -180,9 +180,9 @@
               <!-- size -->
               <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="event.size + ' байт'"></td>
 
-              <!-- действия -->
+              <!-- actions -->
               <td class="px-4 py-2 whitespace-nowrap text-right text-sm">
-                <a :href="`#log?key=${event.key}`" x-tooltip="'Подробнее'"
+                <a :href="`#log?key=${event.key}`" x-tooltip="'More'"
                   class="inline-flex items-center justify-center text-gray-400 hover:text-gray-600 transition p-1 rounded hover:bg-gray-100 h-8 w-8">
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
                     stroke="currentColor" class="w-5 h-5">
@@ -196,14 +196,14 @@
         </tbody>
       </table>
 
-      <!-- Нет данных -->
+      <!-- No data -->
       <div x-show="events.length === 0 && !isEventsLoading && !eventsErrorMessage"
         class="text-center py-8 text-gray-500">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
           class="w-12 h-12 mx-auto mb-2">
           <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6h4.5m4.5 0a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
         </svg>
-        <p class="text-sm">Скоро здесь появится информация о последних событиях сервера</p>
+        <p class="text-sm">Information about the latest server events will appear here soon</p>
       </div>
     </div>
   </div>

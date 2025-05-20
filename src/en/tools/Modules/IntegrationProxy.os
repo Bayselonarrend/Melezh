@@ -69,6 +69,7 @@ EndFunction
 Function RunProject(Val Port, Val Project) Export
 
     If Not OPI_Tools.IsOneScript() Then
+        IntegrationProxy = Undefined;
         Raise "This function is only available for calling in OneScript!";
     EndIf;
 
@@ -91,14 +92,114 @@ Function RunProject(Val Port, Val Project) Export
     Handler = New("RequestHandler");
     OintContent = New("LibraryComposition");
 
-    Handler.ProjectPath = Project;
-    Handler.ProxyModule = IntegrationProxy;
-    Handler.OPIObject = OintContent;
+    ServerCatalogs = GetServerCatalogs();
+
+    Root = ServerCatalogs["Root"];
+    Static = ServerCatalogs["Static"];
+
+    Handler.Initialize(Project, IntegrationProxy, OintContent, Root);
+
+    WebServer.SetWebRoot(Static);
+    WebServer.SetServerDir(Root);
+    WebServer.UseStaticFiles();
 
     WebServer.AddRequestHandler(Handler, "MainHandle");
     WebServer.Start();
 
     Return FormResponse(True, "Stopped");
+
+EndFunction
+
+// Get project settings
+// Gets a list of all current project settings
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Returns:
+// Structure Of KeyAndValue - Project settings list
+Function GetProjectSettings(Val Project) Export
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("SettingsTable");
+    Result = OPI_SQLite.GetRecords(Table, , , , , Project);
+
+    Return Result;
+
+EndFunction
+
+// Fill project settings
+// Fills in the settings from the passed collection
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Settings - Map Of KeyAndValue - Collection key and value to fill in the settings - set
+// Returns:
+// Structure Of KeyAndValue - Project settings list
+Function FillProjectSettings(Val Project, Val Settings) Export
+
+    OPI_TypeConversion.GetLine(Project);
+    OPI_TypeConversion.GetKeyValueCollection(Settings);
+
+    Result = CheckProjectExistence(Project);
+    CurrentSettings = GetProjectSettings(Project);
+
+    If Not CurrentSettings["result"] Then
+        Return CurrentSettings;
+    Else
+        CurrentSettings = CurrentSettings["data"];
+    EndIf;
+
+    For Each Setting In CurrentSettings Do
+
+        CurrentValue = Setting["value"];
+
+        If OPI_Tools.CollectionFieldExist(Settings, Setting["name"], CurrentValue) Then
+            Setting["value"] = CurrentValue;
+        EndIf
+
+    EndDo;
+
+    Table = ConstantValue("SettingsTable");
+    Connection = OPI_SQLite.CreateConnection(Project);
+
+    Result = OPI_SQLite.ClearTable(Table, Connection);
+
+    If Not Result["result"] Then
+        Return Result;
+    EndIf;
+
+    Result = OPI_SQLite.AddRecords(Table, CurrentSettings, , Connection);
+
+    If Result["result"] Then
+        Return New Structure("result", True);
+    Else
+        Return Result;
+    EndIf;
+
+EndFunction
+
+// Set project setting
+// Sets the value of the selected project setting
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Setting - String - Project setting key - key
+// Value - String - Value of project setting - value
+// Returns:
+// Structure Of KeyAndValue - Project settings list
+Function SetProjectSetting(Val Project, Val Setting, Val Value) Export
+
+    OPI_TypeConversion.GetLine(Setting);
+    OPI_TypeConversion.GetLine(Value);
+
+    Return FillProjectSettings(Project, New Structure(Setting, Value));
 
 EndFunction
 
@@ -113,7 +214,7 @@ EndFunction
 // Project - String - Project filepath - proj
 // OintLibrary - String - Library name in CLI format - lib
 // OintFunction - String - OpenIntegrations function name - func
-// Method - String - HTTP method that will process the handler: GET, POST, FORM - method
+// Method - String - HTTP method to be processed by the handler: GET, JSON, FORM - method
 //
 // Returns:
 // Structure Of KeyAndValue - Result of handler modification
@@ -132,7 +233,7 @@ Function AddRequestHandler(Val Project, Val OintLibrary, Val OintFunction, Val M
         Project = Result["path"];
     EndIf;
 
-    If Not Method = "GET" And Not Method = "POST" And Not Method = "FORM" Then
+    If Not Method = "GET" And Not Method = "JSON" And Not Method = "FORM" Then
         Return FormResponse(False, StrTemplate("Unsupported method %1!", Method));
     EndIf;
 
@@ -311,7 +412,7 @@ EndFunction
 // HandlersKey - String - Handlers key - handler
 // OintLibrary - String - Library name in CLI format - lib
 // OintFunction - String - OpenIntegrations function name - func
-// Method - String - HTTP method that will process the handler: GET, POST, FORM - method
+// Method - String - HTTP method to be processed by the handler: GET, JSON, FORM - method
 //
 // Returns:
 // Structure Of KeyAndValue - Result of changing the handler
@@ -466,6 +567,7 @@ Function SetHandlerArgument(Val Project
     FilterStructure.Insert("raw" , False);
     FiltersArray.Add(FilterStructure);
 
+    FilterStructure = New Structure;
     FilterStructure.Insert("field", "arg");
     FilterStructure.Insert("value", Argument);
     FiltersArray.Add(FilterStructure);
@@ -535,7 +637,81 @@ Function GetHandlerArguments(Val Project, Val HandlersKey) Export
 
 EndFunction
 
+// Clear handler arguments
+// Deletes all previously values of the handler arguments
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// HandlersKey - String - Handlers key - handler
+//
+// Returns:
+// Structure Of KeyAndValue - Cleaning result
+Function ClearHandlerArguments(Val Project, Val HandlersKey) Export
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    OPI_TypeConversion.GetLine(HandlersKey);
+
+    FilterStructure = New Structure;
+    FilterStructure.Insert("field", "key");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", HandlersKey);
+    FilterStructure.Insert("raw" , False);
+
+    Table = ConstantValue("ArgsTable");
+
+    Result = OPI_SQLite.DeleteRecords(Table, FilterStructure, Project);
+
+    Return Result;
+
+EndFunction
+
 #EndRegion
+
+#EndRegion
+
+#Region Internal
+
+Function ReceiveUniqueHandlerKey(Path) Export
+
+    SecretKey = GetUUID(9);
+    Table = ConstantValue("HandlersTable");
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "key");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", SecretKey);
+    FilterStructure.Insert("raw" , False);
+
+    Result = OPI_SQLite.GetRecords(Table, , FilterStructure, , , Path);
+
+    If Not Result["result"] Then
+        Return Result;
+    EndIf;
+
+    While Result["data"].Count() > 0 Do
+
+        SecretKey = GetUUID(9);
+        FilterStructure["value"] = SecretKey;
+
+        Result = OPI_SQLite.GetRecords(Table, , FilterStructure, , , Path);
+
+        If Not Result["result"] Then
+            Return Result;
+        EndIf;
+
+    EndDo;
+
+    Return SecretKey;
+
+EndFunction
 
 #EndRegion
 
@@ -544,6 +720,10 @@ EndFunction
 #Region Project
 
 Function CheckProjectExistence(Path)
+
+    If OPI_AddIns.IsAddIn(Path) Then
+        Return FormResponse(True, "", Path);
+    EndIf;
 
     OPI_TypeConversion.GetLine(Path);
     OPI_Tools.RestoreEscapeSequences(Path);
@@ -676,6 +856,13 @@ Function CreateNewProject(Path)
         Return Result;
     EndIf;
 
+    Result = SetDefaultSettings(Path);
+
+    If Not Result["result"] Then
+        DeleteFiles(Path);
+        Return Result;
+    EndIf;
+
     Return Result;
 
 EndFunction
@@ -715,48 +902,42 @@ Function CreateSettingsTable(Path)
 
     TableStructure = New Map();
     TableStructure.Insert("name" , "TEXT PRIMARY KEY NOT NULL UNIQUE");
+    TableStructure.Insert("description", "TEXT");
     TableStructure.Insert("value" , "TEXT");
 
-    ArgsTableName = ConstantValue("SettingsTable");
-    Result = OPI_SQLite.CreateTable(ArgsTableName, TableStructure, Path);
+    SettingTableName = ConstantValue("SettingsTable");
+    Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
 
     Return Result;
 
 EndFunction
 
-Function ReceiveUniqueHandlerKey(Path)
+Function SetDefaultSettings(Path)
 
-    SecretKey = GetUUID(9);
-    Table = ConstantValue("HandlersTable");
+    DefaultSettings = GetDefaultSettings();
+    SettingTableName = ConstantValue("SettingsTable");
 
-    FilterStructure = New Structure;
+    Result = OPI_SQLite.AddRecords(SettingTableName, DefaultSettings, , Path);
 
-    FilterStructure.Insert("field", "key");
-    FilterStructure.Insert("type" , "=");
-    FilterStructure.Insert("value", SecretKey);
-    FilterStructure.Insert("raw" , False);
+    Return Result;
 
-    Result = OPI_SQLite.GetRecords(Table, , FilterStructure, , , Path);
+EndFunction
 
-    If Not Result["result"] Then
-        Return Result;
-    EndIf;
+Function GetDefaultSettings()
 
-    While Result["data"].Count() > 0 Do
+    SettingsList = New Array;
+    SettingsFields = "name,description,value";
 
-        SecretKey = GetUUID(9);
-        FilterStructure["value"] = SecretKey;
+    SettingsList.Add(New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory()));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600"));
 
-        Result = OPI_SQLite.GetRecords(Table, , FilterStructure, , , Path);
-
-        If Not Result["result"] Then
-            Return Result;
-        EndIf;
-
-    EndDo;
-
-    Return SecretKey;
-
+    Return SettingsList;
+    
 EndFunction
 
 Function GetUUID(Val Length)
@@ -806,6 +987,64 @@ Function SwitchRequestHandler(Val Project, Val HandlersKey, Val Activity)
     Result = ChangeHandlersFields(Project, HandlersKey, RecordStructure);
 
     Return Result;
+
+EndFunction
+
+Function LogDirectory()
+
+    Try
+        MelezhCatalog = StrTemplate("%1%2", StrReplace(TempFilesDir(), "\", "/"), "Melezh");
+        MelezhFile = New File(MelezhCatalog);
+
+        If Not MelezhFile.Exist() Then
+            CreateDirectory(MelezhCatalog);
+        EndIf;
+
+        ProjectCatalog = StrTemplate("%1/%2", MelezhCatalog, String(New UUID()));
+        ProjectFile = New File(ProjectCatalog);
+
+        If Not ProjectFile.Exist() Then
+        
+            CreateDirectory(ProjectCatalog);
+
+        Else
+
+            While ProjectFile.Exist() Do
+
+                ProjectCatalog = StrTemplate("%1/%2", MelezhCatalog, String(New UUID()));
+                ProjectFile = New File(ProjectCatalog);
+
+            EndDo;
+
+            CreateDirectory(ProjectCatalog);
+
+        EndIf;
+    Except
+        ProjectCatalog = "";
+    EndTry;
+    
+    Return ProjectCatalog;
+
+EndFunction
+
+#EndRegion
+
+#Region Service
+
+Function GetServerCatalogs()
+
+    LaunchCatalog = EntryScript().Directory;
+    LaunchCatalog = StrReplace(LaunchCatalog, "\", "/");
+
+    PathParts = StrSplit(LaunchCatalog, "/");
+
+    PathParts.Delete(PathParts.UBound());
+    PathParts.Delete(PathParts.UBound());
+
+    RootCatalog = StrConcat(PathParts, "/") + "/ui" ;
+    StaticCatalog = RootCatalog + "/static";
+
+    Return New Structure("Root,Static", RootCatalog, StaticCatalog);
 
 EndFunction
 

@@ -1,0 +1,178 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Console | Melezh</title>
+  <link rel="stylesheet" href="/css/custom-tailwind.css" />
+  <script src="/js/tailwind.js"></script>
+  <script type="module" src="/js/error-fetch.js"></script>
+  <script type="module" src="/js/components/app.js"></script>
+  <script type="module" src="/js/components/views-registry.js"></script>
+  <script type="module" src="/js/components/message-toast.js"></script>
+  <script type="module" src="/js/alpine.js"></script>
+  <link rel="icon" href="/favicon.ico" />
+</head>
+
+<body class="bg-gray-100 text-gray-900" x-data="app()">
+
+  <div class="flex md:hidden bg-white p-4 shadow-md items-center justify-between">
+    <h1 class="text-xl font-bold">Melezh</h1>
+    <button @click="toggleSidebar()" class="text-gray-700">
+      ☰
+    </button>
+  </div>
+
+  <div class="flex h-screen">
+    <aside x-data="sidebar()" x-show="isSidebarOpen" @click.away="if (isMobile()) closeSidebar()"
+      class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10 fixed md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out"
+      :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}">
+
+      <!-- Title -->
+      <h1 class="flex items-center justify-between text-lg font-semibold border-b pb-2 w-full">
+        <span style="font-size: 25px;">Melezh</span>
+        <img src="/img/ico_g.png" alt="Logo" class="h-8 w-auto">
+      </h1>
+
+      <!-- Main toinandгацandя -->
+      <nav class="space-y-2">
+        <a href="#dashboard" @click.prevent="setActiveTab('dashboard')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}"
+          class="flex items-center px-3 py-2 rounded hover:bg-gray-200 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 12h18M3 6h12m-6 12h12" />
+          </svg>
+          Main
+        </a>
+        <a href="#handlers" @click.prevent="setActiveTab('handlers')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'handlers'}"
+          class="flex items-center px-3 py-2 rounded hover:bg-gray-200 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M4.5 12a7.5 7.5 0 0 0 15 0m-15 0a7.5 7.5 0 1 1 15 0m-15 0H3m16.5 0H21m-1.5 0H12m-8.457 3.077 1.41-.513m14.095-5.13 1.41-.513M5.106 17.785l1.15-.964m11.49-9.642 1.149-.964M7.501 19.795l.75-1.3m7.5-12.99.75-1.3m-6.063 16.658.26-1.477m2.605-14.772.26-1.477m0 17.726-.26-1.477M10.698 4.614l-.26-1.477M16.5 19.794l-.75-1.299M7.5 4.205 12 12m6.894 5.785-1.149-.964M6.256 7.178l-1.15-.964m15.352 8.864-1.41-.513M4.954 9.435l-1.41-.514M12.002 12l-3.75 6.495" />
+          </svg>
+          Handlerand
+        </a>
+        <!-- In section primary toinandгацandand (after "Handlerand" and before "Settings") -->
+        <a href="#logs" @click.prevent="setActiveTab('logs')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'logs'}"
+          class="flex items-center px-3 py-2 rounded hover:bg-gray-200 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M9 12h3.75M9 15h3.75M9 18h3.75m3 .75H18a2.25 2.25 0 002.25-2.25V6.108c0-1.135-.845-2.098-1.976-2.192a48.424 48.424 0 00-1.123-.08m-5.801 0c-.065.21-.1.433-.1.664 0 .414.336.75.75.75h4.5a.75.75 0 00.75-.75 2.25 2.25 0 00-.1-.664m-5.8 0A2.251 2.251 0 0113.5 2.25H15c1.012 0 1.867.668 2.15 1.586m-5.8 0c-.376.023-.75.05-1.124.08C9.095 4.01 8.25 4.973 8.25 6.108V8.25m0 0H4.875c-.621 0-1.125.504-1.125 1.125v11.25c0 .621.504 1.125 1.125 1.125h9.75c.621 0 1.125-.504 1.125-1.125V9.375c0-.621-.504-1.125-1.125-1.125H8.25zM6.75 12h.008v.008H6.75V12zm0 3h.008v.008H6.75V15zm0 3h.008v.008H6.75V18z" />
+          </svg>
+          Logs
+        </a>
+        <a href="#settings" @click.prevent="setActiveTab('settings')"
+          :class="{'bg-green-100 text-white-700': activeTab === 'settings'}"
+          class="flex items-center px-3 py-2 rounded hover:bg-gray-200 transition">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24"
+            stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M11.42 15.17 17.25 21A2.652 2.652 0 0 0 21 17.25l-5.877-5.877M11.42 15.17l2.496-3.03c.317-.384.74-.626 1.208-.766M11.42 15.17l-4.655 5.653a2.548 2.548 0 1 1-3.586-3.586l6.837-5.63m5.108-.233c.55-.164 1.163-.188 1.743-.14a4.5 4.5 0 0 0 4.486-6.336l-3.276 3.277a3.004 3.004 0 0 1-2.25-2.25l3.276-3.276a4.5 4.5 0 0 0-6.336 4.486c.091 1.076-.071 2.264-.904 2.95l-.102.085m-1.745 1.437L5.909 7.5H4.5L2.25 3.75l1.5-1.5L7.5 4.5v1.409l4.26 4.26m-1.745 1.437 1.745-1.437m6.615 8.206L15.75 15.75M4.867 19.125h.008v.008h-.008v-.008Z" />
+          </svg>
+          Settings
+        </a>
+      </nav>
+
+      <!-- Flexible прoмежутoto, that would take all dowithтупbutе прowithтранwithтino -->
+      <div class="flex-grow"></div>
+
+      <!-- Button exit -->
+      <div class="pt-6 border-t space-y-2">
+        <button @click="logout()" type="button"
+          class="flex items-center justify-between w-full bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition">
+          <span>Log out</span>
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+          </svg>
+        </button>
+      </div>
+
+      <!-- Links to GitHub and dotodefaultентацandю (now always bottom) -->
+      <div class="pt-4 flex justify-center space-x-2 border-t">
+        <!-- GitHub -->
+        <a href="https://github.com/bayselonarrend/Melezh" target="_blank"
+          class="group flex flex-col items-center justify-center p-3 rounded-md hover:bg-gray-100 transition relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
+            class="w-6 h-6 text-gray-500 group-hover:text-gray-700 transition">
+            <path fill-rule="evenodd"
+              d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"
+              clip-rule="evenodd" />
+          </svg>
+          <span
+            class="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs py-1 px-2 rounded whitespace-nowrap">
+            GitHub
+          </span>
+        </a>
+
+        <!-- Read the Docs -->
+        <a href="https://openintegrations.dev" target="_blank"
+          class="group flex flex-col items-center justify-center p-3 rounded-md hover:bg-gray-100 transition relative">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+            stroke="currentColor" class="w-6 h-6 text-gray-500 group-hover:text-gray-700 transition">
+            <path stroke-linecap="round" stroke-linejoin="round"
+              d="M12 6.042A8.967 8.967 0 0 0 6 3.75c-1.052 0-2.062.18-3 .512v14.25A8.987 8.987 0 0 1 6 18c2.305 0 4.408.867 6 2.292m0-14.25a8.966 8.966 0 0 1 6-2.292c1.052 0 2.062.18 3 .512v14.25A8.987 8.987 0 0 0 18 18a8.967 8.967 0 0 0-6 2.292m0-14.25v14.25" />
+          </svg>
+          <span
+            class="absolute bottom-full mb-1 hidden group-hover:block bg-black text-white text-xs py-1 px-2 rounded">
+            Read the Docs
+          </span>
+        </a>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 p-6 overflow-auto bg-gray-50 mt-16 md:mt-0">
+      <!-- Andнdandtoатoр upload -->
+      <div x-show="shouldShowLoader" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
+        <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
+          <div class="jumping-image-container h-24 w-32 mb-4">
+            <img src="/img/ico_g.png" alt="Прыгающandй andнdandtoатoр" class="w-full h-full object-contain">
+          </div>
+          <p x-text="loadingMessage" class="text-gray-700"></p>
+        </div>
+      </div>
+
+      <!-- Overlay for мaboutandльbutгo menu -->
+      <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()"
+        class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
+
+      <!-- Дandtoмandhеwithtoandй toheтейnotр for contentа -->
+      <div id="view-container" x-html="currentView"></div>
+    </main>
+  </div>
+
+  <!-- Глaboutальbutе уinеdoмленandе about errors -->
+  <div x-data="errorToast()" x-show="messages.length > 0" class="fixed bottom-4 right-4 z-50 w-80 max-w-full space-y-2">
+
+    <template x-for="message in messages" :key="message.id">
+      <div :class="{
+        'bg-red-50 border-l-4 border-red-500': message.type === 'error',
+        'bg-green-50 border-l-4 border-green-500': message.type === 'success'
+      }"
+        class="relative flex items-center border-l-4 shadow-md rounded-md mb-2 overflow-hidden break-words animate-fade-in"
+        style="word-break: break-word;">
+
+        <!-- Content -->
+        <div class="px-3 py-2 text-sm text-gray-700 whitespace-normal break-words flex flex-col mr-5">
+          <span x-text="message.text"></span>
+          <span class="text-xs text-gray-400 mt-1" x-text="message.time"></span>
+        </div>
+
+        <!-- Button of closing -->
+        <button @click="remove(message.id)" type="button"
+          class="absolute top-1 right-1 p-1 text-gray-400 hover:text-gray-600 transition">
+          ✕
+        </button>
+      </div>
+    </template>
+  </div>
+
+</body>
+
+</html>

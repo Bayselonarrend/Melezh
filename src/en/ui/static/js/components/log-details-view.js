@@ -1,0 +1,48 @@
+﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { jsonViewer } from '/js/json-viewer.js';
+
+export const logDetailsView = () => ({
+  isLoading: true,
+  eventData: null,
+  errorMessage: '',
+  hasFiles() {
+    return Array.isArray(this.eventData?.melezh_request_files) && this.eventData.melezh_request_files.length > 0;
+  },
+  async init() {
+    this.isLoading = true;
+    this.errorMessage = '';
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    const key = urlParams.get('key');
+
+    if (!key) {
+      this.errorMessage = 'Not specified key events';
+      this.isLoading = false;
+      return;
+    }
+
+    try {
+      const response = await fetch(`/api/getEventData?key=${encodeURIComponent(key)}`);
+      const result = await handleFetchResponse(response);
+
+      if (!result.success) throw new Error(result.message);
+      this.eventData = result.data;
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: `Error upload data events: ${error.message}` }
+      }));
+      this.errorMessage = error.message;
+    } finally {
+      this.isLoading = false;
+    }
+  },
+  getStatusText(status) {
+    if (status >= 200 && status < 300) return 'Success';
+    if (status >= 400 && status < 500) return 'Clientwithtoая error';
+    if (status >= 500) return 'Error of server';
+    return 'Notfromweightтный status';
+  },
+  // Method for othreewithintoand JSON
+  renderJson(value) {
+    return jsonViewer.renderValue(value, 0);
+  },
+});

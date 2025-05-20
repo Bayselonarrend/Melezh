@@ -1,16 +1,16 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+﻿import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const dashboardView = () => ({
   isEventsLoading: false,
   events: [],
   eventsErrorMessage: '',
 
-  // Новые поля для статистики
+  // Noinые fields for withтатandwithтandtoand
   successCount: 0,
   clientErrorCount: 0,
   serverErrorCount: 0,
 
-  // Новые поля для сессии
+  // Noinые fields for withеwithwithandand
   isSessionLoading: false,
   serverStartTime: null,
   processedRequests: 0,
@@ -39,13 +39,13 @@ export const dashboardView = () => ({
 
       this.events = result.data || [];
 
-      // Подсчёт статистики
+      // Todwithhёт withтатandwithтandtoand
       this.calculateStats();
 
     } catch (error) {
-      console.error('Ошибка загрузки событий:', error);
+      console.error('Error upload events:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки событий: ${error.message}` }
+        detail: { message: `Error upload events: ${error.message}` }
       }));
       this.eventsErrorMessage = error.message;
     } finally {
@@ -68,18 +68,18 @@ export const dashboardView = () => ({
       this.serverStartTime = new Date(start);
       this.processedRequests = processed;
 
-      this.updateUptime(); // начальное значение
-      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); // обновление каждую секунду
+      this.updateUptime(); // tohальbutе value
+      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); // aboutbutinленandе toажdую withеtoунdу
 
-      // Среднее за час
+      // Midnotе за hаwith
       const now = new Date();
-      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); // избежание деления на 0
+      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); // fromбежанandе splits to 0
       this.requestsPerHour = Math.round(this.processedRequests / hoursRunning);
 
     } catch (error) {
-      console.error('Ошибка загрузки информации о сессии:', error);
+      console.error('Error upload information o session:, error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки информации о сессии: ${error.message}` }
+        detail: { message: `Error upload information o of session: ${error.message}` }
       }));
     } finally {
       this.isSessionLoading = false;
@@ -89,19 +89,19 @@ export const dashboardView = () => ({
   updateUptime() {
     if (!this.serverStartTime) return;
 
-    const diff = Math.floor((new Date() - new Date(this.serverStartTime)) / 1000); // в секундах
+    const diff = Math.floor((new Date() - new Date(this.serverStartTime)) / 1000); // in seconds
     const days = Math.floor(diff / 86400);
     const hours = Math.floor((diff % 86400) / 3600);
     const minutes = Math.floor((diff % 3600) / 60);
     const seconds = diff % 60;
 
     let uptimeStr = '';
-    if (days > 0) uptimeStr += `${days} д `;
-    if (hours > 0) uptimeStr += `${hours} ч `;
-    if (minutes > 0) uptimeStr += `${minutes} мин `;
-    if (seconds >= 0 && !days && !hours) uptimeStr += `${seconds} с`;
+    if (days > 0) uptimeStr += `${days} d `;
+    if (hours > 0) uptimeStr += `${hours} h `;
+    if (minutes > 0) uptimeStr += `${minutes} min `;
+    if (seconds >= 0 && !days && !hours) uptimeStr += `${seconds} s;
 
-    this.uptime = uptimeStr.trim() || 'меньше секунды';
+    this.uptime = uptimeStr.trim() || 'less seconds';
   },
 
   calculateStats() {
@@ -127,10 +127,10 @@ export const dashboardView = () => ({
   },
 
   getStatusText(status) {
-    if (status >= 200 && status < 300) return 'Успех';
-    if (status >= 400 && status < 500) return 'Клиентская ошибка';
-    if (status >= 500) return 'Ошибка сервера';
-    return 'Неизвестный статус';
+    if (status >= 200 && status < 300) return 'Success';
+    if (status >= 400 && status < 500) return 'Clientwithtoая error';
+    if (status >= 500) return 'Error of server';
+    return 'Notfromweightтный status';
   },
 
   async loadRandomAdvice() {
@@ -142,9 +142,9 @@ export const dashboardView = () => ({
 
       this.advice = result.data;
     } catch (error) {
-      console.error('Ошибка загрузки совета:', error);
+      console.error('Error upload advice:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Не удалось загрузить совет: ${error.message}` }
+        detail: { message: `Not succeeded загрузandть advice: ${error.message}` }
       }));
       this.advice = null;
     } finally {
@@ -156,7 +156,7 @@ export const dashboardView = () => ({
     await Promise.all([
       this.loadEvents(),
       this.loadSessionInfo(),
-      this.loadRandomAdvice(), // если совет реализован как часть dashboardView
+      this.loadRandomAdvice(), // if advice реалfromoinан as part dashboardView
     ]);
   }
 

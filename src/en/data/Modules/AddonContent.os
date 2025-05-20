@@ -39,6 +39,57 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
+    NewLine.Method = "GetProjectSettings";
+    NewLine.SearchMethod = "GETPROJECTSETTINGS";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Projects setup";
+    NewLine.MethodDescription = "Gets a list of all current project settings";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "FillProjectSettings";
+    NewLine.SearchMethod = "FILLPROJECTSETTINGS";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Projects setup";
+    NewLine.MethodDescription = "Fills in the settings from the passed collection";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "FillProjectSettings";
+    NewLine.SearchMethod = "FILLPROJECTSETTINGS";
+    NewLine.Parameter = "--set";
+    NewLine.Description = "Collection key and value to fill in the settings";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetProjectSetting";
+    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Projects setup";
+    NewLine.MethodDescription = "Sets the value of the selected project setting";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetProjectSetting";
+    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.Parameter = "--key";
+    NewLine.Description = "Project setting key";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetProjectSetting";
+    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.Parameter = "--value";
+    NewLine.Description = "Value of project setting";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
     NewLine.Method = "AddRequestHandler";
     NewLine.SearchMethod = "ADDREQUESTHANDLER";
     NewLine.Parameter = "--proj";
@@ -67,7 +118,7 @@ Function GetComposition() Export
     NewLine.Method = "AddRequestHandler";
     NewLine.SearchMethod = "ADDREQUESTHANDLER";
     NewLine.Parameter = "--method";
-    NewLine.Description = "HTTP method that will process the handler: GET, POST, FORM (optional, default - GET)";
+    NewLine.Description = "HTTP method to be processed by the handler: GET, JSON, FORM (optional, default - GET)";
     NewLine.Region = "Handlers configuration";
 
 
@@ -151,7 +202,7 @@ Function GetComposition() Export
     NewLine.Method = "UpdateRequestHandler";
     NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
     NewLine.Parameter = "--method";
-    NewLine.Description = "HTTP method that will process the handler: GET, POST, FORM (optional, default - Empty value)";
+    NewLine.Description = "HTTP method to be processed by the handler: GET, JSON, FORM (optional, default - Empty value)";
     NewLine.Region = "Handlers configuration";
 
 
@@ -267,6 +318,23 @@ Function GetComposition() Export
     NewLine = CompositionTable.Add();
     NewLine.Method = "GetHandlerArguments";
     NewLine.SearchMethod = "GETHANDLERARGUMENTS";
+    NewLine.Parameter = "--handler";
+    NewLine.Description = "Handlers key";
+    NewLine.Region = "Argument setting";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "ClearHandlerArguments";
+    NewLine.SearchMethod = "CLEARHANDLERARGUMENT";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Argument setting";
+    NewLine.MethodDescription = "Deletes all previously values of the handler arguments";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "ClearHandlerArguments";
+    NewLine.SearchMethod = "CLEARHANDLERARGUMENT";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Argument setting";

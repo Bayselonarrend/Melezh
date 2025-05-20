@@ -90,3 +90,8 @@ select option img {
 img {
   image-rendering: crisp-edges;
 }
+
+.font-mono {
+  white-space: pre-wrap;
+  word-break: break-word;
+}

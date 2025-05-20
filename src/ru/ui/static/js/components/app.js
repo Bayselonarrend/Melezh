@@ -12,6 +12,7 @@ document.addEventListener('alpine:init', () => {
     handlers: '#handlers',
     'handler-form': '#handler-form',
     logs: '#logs',
+    'log-details': '#log',
     settings: '#settings'
   };
 

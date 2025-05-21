@@ -1,4 +1,3 @@
-#Use cmdline
 #Use oint
 #Use oint-cli
 #Use "../../tools"

@@ -17,9 +17,9 @@
     </div>
 
     <div class="space-y-1 w-full">
-      <h2 class="text-2xl font-bold" x-text="isEditMode ? 'Change aboutрабoтhandtoа' : 'New aboutрабoтhandto'"></h2>
+      <h2 class="text-2xl font-bold" x-text="isEditMode ? 'Update handler' : 'New handler'"></h2>
       <p
-        x-text="isEditMode ? 'Innotwithandте change in withущеwithтinующandй aboutрабoтhandto запрowithin' : 'Заtoлнandте фoрму for of create butinoгo aboutрабoтhandtoа'">
+        x-text="isEditMode ? 'Make changes to the existing request handler' : 'Fill out the form to create a new request handler'">
       </p>
     </div>
   </div>
@@ -57,7 +57,7 @@
             <button type="button" @click="open = !open"
               class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
               :class="{ 'text-gray-500': !formData.method }">
-              <span class="block truncate" x-text="formData.method || 'Inыберandте method'"></span>
+              <span class="block truncate" x-text="formData.method || 'Select a method'"></span>
               <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd"
@@ -124,7 +124,7 @@
                     @error="handleImageError">
                 </template>
                 <span class="block truncate" :class="{ 'ml-3': formData.library }"
-                  x-text="formData.library ? libraries.find(l => l.name === formData.library)?.title : 'Inыберandте бandблandoтеtoу'"></span>
+                  x-text="formData.library ? libraries.find(l => l.name === formData.library)?.title : 'Select a library'"></span>
               </span>
               <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
@@ -167,7 +167,7 @@
               class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
               :class="{ 'bg-gray-100': !formData.library || isFunctionsLoading, 'text-gray-500': !formData.function }">
               <span class="block truncate"
-                x-text="formData.function ? functions.find(f => f.name === formData.function)?.title : 'Inыберandте function'"></span>
+                x-text="formData.function ? functions.find(f => f.name === formData.function)?.title : 'Select a function'"></span>
               <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
                 <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
                   <path fill-rule="evenodd"

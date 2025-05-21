@@ -7,6 +7,5 @@
     .ВключитьФайл("core")
     .ВключитьФайл("tools")
     .ЗависитОт("oint-cli")
-    .ЗависитОт("cmdline")
     .ЗависитОт("coloratos")
     .ИсполняемыйФайл("core/Classes/app.os", "melezh")

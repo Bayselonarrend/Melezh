@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 
 // Copyright (c) 2025 Anton Tsitavets
 
@@ -67,7 +67,7 @@ Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
     Logger = New("Logger");
     Logger.Initialize(SettingsVault);
 
-    SessionsHandler = New ("SessionsHandler");
+    SessionsHandler = New("SessionsHandler");
     SessionsHandler.Initialize(SQLiteConnectionManager, SettingsVault);
 
     ActionsProcessor = New("ActionsProcessor");

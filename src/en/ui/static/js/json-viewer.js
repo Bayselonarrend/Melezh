@@ -1,4 +1,4 @@
-﻿export const jsonViewer = {
+export const jsonViewer = {
   renderValue(value, level = 0) {
     if (value === null || typeof value !== 'object') {
       return this.formatPrimitive(value);
@@ -28,7 +28,7 @@
   },
 
   renderObject(obj, level) {
-    const indent = '&nbsp;'.repeat(level * 4); // 4 space to level
+    const indent = '&nbsp;'.repeat(level * 4); 
     let html = '{<br>';
 
     const keys = Object.keys(obj);

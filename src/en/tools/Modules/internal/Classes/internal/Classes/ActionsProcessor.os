@@ -1,4 +1,4 @@
-﻿#Use oint
+#Use oint
 #Use "./internal"
 
 Var OPIObject;
@@ -22,7 +22,7 @@ Function MainHandle(Val Context, Val Path) Export
     RequestBody = Undefined;
 
     Try
-        HandlerDescription = GetRequestHandler(Path);
+        HandlerDescription = GetRequestsHandler(Path);
 
         If HandlerDescription["result"] Then
 
@@ -262,10 +262,10 @@ Function FormParameterBoiler(Arguments, Parameters)
 
 EndFunction
 
-Function GetRequestHandler(Path)
+Function GetRequestsHandler(Path)
 
     ConnectionRO = ConnectionManager.GetROConnection();
-    CurrentHandler = ProxyModule.GetRequestHandler(ConnectionRO, Path);
+    CurrentHandler = ProxyModule.GetRequestsHandler(ConnectionRO, Path);
 
     Return CurrentHandler;
 

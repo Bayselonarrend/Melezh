@@ -74,7 +74,7 @@ export const handlerFormView = () => ({
       this.libraries = result.data || [];
 
     } catch (error) {
-      console.error('Ошибка загрузки библиотек:', error);
+      console.error('Ошибка загрузки:', error);
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
     } finally {
       this.isLibrariesLoading = false;
@@ -103,8 +103,8 @@ export const handlerFormView = () => ({
       this.functions = result.data || [];
 
     } catch (error) {
-      console.error('Ошибка загрузки функций:', error);
-      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Не удалось загрузить функции: ${error.message}` } }));
+      console.error('Ошибка загрузки:', error);
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка загрузки: ${error.message}` } }));
     } finally {
       this.isFunctionsLoading = false;
     }
@@ -222,8 +222,8 @@ export const handlerFormView = () => ({
       }));
 
     } catch (error) {
-      console.error('Ошибка загрузки аргументов:', error);
-      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка загрузки аргументов: ${error.message}` } }));
+      console.error('Ошибка загрузки:', error);
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Ошибка загрузки: ${error.message}` } }));
     } finally {
       this.isArgsLoading = false;
     }
@@ -256,8 +256,7 @@ export const handlerFormView = () => ({
   },
 
   handleImageError(event) {
-    // Заменяем несуществующую иконку на заглушку
     event.target.src = '/img/libs/default.png';
-    event.target.onerror = null; // Предотвращаем бесконечный цикл, если заглушка тоже не загрузится
+    event.target.onerror = null;
   }
 });

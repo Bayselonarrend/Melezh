@@ -1,4 +1,4 @@
-﻿#Use "./internal"
+#Use "./internal"
 
 Var SessionList;
 Var ConnectionManager;
@@ -47,7 +47,7 @@ Function AuthorizeSession(Context) Export
 		
 		SessionList.Insert(Cookie, True);
 		
-		Context.Response.Cookies.Add("melezh", Cookie);
+		Context.Response.Cookie.Append("melezh", Cookie);
 		Context.Response.StatusCode = 200;
 		
 		Result = New Structure("result", True);
@@ -94,7 +94,7 @@ EndProcedure
 
 Function GetCookieAuth(Context)
 	
-	Cookies = Context.Request.Cookies;
+	Cookies = Context.Request.Cookie;
 	Token = "";
 	
 	For Each Cookie In Cookies Do

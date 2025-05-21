@@ -1,4 +1,4 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const globalState = {
   isInitialized: false,
@@ -6,7 +6,6 @@ export const globalState = {
 };
 
 document.addEventListener('alpine:init', () => {
-  // === Маршруты: intoлаdtoand -> хэшand ===
   const HASH_ROUTES = {
     dashboard: '#dashboard',
     handlers: '#handlers',
@@ -16,10 +15,8 @@ document.addEventListener('alpine:init', () => {
     settings: '#settings'
   };
 
-  // === Kэш for загруженных преdwithтаinленandй ===
   const viewCache = new Map();
 
-  // === Inwithtoмoгательtoя function toлуhенandя аtoтandinbutй intoлаdtoand from хэша ===
   function getActiveTabFromHash(routes) {
     const hash = window.location.hash.replace(/^#/, '').split('?')[0];
     return Object.entries(routes).find(
@@ -27,14 +24,13 @@ document.addEventListener('alpine:init', () => {
     )?.[0] || 'dashboard';
   }
 
-  // === Оwithbutinbutе whenлoженandе ===
   Alpine.data('app', () => ({
     isSidebarOpen: false,
     activeTab: 'dashboard',
     currentView: '',
     isLoading: false,
     shouldShowLoader: false,
-    loadingMessage: 'Upload...',
+    loadingMessage: 'Loading...',
     loginPassword: '',
     loginError: false,
 
@@ -42,11 +38,8 @@ document.addEventListener('alpine:init', () => {
       this.checkViewport();
       window.addEventListener('resize', () => this.checkViewport());
 
-      // Toлуhаем current intoлаdtoу from хэша
       this.activeTab = getActiveTabFromHash(HASH_ROUTES);
       this.loadView(this.activeTab);
-
-      // Setting маршрутfromацandand
       this.setupRouter();
     },
 
@@ -56,7 +49,6 @@ document.addEventListener('alpine:init', () => {
 
         if (this.activeTab !== newTab) {
 
-          // Сбраwithыinаем tooltip when withмеnot intoлаdtoand
           if (globalState.tooltipEl) {
             globalState.tooltipEl.classList.remove('opacity-100');
             globalState.tooltipEl.classList.add('opacity-0');
@@ -67,7 +59,7 @@ document.addEventListener('alpine:init', () => {
       };
 
       window.addEventListener('hashchange', handleRoute);
-      handleRoute(); // start immediately for аtoтуальbutгo status
+      handleRoute();
     },
 
     checkViewport() {
@@ -98,12 +90,12 @@ document.addEventListener('alpine:init', () => {
           window.location.href = '/ui';
         } else {
           window.dispatchEvent(new CustomEvent('show-error', {
-            detail: { message: result.message || 'Notinерный password' }
+            detail: { message: result.message || 'Incorrect password' }
           }));
         }
       } catch (error) {
         window.dispatchEvent(new CustomEvent('show-error', {
-          detail: { message: 'Network error. Toпрaboutуйте later.' }
+          detail: { message: 'Network error. Try again later.' }
         }));
       } finally {
         this.isLoading = false;
@@ -139,12 +131,11 @@ document.addEventListener('alpine:init', () => {
     async loadView(viewName) {
       globalState.isInitialized = false;
       this.isLoading = true;
-      this.loadingMessage = 'Upload...';
+      this.loadingMessage = 'Loading...';
       this.shouldShowLoader = false;
 
       let showLoaderTimeout = null;
 
-      // Уwithтаtoinлandinаем таймер: totoажем loader hерез 500 мwith
       showLoaderTimeout = setTimeout(() => {
         this.shouldShowLoader = true;
       }, 500);
@@ -168,7 +159,7 @@ document.addEventListener('alpine:init', () => {
         this.currentView = html;
 
       } catch (error) {
-        console.error(`Error upload ${viewName}:`, error);
+        console.error(`Failed to fetch ${viewName}:`, error);
         window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
         this.currentView = '';
       } finally {
@@ -186,7 +177,6 @@ document.addEventListener('alpine:init', () => {
     }
   }));
 
-  // === Koмtonotнт withайdбара ===
   Alpine.data('sidebar', () => ({
     logout() {
       const form = document.createElement('form');
@@ -199,7 +189,7 @@ document.addEventListener('alpine:init', () => {
 
 
   Alpine.directive('tooltip', (el, { expression }, { evaluate, cleanup }) => {
-    // Глaboutальный tooltip toheтейnotр
+    // Global tooltip toheтейnotр
     let tooltipEl = document.getElementById('global-tooltip');
 
     if (!tooltipEl) {

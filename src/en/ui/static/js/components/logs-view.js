@@ -1,7 +1,6 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 import { globalState } from '/js/components/app.js';
 
-// InNOT functions logsView — хранandм withwithтoянandе межdу переof createмand
 const cachedState = {
   handler: '',
   date: '',
@@ -17,7 +16,6 @@ export const logsView = () => ({
   events: [],
   eventsErrorMessage: '',
 
-  // Inыhandwithляемoе propertieso
   get hasFilters() {
     return this.handler.trim() !== '' && this.date.trim() !== '';
   },
@@ -26,7 +24,6 @@ export const logsView = () => ({
     this.filtersCollapsed = !this.filtersCollapsed;
   },
 
-  // Initialization
   init() {
     const parseHash = () => {
       const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
@@ -42,7 +39,6 @@ export const logsView = () => ({
 
     parseHash();
 
-    // Загружаем events only odandн раз
     if (!globalState.isInitialized) {
       globalState.isInitialized = true;
       this.loadEvents();
@@ -69,7 +65,7 @@ export const logsView = () => ({
 
       this.events = result.data || [];
     } catch (error) {
-      console.error('Error upload logs:', error);
+      console.error('Failed to fetch:', error);
       this.eventsErrorMessage = error.message;
     } finally {
       this.isEventsLoaded = true;
@@ -81,12 +77,9 @@ export const logsView = () => ({
 
   getStatusText(status) {
     if (status >= 200 && status < 300) return 'Success';
-    if (status >= 400 && status < 500) return 'Clientwithtoая error';
-    if (status >= 500) return 'Error of server';
-    return 'Notfromweightтный status';
+    if (status >= 400 && status < 500) return 'Client error';
+    if (status >= 500) return 'Server error';
+    return 'Unknown status';
   },
 
-  showDetails(event) {
-    alert('For now not реалfromoinаbut');
-  },
 });

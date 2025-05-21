@@ -1,9 +1,8 @@
-﻿document.addEventListener('alpine:init', () => {
+document.addEventListener('alpine:init', () => {
   Alpine.data('errorToast', () => ({
     messages: [],
 
     init() {
-      // Todпandwithыinаемwithя to events
       window.addEventListener('show-error', e => this.addMessage(e.detail.message, 'error'));
       window.addEventListener('show-success', e => this.addMessage(e.detail.message, 'success'));
     },
@@ -18,7 +17,6 @@
 
       this.messages.unshift(message);
 
-      // Autoматandhеwithtooе withtoрытandе hерез 5 withеtoунd
       setTimeout(() => this.remove(message.id), 10000);
     },
 

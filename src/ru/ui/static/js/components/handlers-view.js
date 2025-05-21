@@ -21,9 +21,9 @@ export const handlersView = () => ({
     } catch (error) {
 
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки обработчиков: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
-      console.error('Ошибка загрузки обработчиков:', error);
+      console.error('Ошибка загрузки:', error);
       this.handlers = [];
 
     } finally {
@@ -53,10 +53,8 @@ export const handlersView = () => ({
 
       if (!result.result) throw new Error(result.error || 'Ошибка сервера');
 
-      // Обновляем статус локально только после успешного ответа
       handler.active = newStatus;
 
-      // Показываем успех через твой toast
       window.dispatchEvent(new CustomEvent('show-success', {
         detail: { message: `Статус обработчика "${handler.key}" изменён на ${newStatus === 1 ? '"Активный"' : '"Неактивный"'}` }
       }));
@@ -66,7 +64,6 @@ export const handlersView = () => ({
         detail: { message: `Ошибка изменения статуса "${handler.key}": ${error.message}` }
       }));
 
-      // Восстанавливаем предыдущее состояние
       handler.active = handler.active == 1 ? 0 : 1;
     }
   },
@@ -84,21 +81,20 @@ export const handlersView = () => ({
         body: formData
       });
 
-      if (!response.ok) throw new Error('Ошибка загрузки данных');
+      if (!response.ok) throw new Error('Ошибка загрузки');
 
       const result = await response.json();
 
       if (!result.result) throw new Error(result.error || 'Неизвестная ошибка');
 
-      // Сохраняем данные в глобальной переменной
       window.handlerToEdit = result.data;
 
       // Переход к форме
       window.location.hash = '#handler-form';
     } catch (error) {
-      console.error('Ошибка получения обработчика:', error);
+      console.error('Ошибка загрузки:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка при открытии формы редактирования: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
     }
   },
@@ -136,13 +132,11 @@ export const handlersView = () => ({
         // Удаляем из списка
         this.handlers = this.handlers.filter(h => h.key !== handler.key);
 
-        // Показываем успех
         window.dispatchEvent(new CustomEvent('show-success', {
           detail: { message: `Обработчик "${handler.key}" удален` }
         }));
       })
       .catch((error) => {
-        // Показываем ошибку
         window.dispatchEvent(new CustomEvent('show-error', {
           detail: { message: `Ошибка при удалении "${handler.key}": ${error.message}` }
         }));

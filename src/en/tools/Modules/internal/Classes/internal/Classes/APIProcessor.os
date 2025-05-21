@@ -1,4 +1,4 @@
-﻿#Use oint
+#Use oint
 #Use "./internal"
 
 Var ProxyModule;
@@ -62,7 +62,7 @@ Function MainHandle(Val Context, Val Path) Export
 		ElsIf Command = "getnewkey" Then
 			Result = ReturnNewHandlerKey(Context);
 		ElsIf Command = "deletehandler" Then
-			Result = DeleteRequestHandler(Context);
+			Result = DeleteRequestsHandler(Context);
 		ElsIf Command = "getsettings" Then
 			Result = ReturnProjectSettings(Context);
 		ElsIf Command = "savesettings" Then
@@ -102,7 +102,7 @@ Function ReturnHandlerList(Context)
 	Try
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
-		Result = ProxyModule.GetRequestHandlersList(ConnectionRO);
+		Result = ProxyModule.GetRequestsHandlersList(ConnectionRO);
 		
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
@@ -138,7 +138,7 @@ Function ReturnFunctionList(Context)
 		
 		Library = Context.Request.Form["library"][0];
 		Content = OPIObject.GetComposition(Library).Copy();
-		Content.Collapse("Method");
+		Content.GroupBy("Method");
 		
 		FunctionArray = Content.UnloadColumn("Method");
 		OptionsArray = New Array;
@@ -165,7 +165,7 @@ Function ReturnArgumentList(Context)
 		Method = Context.Request.Form["function"][0];
 		
 		Content = OPIObject.GetComposition(Library).Copy();
-		Content.Collapse("Method,Parameter,Description");
+		Content.GroupBy("Method,Parameter,Description");
 		
 		ArgumentList = Content.FindRows(New Structure("Method", Method));
 		
@@ -451,7 +451,7 @@ Function ReturnHandler(Context)
 		HandlersKey = Context.Request.Form["key"][0];
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
-		Result = ProxyModule.GetRequestHandler(ConnectionRO, HandlersKey);
+		Result = ProxyModule.GetRequestsHandler(ConnectionRO, HandlersKey);
 		
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
@@ -473,9 +473,9 @@ Function UpdateHandlerStatus(Context)
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		
 		If HandlerStatus = "0" Then
-			Result = ProxyModule.DisableRequestHandler(ConnectionRW, HandlersKey);
+			Result = ProxyModule.DisableRequestsHandler(ConnectionRW, HandlersKey);
 		Else
-			Result = ProxyModule.EnableRequestHandler(ConnectionRW, HandlersKey);
+			Result = ProxyModule.EnableRequestsHandler(ConnectionRW, HandlersKey);
 		EndIf;
 		
 		If Result["result"] Then
@@ -508,7 +508,7 @@ Function CreateHandler(Context)
 		Arguments = HandlerStructure["args"];
 		UUID = HandlerStructure["key"];
 		
-		CurrentHandler = ProxyModule.AddRequestHandler(ConnectionRW, Library, OintMethod, HTTPMethod);
+		CurrentHandler = ProxyModule.AddRequestsHandler(ConnectionRW, Library, OintMethod, HTTPMethod);
 		
 		If Not CurrentHandler["result"] Then
 			Raise CurrentHandler["error"];
@@ -542,7 +542,7 @@ Function CreateHandler(Context)
 		Context.Response.StatusCode = 200;
 		
 	Except
-		ProxyModule.DeleteRequestHandler(ConnectionRW, HandlerUUID);
+		ProxyModule.DeleteRequestsHandler(ConnectionRW, HandlerUUID);
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
 	EndTry;
 	
@@ -550,12 +550,12 @@ Function CreateHandler(Context)
 	
 EndFunction
 
-Function DeleteRequestHandler(Context)
+Function DeleteRequestsHandler(Context)
 	
 	Try
 		Handler = Context.Request.Form["key"][0];
 		ConnectionRW = ConnectionManager.GetRWConnection();
-		Result = ProxyModule.DeleteRequestHandler(ConnectionRW, Handler);
+		Result = ProxyModule.DeleteRequestsHandler(ConnectionRW, Handler);
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
 	EndTry;
@@ -575,7 +575,7 @@ Function UpdateHandler(Context)
 		UUID = HandlerStructure["originalKey"];
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
-		OldHandler = ProxyModule.GetRequestHandler(ConnectionRO, UUID);
+		OldHandler = ProxyModule.GetRequestsHandler(ConnectionRO, UUID);
 		
 		If Not OldHandler["result"] Then
 			Raise OldHandler["error"];
@@ -644,7 +644,7 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 		
 	EndDo;
 	
-	Updating = ProxyModule.UpdateRequestHandler(ConnectionRW
+	Updating = ProxyModule.UpdateRequestsHandler(ConnectionRW
 	, HandlerUUID
 	, Library
 	, OintMethod

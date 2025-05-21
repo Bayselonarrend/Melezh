@@ -1,5 +1,6 @@
-﻿#Use cmdline
+#Use cmdline
 #Use oint
+#Use oint-cli
 #Use "../../tools"
 #Use "../../help"
 #Use "../../data"
@@ -23,7 +24,7 @@ Procedure MainHandler()
 	Debugging = True;
 	Testing = False;
 
-	Parser = New CommandLineArgumentParser();
+	Parser = New("CommandLineArgumentParser");
 	Version = AddonContent.GetVersion();
 	MethodsTable = AddonContent.GetComposition();
 	Module = "IntegrationProxy";
@@ -51,10 +52,10 @@ Procedure FormInput()
 	Parser.AddParameter("Method");
 	AddMethodsParameters();
 	
-	Parser.AddFlagParameter("--help");
-	Parser.AddFlagParameter("--debug");
+	Parser.AddFlagParam("--help");
+	Parser.AddFlagParam("--debug");
 
-	Parser.AddNamedParameter("--out");
+	Parser.AddNamedParam("--out");
 
 EndProcedure
 
@@ -63,7 +64,7 @@ Procedure AddMethodsParameters();
 	ParamsList = MethodsTable.FindRows(New Structure("SearchMethod", Upper(CurrentMethod)));
 
 	For Each Parameter In ParamsList Do
-		Parser.AddNamedParameter(Parameter.Parameter);
+		Parser.AddNamedParam(Parameter.Parameter);
 	EndDo;
 	
 EndProcedure
@@ -249,7 +250,7 @@ Procedure HandleErrorOutput(Output, ErrorInfo)
 		If Debugging Then
 			Information = DetailErrorDescription(ErrorInfo);
 		Else
-			Information = BriefErrorRepresentation(ErrorInfo);
+			Information = BriefErrorDescription(ErrorInfo);
 		EndIf;
 	
 	EndIf;
@@ -346,7 +347,7 @@ Except
 	If Debugging Then
 		Information = ErrorDescription();
 	Else
-		Information = BriefErrorRepresentation(ErrorInfo());
+		Information = BriefErrorDescription(ErrorInfo());
 	EndIf;
 
 	Help.DisplayExceptionMessage(Information, OutputFile);

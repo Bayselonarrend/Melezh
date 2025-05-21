@@ -1,4 +1,4 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 import { jsonViewer } from '/js/json-viewer.js';
 
 export const logDetailsView = () => ({
@@ -28,7 +28,7 @@ export const logDetailsView = () => ({
       this.eventData = result.data;
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error upload data events: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
       this.errorMessage = error.message;
     } finally {
@@ -37,9 +37,9 @@ export const logDetailsView = () => ({
   },
   getStatusText(status) {
     if (status >= 200 && status < 300) return 'Success';
-    if (status >= 400 && status < 500) return 'Clientwithtoая error';
-    if (status >= 500) return 'Error of server';
-    return 'Notfromweightтный status';
+    if (status >= 400 && status < 500) return 'Client error';
+    if (status >= 500) return 'Server error';
+    return 'Unknown status';
   },
   // Method for othreewithintoand JSON
   renderJson(value) {

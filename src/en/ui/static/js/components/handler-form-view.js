@@ -1,4 +1,4 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const handlerFormView = () => ({
   formData: {
@@ -74,7 +74,7 @@ export const handlerFormView = () => ({
       this.libraries = result.data || [];
 
     } catch (error) {
-      console.error('Error upload libraries:', error);
+      console.error('Failed to fetch:', error);
       window.dispatchEvent(new CustomEvent('show-error', { detail: { message: error.message } }));
     } finally {
       this.isLibrariesLoading = false;
@@ -103,8 +103,8 @@ export const handlerFormView = () => ({
       this.functions = result.data || [];
 
     } catch (error) {
-      console.error('Error upload фунtoцandй:', error);
-      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Not succeeded загрузandть functions: ${error.message}` } }));
+      console.error('Failed to fetch:', error);
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Failed to fetch: ${error.message}` } }));
     } finally {
       this.isFunctionsLoading = false;
     }
@@ -124,28 +124,28 @@ export const handlerFormView = () => ({
 
     if (!this.formData.key.trim()) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: 'Field "Key" aboutязательbut for filledandя' }
+        detail: { message: 'The "Key" field is required' }
       }));
       return;
     }
 
     if (!this.formData.method) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: 'Field "Method" aboutязательbut for filledandя' }
+        detail: { message: 'The "Method" field is required' }
       }));
       return;
     }
 
     if (!this.formData.library) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: 'Field "Library" aboutязательbut for filledandя' }
+        detail: { message: 'The "Library" field is required' }
       }));
       return;
     }
 
     if (!this.formData.function) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: 'Field "Function" aboutязательbut for filledandя' }
+        detail: { message: 'The "Function" field is required' }
       }));
       return;
     }
@@ -180,7 +180,7 @@ export const handlerFormView = () => ({
 
       // Success!
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: 'Successfully withхраnotbut!' }
+        detail: { message: 'Successfully saved!' }
       }));
 
       window.location.hash = '#handlers';
@@ -222,8 +222,8 @@ export const handlerFormView = () => ({
       }));
 
     } catch (error) {
-      console.error('Error upload argumentoin:', error);
-      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Error upload argumentoin: ${error.message}` } }));
+      console.error('Failed to fetch:', error);
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Failed to fetch: ${error.message}` } }));
     } finally {
       this.isArgsLoading = false;
     }
@@ -251,13 +251,12 @@ export const handlerFormView = () => ({
       this.formData.key = result.data;
 
     } catch (error) {
-      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Error геnotрацandand of key: ${error.message}` } }));
+      window.dispatchEvent(new CustomEvent('show-error', { detail: { message: `Key generation error: ${error.message}` } }));
     }
   },
 
   handleImageError(event) {
-    // Заменяем notwithущеwithтinующую andtohetoу to заглушtoу
     event.target.src = '/img/libs/default.png';
-    event.target.onerror = null; // Преdoтinращаем endless loop, if stub too not загрузandтwithя
+    event.target.onerror = null;
   }
 });

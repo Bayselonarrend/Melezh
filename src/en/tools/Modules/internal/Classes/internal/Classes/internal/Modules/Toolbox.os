@@ -1,4 +1,4 @@
-﻿#Use oint
+#Use oint
 
 #Region Internal
 
@@ -53,14 +53,14 @@ Function HandlingError(Context, Code, Text) Export
 
         Result = New Structure("result,error", False, Text.Description);
 
-        If StrFind(Text.SourceString, "Raise") = 0 Then
+        If StrFind(Text.SourceLine, "Raise") = 0 Then
 
             ModuleFile = New File(Text.ModuleName);
 
             ExceptionStructure = New Structure;
             ExceptionStructure.Insert("module", ModuleFile.Name);
             ExceptionStructure.Insert("row" , Text.LineNumber);
-            ExceptionStructure.Insert("code" , TrimAll(Text.SourceString));
+            ExceptionStructure.Insert("code" , TrimAll(Text.SourceLine));
 
             Result.Insert("exception", ExceptionStructure);
 

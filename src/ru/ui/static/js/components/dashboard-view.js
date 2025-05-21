@@ -5,12 +5,10 @@ export const dashboardView = () => ({
   events: [],
   eventsErrorMessage: '',
 
-  // Новые поля для статистики
   successCount: 0,
   clientErrorCount: 0,
   serverErrorCount: 0,
 
-  // Новые поля для сессии
   isSessionLoading: false,
   serverStartTime: null,
   processedRequests: 0,
@@ -43,9 +41,9 @@ export const dashboardView = () => ({
       this.calculateStats();
 
     } catch (error) {
-      console.error('Ошибка загрузки событий:', error);
+      console.error('Ошибка загрузки:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки событий: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
       this.eventsErrorMessage = error.message;
     } finally {
@@ -68,18 +66,17 @@ export const dashboardView = () => ({
       this.serverStartTime = new Date(start);
       this.processedRequests = processed;
 
-      this.updateUptime(); // начальное значение
-      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); // обновление каждую секунду
+      this.updateUptime(); 
+      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); 
 
-      // Среднее за час
       const now = new Date();
-      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); // избежание деления на 0
+      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); 
       this.requestsPerHour = Math.round(this.processedRequests / hoursRunning);
 
     } catch (error) {
-      console.error('Ошибка загрузки информации о сессии:', error);
+      console.error('Ошибка загрузки:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки информации о сессии: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
     } finally {
       this.isSessionLoading = false;
@@ -142,9 +139,9 @@ export const dashboardView = () => ({
 
       this.advice = result.data;
     } catch (error) {
-      console.error('Ошибка загрузки совета:', error);
+      console.error('Ошибка загрузки:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Не удалось загрузить совет: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
       this.advice = null;
     } finally {
@@ -156,7 +153,7 @@ export const dashboardView = () => ({
     await Promise.all([
       this.loadEvents(),
       this.loadSessionInfo(),
-      this.loadRandomAdvice(), // если совет реализован как часть dashboardView
+      this.loadRandomAdvice(),
     ]);
   }
 

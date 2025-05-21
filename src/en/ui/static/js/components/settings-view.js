@@ -1,4 +1,4 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const settingsPage = () => ({
   settings: [],
@@ -17,7 +17,6 @@ export const settingsPage = () => ({
 
       if (!result.success) throw new Error(result.message);
 
-      // Убеdandмwithя, that all values — stringsand
       this.settings = (result.data || []).map(setting => ({
         ...setting,
         value: String(setting.value)
@@ -25,9 +24,9 @@ export const settingsPage = () => ({
 
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error upload settings: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
-      console.error('Error upload settings:', error);
+      console.error('Failed to fetch:', error);
       this.settings = [];
 
     } finally {
@@ -39,7 +38,7 @@ export const settingsPage = () => ({
     const payload = {};
 
     this.settings.forEach(setting => {
-      payload[setting.name] = setting.value; // remains as string
+      payload[setting.name] = setting.value;
     });
 
     try {
@@ -56,14 +55,14 @@ export const settingsPage = () => ({
       if (!result.success) throw new Error(result.message);
 
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: 'Settings successfully withхраnotны!' }
+        detail: { message: 'Settings successfully saved!' }
       }));
 
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error when withхраnotнandand settings: ${error.message}` }
+        detail: { message: `Error while saving settings: ${error.message}` }
       }));
-      console.error('Error when withхраnotнandand settings:', error);
+      console.error('Error while saving settings:', error);
     }
   }
 });

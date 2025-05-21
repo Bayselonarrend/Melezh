@@ -1,16 +1,14 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const dashboardView = () => ({
   isEventsLoading: false,
   events: [],
   eventsErrorMessage: '',
 
-  // Noinые fields for withтатandwithтandtoand
   successCount: 0,
   clientErrorCount: 0,
   serverErrorCount: 0,
 
-  // Noinые fields for withеwithwithandand
   isSessionLoading: false,
   serverStartTime: null,
   processedRequests: 0,
@@ -43,9 +41,9 @@ export const dashboardView = () => ({
       this.calculateStats();
 
     } catch (error) {
-      console.error('Error upload events:', error);
+      console.error('Failed to fetch:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error upload events: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
       this.eventsErrorMessage = error.message;
     } finally {
@@ -68,18 +66,17 @@ export const dashboardView = () => ({
       this.serverStartTime = new Date(start);
       this.processedRequests = processed;
 
-      this.updateUptime(); // tohальbutе value
-      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); // aboutbutinленandе toажdую withеtoунdу
+      this.updateUptime(); 
+      this.uptimeInterval = setInterval(() => this.updateUptime(), 1000); 
 
-      // Midnotе за hаwith
       const now = new Date();
-      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); // fromбежанandе splits to 0
+      const hoursRunning = Math.max(0.1, (now - this.serverStartTime) / 1000 / 60 / 60); 
       this.requestsPerHour = Math.round(this.processedRequests / hoursRunning);
 
     } catch (error) {
-      console.error('Error upload information o session:, error);
+      console.error('Failed to fetch:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error upload information o of session: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
     } finally {
       this.isSessionLoading = false;
@@ -99,9 +96,9 @@ export const dashboardView = () => ({
     if (days > 0) uptimeStr += `${days} d `;
     if (hours > 0) uptimeStr += `${hours} h `;
     if (minutes > 0) uptimeStr += `${minutes} min `;
-    if (seconds >= 0 && !days && !hours) uptimeStr += `${seconds} s;
+    if (seconds >= 0 && !days && !hours) uptimeStr += `${seconds} s`;
 
-    this.uptime = uptimeStr.trim() || 'less seconds';
+    this.uptime = uptimeStr.trim() || 'less than a second';
   },
 
   calculateStats() {
@@ -128,9 +125,9 @@ export const dashboardView = () => ({
 
   getStatusText(status) {
     if (status >= 200 && status < 300) return 'Success';
-    if (status >= 400 && status < 500) return 'Clientwithtoая error';
-    if (status >= 500) return 'Error of server';
-    return 'Notfromweightтный status';
+    if (status >= 400 && status < 500) return 'Client error';
+    if (status >= 500) return 'Server error';
+    return 'Unknown status';
   },
 
   async loadRandomAdvice() {
@@ -142,9 +139,9 @@ export const dashboardView = () => ({
 
       this.advice = result.data;
     } catch (error) {
-      console.error('Error upload advice:', error);
+      console.error('Failed to fetch:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Not succeeded загрузandть advice: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
       this.advice = null;
     } finally {
@@ -156,7 +153,7 @@ export const dashboardView = () => ({
     await Promise.all([
       this.loadEvents(),
       this.loadSessionInfo(),
-      this.loadRandomAdvice(), // if advice реалfromoinан as part dashboardView
+      this.loadRandomAdvice(),
     ]);
   }
 

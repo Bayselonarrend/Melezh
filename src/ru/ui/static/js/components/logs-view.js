@@ -1,7 +1,6 @@
 import { handleFetchResponse } from '/js/error-fetch.js';
 import { globalState } from '/js/components/app.js';
 
-// ВНЕ функции logsView — храним состояние между пересозданиями
 const cachedState = {
   handler: '',
   date: '',
@@ -17,7 +16,6 @@ export const logsView = () => ({
   events: [],
   eventsErrorMessage: '',
 
-  // Вычисляемое свойство
   get hasFilters() {
     return this.handler.trim() !== '' && this.date.trim() !== '';
   },
@@ -26,7 +24,6 @@ export const logsView = () => ({
     this.filtersCollapsed = !this.filtersCollapsed;
   },
 
-  // Инициализация
   init() {
     const parseHash = () => {
       const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
@@ -42,7 +39,6 @@ export const logsView = () => ({
 
     parseHash();
 
-    // Загружаем события только один раз
     if (!globalState.isInitialized) {
       globalState.isInitialized = true;
       this.loadEvents();
@@ -69,7 +65,7 @@ export const logsView = () => ({
 
       this.events = result.data || [];
     } catch (error) {
-      console.error('Ошибка загрузки логов:', error);
+      console.error('Ошибка загрузки:', error);
       this.eventsErrorMessage = error.message;
     } finally {
       this.isEventsLoaded = true;
@@ -86,7 +82,4 @@ export const logsView = () => ({
     return 'Неизвестный статус';
   },
 
-  showDetails(event) {
-    alert('Пока не реализовано');
-  },
 });

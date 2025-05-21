@@ -1,4 +1,4 @@
-﻿import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '/js/error-fetch.js';
 
 export const handlersView = () => ({
   handlers: [],
@@ -21,9 +21,9 @@ export const handlersView = () => ({
     } catch (error) {
 
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error upload aboutрабoтhandtooin: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
-      console.error('Error upload aboutрабoтhandtooin:', error);
+      console.error('Failed to fetch:', error);
       this.handlers = [];
 
     } finally {
@@ -51,22 +51,19 @@ export const handlersView = () => ({
 
       const result = await response.json();
 
-      if (!result.result) throw new Error(result.error || 'Error of server');
+      if (!result.result) throw new Error(result.error || 'Server error');
 
-      // Обbutinляем status лotoальbut only after successfullyгo of response
       handler.active = newStatus;
 
-      // Whileзыinаем уwithпех hерез тinoй toast
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: `Status aboutрабoтhandtoа "${handler.key}" changeенён to ${newStatus === 1 ? '"Active"' : '"Notаtoтandinный"'}` }
+        detail: { message: `Status aboutрабoтhandtoа "${handler.key}" changeенён to ${newStatus === 1 ? '"Active"' : '"Inactive"'}` }
       }));
     } catch (error) {
-      console.error('Error change of status:', error);
+      console.error('Status change error:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error change of status "${handler.key}": ${error.message}` }
+        detail: { message: `Status change error "${handler.key}": ${error.message}` }
       }));
 
-      // Inowithwithтаtoinлandinаем преdыdущее withwithтoянandе
       handler.active = handler.active == 1 ? 0 : 1;
     }
   },
@@ -84,21 +81,20 @@ export const handlersView = () => ({
         body: formData
       });
 
-      if (!response.ok) throw new Error('Error upload data');
+      if (!response.ok) throw new Error('Failed to fetch');
 
       const result = await response.json();
 
-      if (!result.result) throw new Error(result.error || 'Notfromweightтtoя error');
+      if (!result.result) throw new Error(result.error || 'Unknown error');
 
-      // Сoхраняем Data in глaboutальbutй переменbutй
       window.handlerToEdit = result.data;
 
       // Перехod to фoрме
       window.location.hash = '#handler-form';
     } catch (error) {
-      console.error('Error toлуhенandя aboutрабoтhandtoа:', error);
+      console.error('Failed to fetch:', error);
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Error when opening of form реdаtoтandрoinанandя: ${error.message}` }
+        detail: { message: `Failed to fetch: ${error.message}` }
       }));
     }
   },
@@ -116,7 +112,7 @@ export const handlersView = () => ({
   },
   
   deleteHandler(handler) {
-    if (!confirm(`You sure, that want delete aboutрабoтhandto "${handler.key}"?`)) return;
+    if (!confirm(`Are you sure you want to delete handler "${handler.key}"?`)) return;
 
     const formData = new URLSearchParams();
     formData.append('key', handler.key);
@@ -136,15 +132,13 @@ export const handlersView = () => ({
         // Уdаляем from list
         this.handlers = this.handlers.filter(h => h.key !== handler.key);
 
-        // Whileзыinаем уwithпех
         window.dispatchEvent(new CustomEvent('show-success', {
           detail: { message: `Handler "${handler.key}" уdален` }
         }));
       })
       .catch((error) => {
-        // Whileзыinаем oшandбtoу
         window.dispatchEvent(new CustomEvent('show-error', {
-          detail: { message: `Error when deleting "${handler.key}": ${error.message}` }
+          detail: { message: `Deletion error "${handler.key}": ${error.message}` }
         }));
       });
   }

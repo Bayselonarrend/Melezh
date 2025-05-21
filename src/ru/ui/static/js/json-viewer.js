@@ -28,7 +28,7 @@ export const jsonViewer = {
   },
 
   renderObject(obj, level) {
-    const indent = '&nbsp;'.repeat(level * 4); // 4 пробела на уровень
+    const indent = '&nbsp;'.repeat(level * 4); 
     let html = '{<br>';
 
     const keys = Object.keys(obj);

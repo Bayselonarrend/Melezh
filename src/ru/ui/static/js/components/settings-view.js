@@ -17,7 +17,6 @@ export const settingsPage = () => ({
 
       if (!result.success) throw new Error(result.message);
 
-      // Убедимся, что все значения — строки
       this.settings = (result.data || []).map(setting => ({
         ...setting,
         value: String(setting.value)
@@ -25,9 +24,9 @@ export const settingsPage = () => ({
 
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки настроек: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
-      console.error('Ошибка загрузки настроек:', error);
+      console.error('Ошибка загрузки:', error);
       this.settings = [];
 
     } finally {
@@ -39,7 +38,7 @@ export const settingsPage = () => ({
     const payload = {};
 
     this.settings.forEach(setting => {
-      payload[setting.name] = setting.value; // остаётся строкой
+      payload[setting.name] = setting.value;
     });
 
     try {

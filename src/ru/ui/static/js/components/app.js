@@ -6,7 +6,6 @@ export const globalState = {
 };
 
 document.addEventListener('alpine:init', () => {
-  // === Маршруты: вкладки -> хэши ===
   const HASH_ROUTES = {
     dashboard: '#dashboard',
     handlers: '#handlers',
@@ -16,10 +15,8 @@ document.addEventListener('alpine:init', () => {
     settings: '#settings'
   };
 
-  // === Кэш для загруженных представлений ===
   const viewCache = new Map();
 
-  // === Вспомогательная функция получения активной вкладки из хэша ===
   function getActiveTabFromHash(routes) {
     const hash = window.location.hash.replace(/^#/, '').split('?')[0];
     return Object.entries(routes).find(
@@ -27,7 +24,6 @@ document.addEventListener('alpine:init', () => {
     )?.[0] || 'dashboard';
   }
 
-  // === Основное приложение ===
   Alpine.data('app', () => ({
     isSidebarOpen: false,
     activeTab: 'dashboard',
@@ -42,11 +38,8 @@ document.addEventListener('alpine:init', () => {
       this.checkViewport();
       window.addEventListener('resize', () => this.checkViewport());
 
-      // Получаем текущую вкладку из хэша
       this.activeTab = getActiveTabFromHash(HASH_ROUTES);
       this.loadView(this.activeTab);
-
-      // Настройка маршрутизации
       this.setupRouter();
     },
 
@@ -56,7 +49,6 @@ document.addEventListener('alpine:init', () => {
 
         if (this.activeTab !== newTab) {
 
-          // Сбрасываем tooltip при смене вкладки
           if (globalState.tooltipEl) {
             globalState.tooltipEl.classList.remove('opacity-100');
             globalState.tooltipEl.classList.add('opacity-0');
@@ -67,7 +59,7 @@ document.addEventListener('alpine:init', () => {
       };
 
       window.addEventListener('hashchange', handleRoute);
-      handleRoute(); // запуск сразу для актуального состояния
+      handleRoute();
     },
 
     checkViewport() {
@@ -144,7 +136,6 @@ document.addEventListener('alpine:init', () => {
 
       let showLoaderTimeout = null;
 
-      // Устанавливаем таймер: покажем loader через 500 мс
       showLoaderTimeout = setTimeout(() => {
         this.shouldShowLoader = true;
       }, 500);
@@ -186,7 +177,6 @@ document.addEventListener('alpine:init', () => {
     }
   }));
 
-  // === Компонент сайдбара ===
   Alpine.data('sidebar', () => ({
     logout() {
       const form = document.createElement('form');

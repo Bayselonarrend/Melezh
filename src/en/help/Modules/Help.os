@@ -1,5 +1,5 @@
-﻿#Use "../../tools"
-#Use coloratos
+#Use "../../tools"
+#Use oint-cli
 
 #Region Internal
 
@@ -7,20 +7,20 @@ Procedure DisplayStartPage(Val Version) Export
 	
 
 	Консоль.TextColor = ConsoleColor.Green;
-	Консоль.PrintString("");
+	Консоль.WriteLine("");
 
 	Консоль.TextColor = ConsoleColor.Cyan;
-	ColorOutput.Output("
-		| ______ _____________________________________ __
-		| ___ |/ /__ ____/__ /___ ____/__ /__ / / /
-		| __ /|_/ /__ __/ __ / __ __/ __ /__ /_/ / 
-		| _ / / / _ /___ _ /___ /___ _ /__ __ /  
-		| /_/ /_/ /_____/ /_____/_____/ /____/_/ /_/   
+	ColorOutput.Write("
+		| ______  _____________________________________  __
+		| ___   |/  /__  ____/__  /___  ____/__  /__  / / /
+		| __  /|_/ /__  __/  __  / __  __/  __  /__  /_/ / 
+		| _  /  / / _  /___  _  /___  /___  _  /__  __  /  
+		| /_/  /_/  /_____/  /_____/_____/  /____/_/ /_/   
 		|");
 		
 	Консоль.TextColor = ConsoleColor.Yellow;
 
-	ColorOutput.Output("
+	ColorOutput.Write("
 		|                          
 		| Welcome to (Melezh|#color=White) v (" + Version + "|#color=Cyan)!
 		|
@@ -39,29 +39,29 @@ Procedure DisplayStartPage(Val Version) Export
 		+ "(Value|#color=White)"
 		+ "(""|#color=Green) ");
 
-	ColorOutput.PrintString("
+	ColorOutput.WriteLine("
 		|
 		| Call method without parameters returns help
 		| (meleth|#color=White) (--help|#color=Gray) - get a list of available methods"); 
 		
 
 	Консоль.TextColor = ConsoleColor.White;
-	ColorOutput.PrintString("
+	ColorOutput.WriteLine("
 		|
 		| (Standard options:|#color=Yellow)
 		|
-		| (--help|#color=Cyan) - outputs the method help or a list of all methods. Similar to calling a method without parameters
-		| (--debug|#color=Cyan) - a flag responsible for providing more detailed information during program operation
-		| (--out|#color=Cyan) - path to file saving result
+		|  (--help|#color=Cyan)  - outputs the method help or a list of all methods. Similar to calling a method without parameters
+		|  (--debug|#color=Cyan) - a flag responsible for providing more detailed information during program operation
+		|  (--out|#color=Cyan)   - the path to the result saving file (particularly binary data
 		|");
 	
 	Консоль.TextColor = ConsoleColor.Yellow;
-	ColorOutput.PrintString(" Full documentation can be found at: (https://openintegrations.dev|#color=Green)" + Chars.LF);
+	ColorOutput.WriteLine(" Full documentation can be found at: (https://openintegrations.dev|#color=Green)" + Chars.LF);
 
-	Консоль.PrintString("");
+	Консоль.WriteLine("");
 	Консоль.TextColor = ConsoleColor.White;
 
-	FinishWork(0);
+	Exit(0);
 	
 EndProcedure
 
@@ -69,24 +69,24 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 
 	Консоль.TextColor = ConsoleColor.White;
 
-	ParametersTable.Collapse("Method,Region");
+	ParametersTable.GroupBy("Method,Region");
 
-	ColorOutput.PrintString(" (##|#color=Green) Available methods: " + Chars.LF);
+	ColorOutput.WriteLine(" (##|#color=Green) Available methods: " + Chars.LF);
 	Консоль.TextColor = ConsoleColor.White;
 
-	CurrentRegion = "";
-	Counter = 0;
+	CurrentRegion       = "";
+	Counter              = 0;
 	NumberOfParameters = ParametersTable.Count();
 
 
 	For each MethodLine In ParametersTable Do
 
-		First = False;
+		First    = False;
 		Last = False;
 
 		If CurrentRegion <> MethodLine.Region Then
 			CurrentRegion = MethodLine.Region;
-			ColorOutput.PrintString(" (o|#color=Yellow) (" + CurrentRegion + "|#color=Cyan)");
+			ColorOutput.WriteLine("    (o|#color=Yellow) (" + CurrentRegion + "|#color=Cyan)");
 			First = True;
 		EndIf;
 
@@ -101,12 +101,12 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 		ElsIf First Then
 			Label = "└─┬─";
 		ElsIf Last Then
-			Label = " └─";
+			Label = "  └─";
 		Else
-			Label = " ├─";
+			Label = "  ├─";
 		EndIf;
 		
-		ColorOutput.PrintString(" (" + Label + "|#color=Yellow) " + MethodString.Method);
+		ColorOutput.WriteLine("    (" + Label + "|#color=Yellow) " + MethodLine.Method);
 
 		Counter = Counter + 1;
 	EndDo;
@@ -114,7 +114,7 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 	Message(Chars.LF);
 	Консоль.TextColor = ConsoleColor.White;
 
-	FinishWork(0);
+	Exit(0);
 
 EndProcedure
 
@@ -124,12 +124,12 @@ Procedure DisplayParameterHelp(Val ParametersTable) Export
 		DisplayExceptionMessage("Method");
 	EndIf;
 
-	MethodName = ParametersTable[0].Method;
+	MethodName    = ParametersTable[0].Method;
 	HelpText = "
 	| (##|#color=Green) Method (" + MethodName + "|#color=Cyan)
-	| (##|#color=Green) " + ParametersTable[0].MethodDescription; 
+	| (##|#color=Green) "       + ParametersTable[0].MethodDescription; 
 	
-	ColorOutput.PrintString(HelpText);
+	ColorOutput.WriteLine(HelpText);
 	HelpText = "";
 
 	HandleHelpTabulation(ParametersTable);
@@ -138,16 +138,16 @@ Procedure DisplayParameterHelp(Val ParametersTable) Export
 
 		HelpText = HelpText 
 			+ Chars.LF
-			+ " ("
+			+ "    ("
 			+ MethodParameter["Parameter"]
 			+ "|#color=Yellow) - "
 			+ MethodParameter["Description"];
 
 	EndDo;
 
-	ColorOutput.PrintString(HelpText + Chars.LF);
+	ColorOutput.WriteLine(HelpText + Chars.LF);
 
-	FinishWork(0);
+	Exit(0);
 	
 EndProcedure
 
@@ -157,15 +157,15 @@ Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
 
 	If Reason = "Command" Then
 		Text = "Incorrect command! Check input correctness";
-		Code = 1;
+		Code   = 1;
 
 	ElsIf Reason = "Method" Then
 		Text = "Incorrect method! Check input correctness";
-		Code = 2;
+		Code   = 2;
 		
 	Else
 		Text = "Unexpected Error! " + Reason;
-		Code = 99;
+		Code   = 99;
 	EndIf;
 
 	Text = Chars.LF + Text + Chars.LF;
@@ -185,7 +185,7 @@ Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
 
 	EndIf;
 
-	FinishWork(Code);
+	Exit(Code);
 
 EndProcedure
 
@@ -204,8 +204,8 @@ Procedure HandleHelpTabulation(ParametersTable)
 			MethodParameter[Parameter_] = MethodParameter[Parameter_] + " ";
 		EndDo;
 
-		CurrentDescription = MethodParameter["Description"];
-		DescriptionArray = StrSplit(CurrentDescription, Chars.LF);
+		CurrentDescription    = MethodParameter["Description"];
+		DescriptionArray     = StrSplit(CurrentDescription, Chars.LF);
 		InitialTab = 4;
 
 		If DescriptionArray.Count() = 1 Then
@@ -214,11 +214,11 @@ Procedure HandleHelpTabulation(ParametersTable)
 
 			For N = 1 To DescriptionArray.UBound() Do
 
-				CurrentElement = ArrayDescription[N];
+				CurrentElement = DescriptionArray[N];
 				RequiredLength = StrLen(CurrentElement) + StrLen(MethodParameter[Parameter_] + " - ") + InitialTab;
 
-				While StrLen(ArrayDescription[N]) < RequiredLength Do
-					ArrayDescription[N] = " " + ArrayDescription[N];
+				While StrLen(DescriptionArray[N]) < RequiredLength Do
+					DescriptionArray[N] = " " + DescriptionArray[N];
 				EndDo;
 
 			EndDo;

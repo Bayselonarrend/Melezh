@@ -1,4 +1,4 @@
-﻿#Use oint
+#Use oint
 #Use "./internal"
 
 Var ServerPath;

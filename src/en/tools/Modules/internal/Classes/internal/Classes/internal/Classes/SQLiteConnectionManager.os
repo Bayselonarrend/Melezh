@@ -1,4 +1,4 @@
-﻿#Use oint
+#Use oint
 
 Var ConnectionRO;
 Var ConnectionRW;

@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 
 // Copyright (c) 2025 Anton Tsitavets
 
@@ -89,7 +89,7 @@ Function RunProject(Val Port, Val Project) Export
     ServersSettings[0] = Port;
 
     WebServer = New(TypeServer, ServersSettings);
-    Handler = New("RequestHandler");
+    Handler = New("RequestsHandler");
     OintContent = New("LibraryComposition");
 
     ServerCatalogs = GetServerCatalogs();
@@ -103,8 +103,8 @@ Function RunProject(Val Port, Val Project) Export
     WebServer.SetServerDir(Root);
     WebServer.UseStaticFiles();
 
-    WebServer.AddRequestHandler(Handler, "MainHandle");
-    WebServer.Start();
+    WebServer.AddRequestsHandler(Handler, "MainHandle");
+    WebServer.Run();
 
     Return FormResponse(True, "Stopped");
 
@@ -218,7 +218,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Result of handler modification
-Function AddRequestHandler(Val Project, Val OintLibrary, Val OintFunction, Val Method = "GET") Export
+Function AddRequestsHandler(Val Project, Val OintLibrary, Val OintFunction, Val Method = "GET") Export
 
     OPI_TypeConversion.GetLine(OintLibrary);
     OPI_TypeConversion.GetLine(OintFunction);
@@ -275,7 +275,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Handlers list
-Function GetRequestHandlersList(Val Project) Export
+Function GetRequestsHandlersList(Val Project) Export
 
     Result = CheckProjectExistence(Project);
 
@@ -301,7 +301,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Handlers information
-Function GetRequestHandler(Val Project, Val HandlersKey) Export
+Function GetRequestsHandler(Val Project, Val HandlersKey) Export
 
     OPI_TypeConversion.GetLine(HandlersKey);
 
@@ -364,7 +364,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Deleting result
-Function DeleteRequestHandler(Val Project, Val HandlersKey) Export
+Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
 
     OPI_TypeConversion.GetLine(HandlersKey);
 
@@ -416,7 +416,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Result of changing the handler
-Function UpdateRequestHandler(Val Project
+Function UpdateRequestsHandler(Val Project
     , Val HandlersKey
     , Val OintLibrary = ""
     , Val OintFunction = ""
@@ -464,9 +464,9 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function DisableRequestHandler(Val Project, Val HandlersKey) Export
+Function DisableRequestsHandler(Val Project, Val HandlersKey) Export
 
-    Return SwitchRequestHandler(Project, HandlersKey, False);
+    Return SwitchRequestsHandler(Project, HandlersKey, False);
 
 EndFunction
 
@@ -479,9 +479,9 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function EnableRequestHandler(Val Project, Val HandlersKey) Export
+Function EnableRequestsHandler(Val Project, Val HandlersKey) Export
 
-    Return SwitchRequestHandler(Project, HandlersKey, True);
+    Return SwitchRequestsHandler(Project, HandlersKey, True);
 
 EndFunction
 
@@ -517,7 +517,7 @@ Function UpdateHandlersKey(Val Project, Val HandlersKey, Val NewKey = "") Export
         Return Result;
     EndIf;
 
-    Result = GetRequestHandler(Project, NewKey);
+    Result = GetRequestsHandler(Project, NewKey);
 
     Return Result;
 
@@ -592,7 +592,7 @@ Function SetHandlerArgument(Val Project
         EndIf;
 
         If Result["result"] Then
-            Result = GetRequestHandler(Project, HandlersKey);
+            Result = GetRequestsHandler(Project, HandlersKey);
         EndIf;
 
     EndIf;
@@ -970,7 +970,7 @@ Function ChangeHandlersFields(Val Project, Val HandlersKey, Val RecordStructure)
 
 EndFunction
 
-Function SwitchRequestHandler(Val Project, Val HandlersKey, Val Activity)
+Function SwitchRequestsHandler(Val Project, Val HandlersKey, Val Activity)
 
     OPI_TypeConversion.GetLine(HandlersKey);
     OPI_TypeConversion.GetBoolean(Activity);
@@ -1033,7 +1033,7 @@ EndFunction
 
 Function GetServerCatalogs()
 
-    LaunchCatalog = EntryScript().Directory;
+    LaunchCatalog = EntryScript().Path;
     LaunchCatalog = StrReplace(LaunchCatalog, "\", "/");
 
     PathParts = StrSplit(LaunchCatalog, "/");

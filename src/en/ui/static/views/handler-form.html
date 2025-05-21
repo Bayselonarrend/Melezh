@@ -1,4 +1,4 @@
-﻿<!-- /views/handler-form.html -->
+<!-- /views/handler-form.html -->
 <div x-data="handlerFormView">
   <div class="flex space-x-4 items-center mb-4">
 
@@ -122,7 +122,7 @@
         <!-- Field libraries -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Library</label>
-          <div x-show="isLibrariesLoading" class="mt-1">Upload...</div>
+          <div x-show="isLibrariesLoading" class="mt-1">Loading...</div>
           <div class="relative mt-1" x-data="{ open: false }">
             <button type="button" @click="open = !open" :disabled="isLibrariesLoading || isLoading"
               class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
@@ -171,7 +171,7 @@
         <!-- Field functions -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Function</label>
-          <div x-show="isFunctionsLoading" class="mt-1">Upload...</div>
+          <div x-show="isFunctionsLoading" class="mt-1">Loading...</div>
           <div class="relative mt-1" x-data="{ open: false }">
             <button type="button" @click="open = !open" :disabled="!formData.library || isFunctionsLoading"
               class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:border-green-500 focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
@@ -252,7 +252,7 @@
         <div x-show="args.length > 0 && !isArgsLoading"
           class="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-4">
           <h3 class="font-semibold text-gray-700">Arguments functions</h3>
-          <div class="text-xs text-gray-500 mb-2">Nаwithтрoйте parameterы to default, that буdут andwithtoльзoinатьwithя in
+          <div class="text-xs text-gray-500 mb-2">Nаstroйте parameterы to default, that буdут andwithtoльзoinатьwithя in
             aboutрабoтhandtoе</div>
 
           <template x-for="arg_ in args" :key="arg_.arg">
@@ -280,7 +280,7 @@
                   class="form-checkbox h-4 w-4 text-blue-600">
                 <span class="ml-2 text-sm">Strict</span>
                 <span class="ml-1 text-gray-400"
-                  title="Стрoгandе argumentы notльзя перезапandwithать current from of request">?</span>
+                  title="Stroгandе argumentы notльзя перезапandwithать current from of request">?</span>
               </label>
             </div>
           </template>

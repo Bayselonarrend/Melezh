@@ -1,4 +1,4 @@
-﻿Function GetVersion() Export
+Function GetVersion() Export
   Return "0.1.0";
 EndFunction
 
@@ -90,8 +90,8 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "AddRequestHandler";
-    NewLine.SearchMethod = "ADDREQUESTHANDLER";
+    NewLine.Method = "AddRequestsHandler";
+    NewLine.SearchMethod = "ADDREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -99,32 +99,32 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "AddRequestHandler";
-    NewLine.SearchMethod = "ADDREQUESTHANDLER";
+    NewLine.Method = "AddRequestsHandler";
+    NewLine.SearchMethod = "ADDREQUESTSHANDLER";
     NewLine.Parameter = "--lib";
     NewLine.Description = "Library name in CLI format";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "AddRequestHandler";
-    NewLine.SearchMethod = "ADDREQUESTHANDLER";
+    NewLine.Method = "AddRequestsHandler";
+    NewLine.SearchMethod = "ADDREQUESTSHANDLER";
     NewLine.Parameter = "--func";
     NewLine.Description = "OpenIntegrations function name";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "AddRequestHandler";
-    NewLine.SearchMethod = "ADDREQUESTHANDLER";
+    NewLine.Method = "AddRequestsHandler";
+    NewLine.SearchMethod = "ADDREQUESTSHANDLER";
     NewLine.Parameter = "--method";
     NewLine.Description = "HTTP method to be processed by the handler: GET, JSON, FORM (optional, default - GET)";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "GetRequestHandlersList";
-    NewLine.SearchMethod = "GETREQUESTHANDLERSLIST";
+    NewLine.Method = "GetRequestsHandlersList";
+    NewLine.SearchMethod = "GETREQUESTSHANDLERSLIST";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -132,8 +132,8 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "GetRequestHandler";
-    NewLine.SearchMethod = "GETREQUESTHANDLER";
+    NewLine.Method = "GetRequestsHandler";
+    NewLine.SearchMethod = "GETREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -141,16 +141,16 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "GetRequestHandler";
-    NewLine.SearchMethod = "GETREQUESTHANDLER";
+    NewLine.Method = "GetRequestsHandler";
+    NewLine.SearchMethod = "GETREQUESTSHANDLER";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "DeleteRequestHandler";
-    NewLine.SearchMethod = "DELETEREQUESTHANDLER";
+    NewLine.Method = "DeleteRequestsHandler";
+    NewLine.SearchMethod = "DELETEREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -158,16 +158,16 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "DeleteRequestHandler";
-    NewLine.SearchMethod = "DELETEREQUESTHANDLER";
+    NewLine.Method = "DeleteRequestsHandler";
+    NewLine.SearchMethod = "DELETEREQUESTSHANDLER";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "UpdateRequestHandler";
-    NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
+    NewLine.Method = "UpdateRequestsHandler";
+    NewLine.SearchMethod = "UPDATEREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -175,40 +175,40 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "UpdateRequestHandler";
-    NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
+    NewLine.Method = "UpdateRequestsHandler";
+    NewLine.SearchMethod = "UPDATEREQUESTSHANDLER";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "UpdateRequestHandler";
-    NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
+    NewLine.Method = "UpdateRequestsHandler";
+    NewLine.SearchMethod = "UPDATEREQUESTSHANDLER";
     NewLine.Parameter = "--lib";
     NewLine.Description = "Library name in CLI format (optional, default - Empty value)";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "UpdateRequestHandler";
-    NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
+    NewLine.Method = "UpdateRequestsHandler";
+    NewLine.SearchMethod = "UPDATEREQUESTSHANDLER";
     NewLine.Parameter = "--func";
     NewLine.Description = "OpenIntegrations function name (optional, default - Empty value)";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "UpdateRequestHandler";
-    NewLine.SearchMethod = "UPDATEREQUESTHANDLER";
+    NewLine.Method = "UpdateRequestsHandler";
+    NewLine.SearchMethod = "UPDATEREQUESTSHANDLER";
     NewLine.Parameter = "--method";
     NewLine.Description = "HTTP method to be processed by the handler: GET, JSON, FORM (optional, default - Empty value)";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "DisableRequestHandler";
-    NewLine.SearchMethod = "DISABLEREQUESTHANDLER";
+    NewLine.Method = "DisableRequestsHandler";
+    NewLine.SearchMethod = "DISABLEREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -216,16 +216,16 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "DisableRequestHandler";
-    NewLine.SearchMethod = "DISABLEREQUESTHANDLER";
+    NewLine.Method = "DisableRequestsHandler";
+    NewLine.SearchMethod = "DISABLEREQUESTSHANDLER";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Handlers configuration";
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "EnableRequestHandler";
-    NewLine.SearchMethod = "ENABLEREQUESTHANDLER";
+    NewLine.Method = "EnableRequestsHandler";
+    NewLine.SearchMethod = "ENABLEREQUESTSHANDLER";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Handlers configuration";
@@ -233,8 +233,8 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
-    NewLine.Method = "EnableRequestHandler";
-    NewLine.SearchMethod = "ENABLEREQUESTHANDLER";
+    NewLine.Method = "EnableRequestsHandler";
+    NewLine.SearchMethod = "ENABLEREQUESTSHANDLER";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Handlers configuration";

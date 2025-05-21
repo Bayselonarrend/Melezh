@@ -3,7 +3,6 @@ document.addEventListener('alpine:init', () => {
     messages: [],
 
     init() {
-      // Подписываемся на события
       window.addEventListener('show-error', e => this.addMessage(e.detail.message, 'error'));
       window.addEventListener('show-success', e => this.addMessage(e.detail.message, 'success'));
     },
@@ -18,7 +17,6 @@ document.addEventListener('alpine:init', () => {
 
       this.messages.unshift(message);
 
-      // Автоматическое скрытие через 5 секунд
       setTimeout(() => this.remove(message.id), 10000);
     },
 

@@ -28,7 +28,7 @@ export const logDetailsView = () => ({
       this.eventData = result.data;
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {
-        detail: { message: `Ошибка загрузки данных события: ${error.message}` }
+        detail: { message: `Ошибка загрузки: ${error.message}` }
       }));
       this.errorMessage = error.message;
     } finally {

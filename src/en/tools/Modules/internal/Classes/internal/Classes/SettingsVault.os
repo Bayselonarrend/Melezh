@@ -1,4 +1,4 @@
-﻿#Use "./internal"
+#Use "./internal"
 
 Var FullProjectSettings;
 Var ProjectSettingsUI;

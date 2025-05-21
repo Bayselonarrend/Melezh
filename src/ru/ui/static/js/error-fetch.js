@@ -12,12 +12,10 @@ export async function handleFetchResponse(response) {
     data = null;
   }
 
-  // Если сервер вернул JSON с { result: false, error: ... }
   if (data && !data.result) {
     return { success: false, message: data.error || 'Неизвестная ошибка', data: data };
   }
 
-  // Обычная сетевая ошибка без JSON
   if (!response.ok) {
     return {
       success: false,
@@ -32,7 +30,6 @@ if (data != null) {
   }
 }
 
-  // Успех
   return {
     success: true,
     data: data ?? null

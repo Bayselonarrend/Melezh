@@ -1,8 +1,6 @@
-<!-- /views/handler-form.html -->
 <div x-data="handlerFormView">
   <div class="flex space-x-4 items-center mb-4">
 
-    <!-- Иконка формы -->
     <div class="text-gray-400" x-show="!isEditMode">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -10,7 +8,6 @@
       </svg>
     </div>
 
-    <!-- Иконка редактирования -->
     <div class="text-gray-400" x-show="isEditMode">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -19,7 +16,6 @@
       </svg>
     </div>
 
-    <!-- Заголовок и описание -->
     <div class="space-y-1 w-full">
       <h2 class="text-2xl font-bold" x-text="isEditMode ? 'Изменение обработчика' : 'Новый обработчик'"></h2>
       <p
@@ -30,18 +26,15 @@
 
   <hr class="mb-4">
 
-  <!-- Форма -->
   <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-5xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
 
-      <!-- Основная форма -->
       <div class="space-y-4 md:col-span-2">
 
         <input type="text" id="originalKey" x-model="formData.originalKey" required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           :disabled="true" x-show="isEditMode">
 
-        <!-- Поле ключа -->
         <div>
           <label for="key" class="block text-sm font-medium text-gray-700">Ключ</label>
           <div class="relative mt-1">
@@ -58,7 +51,6 @@
           </div>
         </div>
 
-        <!-- Поле метода -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Метод</label>
           <div class="relative mt-1" x-data="{ open: false }">
@@ -119,7 +111,6 @@
           </div>
         </div>
 
-        <!-- Поле библиотеки -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Библиотека</label>
           <div x-show="isLibrariesLoading" class="mt-1">Загрузка...</div>
@@ -168,7 +159,6 @@
           </div>
         </div>
 
-        <!-- Поле функции -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Функция</label>
           <div x-show="isFunctionsLoading" class="mt-1">Загрузка...</div>
@@ -207,7 +197,6 @@
           </div>
         </div>
 
-        <!-- Кнопки -->
         <div class="flex space-x-4 pt-4">
           <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
             :disabled="isLoading">
@@ -230,9 +219,7 @@
         </div>
       </div>
 
-      <!-- Блок аргументов справа -->
       <div class="md:col-span-3">
-        <!-- Пустое состояние -->
         <div x-show="args.length === 0 && !isArgsLoading"
           class="p-6 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -243,38 +230,29 @@
           <p class="text-sm">После выбора функции здесь будет перечень аргументов</p>
         </div>
 
-        <!-- Индикатор загрузки -->
         <div x-show="isArgsLoading" class="p-6 bg-gray-50 border border-gray-300 rounded-lg text-center">
-          Загрузка аргументов...
+          Загрузка...
         </div>
 
-        <!-- Список аргументов -->
         <div x-show="args.length > 0 && !isArgsLoading"
           class="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-4">
           <h3 class="font-semibold text-gray-700">Аргументы функции</h3>
-          <div class="text-xs text-gray-500 mb-2">Настройте параметры по умолчанию, которые будут использоваться в
-            обработчике</div>
+          <div class="text-xs text-gray-500 mb-2">Настройте параметры по умолчанию, которые будут использоваться в обработчике</div>
 
           <template x-for="arg_ in args" :key="arg_.arg">
             <div class="flex flex-col sm:flex-row items-start gap-2 p-2 hover:bg-gray-100 rounded">
-              <!-- Активность + имя аргумента -->
               <label class="inline-flex items-center mt-1 sm:mt-0 w-full sm:w-auto" style="min-width: 13ch;">
                 <input type="checkbox" x-model="arg_.active" class="form-checkbox h-4 w-4 text-green-600">
                 <span class="ml-2 text-sm truncate" x-text="`--${arg_.arg}`"></span>
               </label>
 
-              <!-- Описание и значение -->
               <div class="flex-1 min-w-0 space-y-1">
-                <!-- Описание -->
                 <div class="text-xs text-gray-500 break-words" x-text="arg_.description"></div>
-
-                <!-- Поле ввода значения -->
                 <input type="text" x-model="arg_.value" placeholder="Значение по умолчанию" :disabled="!arg_.active"
                   class="w-full px-2 py-1 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-green-500 disabled:bg-gray-100 disabled:text-gray-500"
                   x-bind:class="{'bg-gray-100': !arg_.active}">
               </div>
 
-              <!-- strict -->
               <label class="inline-flex items-center mt-1 sm:mt-0 whitespace-nowrap">
                 <input type="checkbox" x-model="arg_.strict" :disabled="!arg_.active"
                   class="form-checkbox h-4 w-4 text-blue-600">

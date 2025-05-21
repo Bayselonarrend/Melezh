@@ -1,6 +1,5 @@
 <div x-data="handlersView" x-init="init()">
   <div class="flex space-x-4 items-center mb-6">
-    <!-- Icon шеwithтерёнtoand -->
     <div class="text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -9,15 +8,12 @@
       </svg>
     </div>
 
-    <!-- Title and description -->
     <div class="space-y-1 w-full">
       <h2 class="text-2xl font-bold">Handlers panel</h2>
       <p>List of all available handlers</p>
     </div>
 
-    <!-- Buttons right -->
     <div class="flex space-x-2">
-      <!-- Button daboutаinленandя -->
       <button @click="addNewHandler"
         class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -25,7 +21,6 @@
         </svg>
       </button>
 
-      <!-- Button aboutbutinленandя -->
       <button @click="loadHandlers()"
         class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition" :disabled="isLoading">
         <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{'animate-spin': isLoading}" fill="none"
@@ -39,12 +34,10 @@
 
   <hr class="mb-6">
 
-  <!-- Оwithтальtoя part remains without changedandй -->
   <div x-show="isLoading" class="flex justify-center py-4">
     <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
   </div>
 
-  <!-- Table aboutрабoтhandtooin -->
   <div x-show="!isLoading" class="bg-white p-4 rounded-lg shadow overflow-hidden">
     <div x-show="handlers.length > 0">
       <table class="min-w-full divide-y divide-gray-200">
@@ -78,7 +71,6 @@
               </td>
               <td class="px-4 py-2 whitespace-nowrap text-right text-sm">
                 <div class="flex items-center justify-end gap-1">
-                  <!-- Edit -->
                   <button @click="editHandler(handler)" x-tooltip="'Edit'"
                     class="text-gray-400 hover:text-gray-600 transition p-1 rounded hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -88,7 +80,6 @@
                     </svg>
                   </button>
 
-                  <!-- Logs -->
                   <a :href="`/ui#logs?handler=${handler.key}&date=${getCurrentDate()}`" x-tooltip="'Logs'"
                     class="inline-flex items-center justify-center text-gray-400 hover:text-gray-600 transition p-1 rounded hover:bg-gray-100 h-8 w-8">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -98,7 +89,6 @@
                     </svg>
                   </a>
 
-                  <!-- Delete -->
                   <button @click="deleteHandler(handler)" x-tooltip="'Delete'"
                     class="text-red-400 hover:text-red-600 transition p-1 rounded hover:bg-gray-100">
                     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -114,14 +104,12 @@
       </table>
     </div>
 
-    <!-- No data -->
     <div x-show="handlers.length === 0 && !isLoading" class="text-center py-8 text-gray-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12 mx-auto mb-2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
       </svg>
-      <p class="text-sm"><b>No available aboutрабoтhandtooin.</b> Inы mayе withзdать butinый aboutрабoтhandto, toжаin зtohoto "+" in
-        of right upper corner</p>
+      <p class="text-sm"><b>No handlers available.</b> You can create a new handler by clicking the "+" icon in the top right corner.</p>
     </div>
   </div>
 </div>

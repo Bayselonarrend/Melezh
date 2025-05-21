@@ -28,13 +28,11 @@
       class="md:flex flex-col w-64 bg-white shadow-md p-4 space-y-4 transition-all z-10 fixed md:static inset-y-0 left-0 transform md:translate-x-0 transition-transform duration-200 ease-in-out"
       :class="{'translate-x-0': isSidebarOpen, '-translate-x-full': !isSidebarOpen && isMobile()}">
 
-      <!-- Заголовок -->
       <h1 class="flex items-center justify-between text-lg font-semibold border-b pb-2 w-full">
         <span style="font-size: 25px;">Melezh</span>
         <img src="/img/ico_g.png" alt="Логотип" class="h-8 w-auto">
       </h1>
 
-      <!-- Основная навигация -->
       <nav class="space-y-2">
         <a href="#dashboard" @click.prevent="setActiveTab('dashboard')"
           :class="{'bg-green-100 text-white-700': activeTab === 'dashboard'}"
@@ -55,7 +53,6 @@
           </svg>
           Обработчики
         </a>
-        <!-- В разделе основной навигации (после "Обработчики" и перед "Настройки") -->
         <a href="#logs" @click.prevent="setActiveTab('logs')"
           :class="{'bg-green-100 text-white-700': activeTab === 'logs'}"
           class="flex items-center px-3 py-2 rounded hover:bg-gray-200 transition">
@@ -78,10 +75,8 @@
         </a>
       </nav>
 
-      <!-- Гибкий промежуток, который займет все доступное пространство -->
       <div class="flex-grow"></div>
 
-      <!-- Кнопка выхода -->
       <div class="pt-6 border-t space-y-2">
         <button @click="logout()" type="button"
           class="flex items-center justify-between w-full bg-gray-100 hover:bg-gray-200 px-3 py-2 rounded transition">
@@ -93,9 +88,7 @@
         </button>
       </div>
 
-      <!-- Ссылки на GitHub и документацию (теперь всегда внизу) -->
       <div class="pt-4 flex justify-center space-x-2 border-t">
-        <!-- GitHub -->
         <a href="https://github.com/bayselonarrend/Melezh" target="_blank"
           class="group flex flex-col items-center justify-center p-3 rounded-md hover:bg-gray-100 transition relative">
           <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24"
@@ -110,7 +103,6 @@
           </span>
         </a>
 
-        <!-- Документация -->
         <a href="https://openintegrations.dev" target="_blank"
           class="group flex flex-col items-center justify-center p-3 rounded-md hover:bg-gray-100 transition relative">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -126,9 +118,7 @@
       </div>
     </aside>
 
-    <!-- Main Content -->
     <main class="flex-1 p-6 overflow-auto bg-gray-50 mt-16 md:mt-0">
-      <!-- Индикатор загрузки -->
       <div x-show="shouldShowLoader" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-30 z-50">
         <div class="bg-white p-6 rounded-lg shadow-xl flex flex-col items-center">
           <div class="jumping-image-container h-24 w-32 mb-4">
@@ -138,16 +128,13 @@
         </div>
       </div>
 
-      <!-- Оверлей для мобильного меню -->
       <div x-show="isMobile() && isSidebarOpen" x-transition.opacity @click="closeSidebar()"
         class="fixed inset-0 bg-black bg-opacity-50 z-0 md:hidden"></div>
 
-      <!-- Динамический контейнер для контента -->
       <div id="view-container" x-html="currentView"></div>
     </main>
   </div>
 
-  <!-- Глобальное уведомление об ошибках -->
   <div x-data="errorToast()" x-show="messages.length > 0" class="fixed bottom-4 right-4 z-50 w-80 max-w-full space-y-2">
 
     <template x-for="message in messages" :key="message.id">
@@ -158,13 +145,11 @@
         class="relative flex items-center border-l-4 shadow-md rounded-md mb-2 overflow-hidden break-words animate-fade-in"
         style="word-break: break-word;">
 
-        <!-- Контент -->
         <div class="px-3 py-2 text-sm text-gray-700 whitespace-normal break-words flex flex-col mr-5">
           <span x-text="message.text"></span>
           <span class="text-xs text-gray-400 mt-1" x-text="message.time"></span>
         </div>
 
-        <!-- Кнопка закрытия -->
         <button @click="remove(message.id)" type="button"
           class="absolute top-1 right-1 p-1 text-gray-400 hover:text-gray-600 transition">
           ✕

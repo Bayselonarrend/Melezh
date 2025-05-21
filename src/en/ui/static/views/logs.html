@@ -1,6 +1,5 @@
 <div x-data="logsView">
   <div class="flex space-x-4 items-center mb-6">
-    <!-- Icon -->
     <div class="text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
         stroke="currentColor" class="w-12 h-12">
@@ -9,18 +8,15 @@
       </svg>
     </div>
 
-    <!-- Text -->
     <div class="space-y-1">
       <h2 class="text-2xl font-bold">Log Viewer</h2>
-      <p>Information about processed requests with selection by handler and date</p>
+      <p>Information about processed requests, filtered by handler and date</p>
     </div>
   </div>
 
   <hr class="mb-6">
 
-  <!-- Form filterацandand -->
   <div class="bg-white rounded-lg shadow mb-6 overflow-hidden">
-    <!-- Title with button withinoраhandinанandя -->
     <div @click="toggleFilters"
       class="flex justify-between items-center py-2 px-4 cursor-pointer bg-gray-50 hover:bg-gray-100 transition">
       <h3 class="font-semibold text-lg">Filter</h3>
@@ -30,11 +26,10 @@
       </svg>
     </div>
 
-    <!-- Entity of form -->
     <div x-show="!filtersCollapsed" class="p-4 border-t border-gray-200 transition-all duration-200">
       <form @submit.prevent="loadEvents" class="space-y-6">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <!-- Field aboutрабoтhandtoа -->
+
           <div class="p-4 border rounded-md shadow-sm">
             <label class="block font-semibold mb-2">Handlers key</label>
             <small class="block text-gray-500 mb-2">Specify the handler key</small>
@@ -42,7 +37,6 @@
               class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
           </div>
 
-          <!-- Field date -->
           <div class="p-4 border rounded-md shadow-sm">
             <label class="block font-semibold mb-2">Date</label>
             <small class="block text-gray-500 mb-2">Select the date for filtering</small>
@@ -60,19 +54,16 @@
     </div>
   </div>
 
-  <!-- Table Of logs -->
   <div x-show="isEventsLoaded">
-    <!-- Upload -->
+
     <div x-show="isEventsLoading" class="bg-white p-6 rounded-lg shadow-md text-center">
-      Upload Of logs...
+      Loading...
     </div>
 
-    <!-- Error -->
     <div x-show="eventsErrorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
       <p x-text="eventsErrorMessage"></p>
     </div>
 
-    <!-- Table events -->
     <div x-show="!isEventsLoading && !eventsErrorMessage && isEventsLoaded"
       class="bg-white p-4 rounded-lg shadow overflow-hidden">
       <table x-show="events.length > 0" class="min-w-full divide-y divide-gray-200">
@@ -88,7 +79,6 @@
         <tbody class="divide-y divide-gray-200">
           <template x-for="event in events" :key="event.key">
             <tr class="hover:bg-gray-50">
-              <!-- Status -->
               <td class="px-4 py-2 whitespace-nowrap">
                 <span
                   :class="{
@@ -102,21 +92,17 @@
                 <span x-text="new Date(event.date).toLocaleString()" class="text-sm text-gray-700"></span>
               </td>
 
-              <!-- handler -->
               <td class="px-4 py-2 whitespace-nowrap">
                 <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono" x-text="event.handler"></code>
               </td>
 
-              <!-- method / type -->
               <td class="px-4 py-2 whitespace-nowrap">
                 <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded" x-text="event.method"></span>
                 <span class="text-xs bg-purple-100 text-purple-800 px-2 py-1 rounded ml-1" x-text="event.type"></span>
               </td>
 
-              <!-- size -->
-              <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="event.size + ' байт'"></td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="event.size + ' bytes'"></td>
 
-              <!-- actions -->
               <td class="px-4 py-2 whitespace-nowrap text-right text-sm">
                 <a :href="`#log?key=${event.key}`" x-tooltip="'More'"
                   class="inline-flex items-center justify-center text-gray-400 hover:text-gray-600 transition p-1 rounded hover:bg-gray-100 h-8 w-8">
@@ -132,7 +118,6 @@
         </tbody>
       </table>
 
-      <!-- No data -->
       <div x-show="events.length === 0 && !isEventsLoading && !eventsErrorMessage && isEventsLoaded"
         class="text-center py-8 text-gray-500">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -140,12 +125,11 @@
           <path stroke-linecap="round" stroke-linejoin="round" d="m21 7.5-2.25-1.313M21 7.5v2.25m0-2.25-2.25 1.313M3 7.5l2.25-1.313M3 7.5l2.25 1.313M3 7.5v2.25m9 3 2.25-1.313M12 12.75l-2.25-1.313M12 12.75V15m0 6.75 2.25-1.313M12 21.75V19.5m0 2.25-2.25-1.313m0-16.875L12 2.25l2.25 1.313M21 14.25v2.25l-2.25 1.313m-13.5 0L3 16.5v-2.25" />
         </svg>
         <br>
-        <p class="text-sm">Logs not toйdены for specifiedных parameters oтбoра</p>
+        <p class="text-sm">No logs found for the specified filter parameters</p>
       </div>
     </div>
   </div>
 
-  <!-- Plug, if filters not specified -->
   <div x-show="!isEventsLoaded" class="bg-white p-8 rounded-lg shadow text-center">
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
       class="w-12 h-12 mx-auto mb-4 text-gray-400">

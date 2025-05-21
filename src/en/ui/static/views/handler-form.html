@@ -1,8 +1,6 @@
-<!-- /views/handler-form.html -->
 <div x-data="handlerFormView">
   <div class="flex space-x-4 items-center mb-4">
 
-    <!-- Icon of form -->
     <div class="text-gray-400" x-show="!isEditMode">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -10,7 +8,6 @@
       </svg>
     </div>
 
-    <!-- Icon реdаtoтandрoinанandя -->
     <div class="text-gray-400" x-show="isEditMode">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -19,7 +16,6 @@
       </svg>
     </div>
 
-    <!-- Title and description -->
     <div class="space-y-1 w-full">
       <h2 class="text-2xl font-bold" x-text="isEditMode ? 'Change aboutрабoтhandtoа' : 'New aboutрабoтhandto'"></h2>
       <p
@@ -30,18 +26,15 @@
 
   <hr class="mb-4">
 
-  <!-- Form -->
   <form @submit.prevent="submitForm" class="bg-white p-6 rounded-lg shadow-md space-y-4 max-w-5xl mx-auto">
     <div class="grid grid-cols-1 md:grid-cols-5 gap-6">
 
-      <!-- Main form -->
       <div class="space-y-4 md:col-span-2">
 
         <input type="text" id="originalKey" x-model="formData.originalKey" required
           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
           :disabled="true" x-show="isEditMode">
 
-        <!-- Field of key -->
         <div>
           <label for="key" class="block text-sm font-medium text-gray-700">Key</label>
           <div class="relative mt-1">
@@ -58,7 +51,6 @@
           </div>
         </div>
 
-        <!-- Field method -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Method</label>
           <div class="relative mt-1" x-data="{ open: false }">
@@ -119,7 +111,6 @@
           </div>
         </div>
 
-        <!-- Field libraries -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Library</label>
           <div x-show="isLibrariesLoading" class="mt-1">Loading...</div>
@@ -168,7 +159,6 @@
           </div>
         </div>
 
-        <!-- Field functions -->
         <div>
           <label class="block text-sm font-medium text-gray-700">Function</label>
           <div x-show="isFunctionsLoading" class="mt-1">Loading...</div>
@@ -207,12 +197,11 @@
           </div>
         </div>
 
-        <!-- Buttons -->
         <div class="flex space-x-4 pt-4">
           <button type="submit" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700 transition"
             :disabled="isLoading">
             <span x-show="!isEditMode">Create</span>
-            <span x-show="isEditMode">Save change</span>
+            <span x-show="isEditMode">Save changes</span>
             <span x-show="isLoading">
               <svg class="animate-spin h-5 w-5 text-white inline-block" xmlns="http://www.w3.org/2000/svg" fill="none"
                 viewBox="0 0 24 24">
@@ -230,9 +219,7 @@
         </div>
       </div>
 
-      <!-- Block argumentoin right -->
       <div class="md:col-span-3">
-        <!-- Empty withwithтoянandе -->
         <div x-show="args.length === 0 && !isArgsLoading"
           class="p-6 bg-gray-50 border border-dashed border-gray-300 rounded-lg text-center text-gray-400">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -240,47 +227,38 @@
             <path stroke-linecap="round" stroke-linejoin="round"
               d="M8.25 6.75h12M8.25 12h12m-12 5.25h12M3.75 6.75h.007v.008H3.75V6.75Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0ZM3.75 12h.007v.008H3.75V12Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Zm-.375 5.25h.007v.008H3.75v-.008Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
           </svg>
-          <p class="text-sm">After inыбoра functions зdеwithь will переhень argumentoin</p>
+          <p class="text-sm">After selecting a function, a list of arguments will appear here</p>
         </div>
 
-        <!-- Andнdandtoатoр upload -->
         <div x-show="isArgsLoading" class="p-6 bg-gray-50 border border-gray-300 rounded-lg text-center">
-          Upload argumentoin...
+          Loading...
         </div>
 
-        <!-- List argumentoin -->
         <div x-show="args.length > 0 && !isArgsLoading"
           class="bg-gray-50 border border-gray-300 rounded-lg p-4 space-y-4">
-          <h3 class="font-semibold text-gray-700">Arguments functions</h3>
-          <div class="text-xs text-gray-500 mb-2">Nаstroйте parameterы to default, that буdут andwithtoльзoinатьwithя in
-            aboutрабoтhandtoе</div>
+          <h3 class="font-semibold text-gray-700">Function arguments</h3>
+          <div class="text-xs text-gray-500 mb-2">Set up the default parameters that will be used in the handler</div>
 
           <template x-for="arg_ in args" :key="arg_.arg">
             <div class="flex flex-col sm:flex-row items-start gap-2 p-2 hover:bg-gray-100 rounded">
-              <!-- Activity + name argumentа -->
               <label class="inline-flex items-center mt-1 sm:mt-0 w-full sm:w-auto" style="min-width: 13ch;">
                 <input type="checkbox" x-model="arg_.active" class="form-checkbox h-4 w-4 text-green-600">
                 <span class="ml-2 text-sm truncate" x-text="`--${arg_.arg}`"></span>
               </label>
 
-              <!-- Description and value -->
               <div class="flex-1 min-w-0 space-y-1">
-                <!-- Description -->
                 <div class="text-xs text-gray-500 break-words" x-text="arg_.description"></div>
-
-                <!-- Field of input values -->
                 <input type="text" x-model="arg_.value" placeholder="Value to default" :disabled="!arg_.active"
                   class="w-full px-2 py-1 text-sm border border-gray-300 rounded bg-white focus:outline-none focus:ring-1 focus:ring-green-500 disabled:bg-gray-100 disabled:text-gray-500"
                   x-bind:class="{'bg-gray-100': !arg_.active}">
               </div>
 
-              <!-- strict -->
               <label class="inline-flex items-center mt-1 sm:mt-0 whitespace-nowrap">
                 <input type="checkbox" x-model="arg_.strict" :disabled="!arg_.active"
                   class="form-checkbox h-4 w-4 text-blue-600">
                 <span class="ml-2 text-sm">Strict</span>
                 <span class="ml-1 text-gray-400"
-                  title="Stroгandе argumentы notльзя перезапandwithать current from of request">?</span>
+                  title="Strict arguments cannot be overwritten with data from the request">?</span>
               </label>
             </div>
           </template>

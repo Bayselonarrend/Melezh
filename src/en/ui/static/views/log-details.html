@@ -1,7 +1,5 @@
 <div x-data="logDetailsView" x-init="init()" class="space-y-6">
-  <!-- Title -->
   <div class="flex space-x-4 items-center mb-6">
-    <!-- Icon -->
     <div class="text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
@@ -10,32 +8,27 @@
       </svg>
     </div>
 
-    <!-- Text -->
     <div class="space-y-1">
-      <h2 class="text-2xl font-bold">Деталand of request</h2>
-      <p>Toлtoя andнformцandя o inыбранbutм withaboutытandand</p>
+      <h2 class="text-2xl font-bold">Request details</h2>
+      <p>Full information about the selected event</p>
     </div>
   </div>
 
   <hr class="mb-6">
 
-  <!-- Error -->
   <div x-show="errorMessage" class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 rounded">
     <p x-text="errorMessage"></p>
   </div>
 
-  <!-- Upload -->
   <div x-show="isLoading" class="bg-white p-6 rounded-lg shadow-md text-center">
-    Upload details...
+    Loading...
   </div>
 
-  <!-- Primary content -->
   <template x-if="!isLoading && !errorMessage && eventData">
     <div class="space-y-8">
 
-      <!-- Block: Main andнformцandя -->
       <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold mb-4">Main andнformцandя</h3>
+        <h3 class="font-semibold mb-4">Basic information</h3>
         <div x-show="eventData.error"
           class="mb-4 p-3 bg-red-50 text-red-700 border-l-4 border-red-500 rounded-md flex items-start space-x-2">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
@@ -47,7 +40,7 @@
         </div>
         <dl class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-sm">
           <div>
-            <dt class="text-xs uppercase text-gray-500">Key events</dt>
+            <dt class="text-xs uppercase text-gray-500">Event key</dt>
             <dd class="mt-1" x-text="eventData.key"></dd>
           </div>
           <div>
@@ -83,16 +76,15 @@
           </div>
           <div>
             <dt class="text-xs uppercase text-gray-500">Size</dt>
-            <dd class="mt-1" x-text="eventData.size + ' байт'"></dd>
+            <dd class="mt-1" x-text="eventData.size + ' bytes'"></dd>
           </div>
         </dl>
       </div>
 
-      <!-- Block: Headers -->
       <div class="bg-white p-4 rounded-lg shadow">
         <h3 class="font-semibold mb-4">Headers</h3>
         <div x-show="Object.keys(eventData.headers || {}).length === 0" class="text-gray-500 text-sm">
-          No headers for oтaboutраженandя
+          No headers to display
         </div>
         <ul x-show="Object.keys(eventData.headers || {}).length > 0" class="space-y-2">
           <template x-for="(value, key) in eventData.headers" :key="key">
@@ -103,11 +95,10 @@
         </ul>
       </div>
 
-      <!-- Block: Parameters URL -->
       <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold mb-4">Parameters URL</h3>
+        <h3 class="font-semibold mb-4">URL parameters</h3>
         <div x-show="Object.keys(eventData.params || {}).length === 0" class="text-gray-500 text-sm">
-          No parameters in URL
+          No parameters in the URL
         </div>
         <ul x-show="Object.keys(eventData.params || {}).length > 0" class="space-y-2">
           <template x-for="(value, key) in eventData.params" :key="key">
@@ -118,22 +109,20 @@
         </ul>
       </div>
 
-      <!-- Body of request -->
       <div class="bg-white p-4 rounded-lg shadow">
-        <h3 class="font-semibold mb-4">Body of request</h3>
+        <h3 class="font-semibold mb-4">Request body</h3>
         <template x-if="eventData.body && Object.keys(eventData.body).length > 0">
           <div class="p-3 bg-gray-50 rounded-md font-mono text-sm" x-html="renderJson(eventData.body)"></div>
         </template>
         <div x-show="!eventData.body || Object.keys(eventData.body).length === 0" class="text-gray-500 text-sm">
-          No data in body of request
+          No data in the request body
         </div>
       </div>
 
-      <!-- Block: Files -->
       <div class="bg-white p-4 rounded-lg shadow">
         <h3 class="font-semibold mb-4">Files</h3>
         <div x-show="!hasFiles()" class="text-gray-500 text-sm">
-          No переdata of files
+          No files
         </div>
         <table x-show="hasFiles()" class="min-w-full divide-y divide-gray-200">
           <thead class="bg-gray-50">
@@ -152,7 +141,7 @@
                 <td class="px-4 py-2 whitespace-nowrap" x-text="file.name"></td>
                 <td class="px-4 py-2 whitespace-nowrap" x-text="file.file_name"></td>
                 <td class="px-4 py-2 whitespace-nowrap" x-text="file.type"></td>
-                <td class="px-4 py-2 whitespace-nowrap" x-text="file.size + ' байт'"></td>
+                <td class="px-4 py-2 whitespace-nowrap" x-text="file.size + ' bytes'"></td>
                 <td class="px-4 py-2 whitespace-nowrap" x-text="file.saved ? 'Yes' : 'No'"></td>
                 <td class="px-4 py-2 break-all max-w-xs" x-text="file.saved_path || '-'"></td>
               </tr>
@@ -161,14 +150,13 @@
         </table>
       </div>
 
-      <!-- Block: Response -->
       <div class="bg-white p-4 rounded-lg shadow">
         <h3 class="font-semibold mb-4">Response</h3>
         <template x-if="eventData.res_body && Object.keys(eventData.res_body).length > 0">
           <div class="p-3 bg-gray-50 rounded-md font-mono text-sm" x-html="renderJson(eventData.res_body)"></div>
         </template>
         <div x-show="!eventData.res_body || Object.keys(eventData.res_body).length === 0" class="text-gray-500 text-sm">
-          No data in body of response
+          No data in the response body
         </div>
       </div>
 

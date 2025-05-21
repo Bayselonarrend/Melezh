@@ -11,24 +11,22 @@
 
         </div>
 
-        <!-- Заголовок и описание -->
         <div class="space-y-1 w-full">
             <h2 class="text-2xl font-bold">Настройки</h2>
             <p>Основные настройки данного проекта</p>
         </div>
     </div>
 
-    <div x-show="isLoading" class="text-center py-4">Загрузка настроек...</div>
+    <div x-show="isLoading" class="text-center py-4">Загрузка...</div>
 
     <form @submit.prevent="saveSettings" x-show="!isLoading" class="space-y-6">
-        <!-- Адаптивная сетка -->
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <template x-for="setting in settings" :key="setting.name">
                 <div class="p-4 border rounded-md shadow-sm">
                     <label class="block font-semibold mb-2" x-text="setting.name"></label>
                     <small class="block text-gray-500 mb-2" x-text="setting.description"></small>
 
-                    <!-- Поле ввода или тумблер -->
                     <template x-if="setting.value.toString() === 'true' || setting.value.toString() === 'false'">
                         <div class="flex items-center  space-y-4">
                             <input type="checkbox" class="hidden" :id="'toggle-' + setting.name" x-model="setting.value"

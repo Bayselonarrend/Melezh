@@ -11,24 +11,22 @@
 
         </div>
 
-        <!-- Title and description -->
         <div class="space-y-1 w-full">
             <h2 class="text-2xl font-bold">Settings</h2>
             <p>Main settings of this project</p>
         </div>
     </div>
 
-    <div x-show="isLoading" class="text-center py-4">Upload settings...</div>
+    <div x-show="isLoading" class="text-center py-4">Loading...</div>
 
     <form @submit.prevent="saveSettings" x-show="!isLoading" class="space-y-6">
-        <!-- Аdаптandintoя greed -->
+
         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <template x-for="setting in settings" :key="setting.name">
                 <div class="p-4 border rounded-md shadow-sm">
                     <label class="block font-semibold mb-2" x-text="setting.name"></label>
                     <small class="block text-gray-500 mb-2" x-text="setting.description"></small>
 
-                    <!-- Field of input or tumbler -->
                     <template x-if="setting.value.toString() === 'true' || setting.value.toString() === 'false'">
                         <div class="flex items-center space-y-4">
                             <input type="checkbox" class="hidden" :id="'toggle-' + setting.name" x-model="setting.value"
@@ -41,7 +39,7 @@
                                     class="absolute left-1 top-1 bg-white w-4 h-4 rounded-full transition-transform duration-300"
                                     :class="{'transform translate-x-6': setting.value.toString() === 'true'}"></span>
                             </label>
-                            <span x-text="setting.value.toString() === 'true' ? 'Inkeyеbut' : 'Inыkeyеbut'"
+                            <span x-text="setting.value.toString() === 'true' ? 'Enabled' : 'Disabled'"
                                 class="text-sm ml-4"></span>
                         </div>
                     </template>

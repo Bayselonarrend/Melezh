@@ -1,2 +1,2 @@
 oint  ПолучитьНастройкиПроекта ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\lpukvf3o.p3c"
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\kdyldwjr.l2o"

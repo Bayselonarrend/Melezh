@@ -1,2 +1,2 @@
 oint  СоздатьПроект \
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\cwgiyrdz.0ki"
+  --path "C:\Users\bayselonarrend\AppData\Local\Temp\kdyldwjr.l2o"

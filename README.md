@@ -1,5 +1,4 @@
-![cover](media/cover_s.png)
-
+![image](https://github.com/user-attachments/assets/ba5833ae-cc82-4c09-b67f-da35291ea49d)
 
 
 

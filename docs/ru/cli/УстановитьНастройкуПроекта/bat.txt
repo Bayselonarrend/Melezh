@@ -1,4 +1,4 @@
 oint  УстановитьНастройкуПроекта ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\kdyldwjr.l2o" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\uavollq1.k0o" ^
   --key "***" ^
   --value "yo"

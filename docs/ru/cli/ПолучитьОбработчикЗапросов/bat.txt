@@ -1,0 +1,3 @@
+oint  ПолучитьОбработчикЗапросов ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\uavollq1.k0o" ^
+  --handler "2ffbc752e"

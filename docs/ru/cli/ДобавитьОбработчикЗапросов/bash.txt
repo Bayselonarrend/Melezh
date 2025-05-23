@@ -1,0 +1,5 @@
+oint  ДобавитьОбработчикЗапросов \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\uavollq1.k0o" \
+  --lib "telegram" \
+  --func "ОтправитьТекстовоеСообщение" \
+  --method "get"

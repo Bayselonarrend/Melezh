@@ -1,0 +1,3 @@
+oint  УдалитьОбработчикЗапросов \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\res1y5ao.hij" \
+  --handler "my-key"

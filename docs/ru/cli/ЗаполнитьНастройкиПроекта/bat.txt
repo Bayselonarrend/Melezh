@@ -1,5 +1,5 @@
 :: JSON данные также могут быть переданы как путь к файлу .json
 
 oint  ЗаполнитьНастройкиПроекта ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\uavollq1.k0o" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\res1y5ao.hij" ^
   --set "{'logs_req_headers':false,'logs_req_body':false}"

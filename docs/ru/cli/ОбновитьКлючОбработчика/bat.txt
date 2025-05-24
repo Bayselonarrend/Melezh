@@ -1,0 +1,4 @@
+oint  ОбновитьКлючОбработчика ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\res1y5ao.hij" ^
+  --handler "627e6d6c4" ^
+  --key "***"

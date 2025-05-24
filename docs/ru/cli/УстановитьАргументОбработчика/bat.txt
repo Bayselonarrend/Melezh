@@ -1,0 +1,6 @@
+oint  УстановитьАргументОбработчика ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\04ezleax.m3w" ^
+  --handler "my-key" ^
+  --arg "text" ^
+  --value "Hello world!" ^
+  --strict true

@@ -1,2 +1,2 @@
 oint  ПолучитьСписокОбработчиковЗапросов ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\res1y5ao.hij"
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\04ezleax.m3w"

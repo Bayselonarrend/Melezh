@@ -1,0 +1,4 @@
+oint  UpdateHandlersKey \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" \
+  --handler "72664bcac" \
+  --key "***"

@@ -1,4 +1,4 @@
 oint  ОбновитьКлючОбработчика ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\w5n1fqum.rsk" ^
-  --handler "8138da26c" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" ^
+  --handler "713a46af9" ^
   --key "***"

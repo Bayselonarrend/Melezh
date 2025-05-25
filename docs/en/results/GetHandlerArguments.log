@@ -1,0 +1,10 @@
+﻿    {
+ "data": [
+  {
+   "arg": "text",
+   "strict": 1,
+   "value": "Hello world!"
+  }
+ ],
+ "result": true
+}

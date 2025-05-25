@@ -1,0 +1,11 @@
+﻿    {
+ "data": {
+  "active": 1,
+  "function": "SendTextMessage",
+  "key": "4992c8a35",
+  "library": "telegram",
+  "method": "GET",
+  "args": []
+ },
+ "result": true
+}

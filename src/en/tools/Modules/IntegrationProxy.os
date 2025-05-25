@@ -406,7 +406,7 @@ Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
     FilterStructure.Insert("value", HandlersKey);
     FilterStructure.Insert("raw" , False);
 
-    Result = New Map;
+    Results = New Map;
     Success = True;
 
     For Each Table In TableConstantNames() Do
@@ -415,13 +415,13 @@ Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
         Result = OPI_SQLite.DeleteRecords(TableName, FilterStructure, Project);
         CurrentSuccess = Result["result"];
 
-        Result.Insert(TableName, CurrentSuccess);
+        Results.Insert(TableName, CurrentSuccess);
 
         Success = ?(Not CurrentSuccess, CurrentSuccess, Success);
 
     EndDo;
 
-    Return New Structure("result,tables", Success, Result);
+    Return New Structure("result,tables", Success, Results);
 
 EndFunction
 
@@ -832,6 +832,7 @@ Function ConstantValue(Val Key)
     If Key = "HandlersTable" Then Return "handlers"
     ElsIf Key = "ArgsTable" Then Return "arguments"
     ElsIf Key = "SettingsTable" Then Return "settings"
+    ElsIf Key = "VariableTable" Then Return "variables"
 
     Else Return "" EndIf;
 
@@ -884,6 +885,13 @@ Function CreateNewProject(Path)
         Return Result;
     EndIf;
 
+    Result = CreateVariableTable(Path);
+
+    If Not Result["result"] Then
+        DeleteFiles(Path);
+        Return Result;
+    EndIf;
+
     Return Result;
 
 EndFunction
@@ -927,6 +935,19 @@ Function CreateSettingsTable(Path)
     TableStructure.Insert("value" , "TEXT");
 
     SettingTableName = ConstantValue("SettingsTable");
+    Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
+
+    Return Result;
+
+EndFunction
+
+Function CreateVariableTable(Path)
+
+    TableStructure = New Map();
+    TableStructure.Insert("name" , "TEXT PRIMARY KEY NOT NULL UNIQUE");
+    TableStructure.Insert("value", "TEXT");
+
+    SettingTableName = ConstantValue("VariableTable");
     Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
 
     Return Result;

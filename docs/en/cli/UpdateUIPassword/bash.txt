@@ -1,3 +1,3 @@
 oint  UpdateUIPassword \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\t3dchd35.3aw" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" \
   --pass "***"

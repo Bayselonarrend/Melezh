@@ -1,0 +1,6 @@
+oint  UpdateRequestsHandler ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" ^
+  --handler "c6399e448" ^
+  --lib "vk" ^
+  --func "CreatePost" ^
+  --method "FORM"

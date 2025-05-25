@@ -1,0 +1,3 @@
+oint  ClearHandlerArguments \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" \
+  --handler "my-key"

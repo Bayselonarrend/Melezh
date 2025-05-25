@@ -66,7 +66,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "SetProjectSetting";
-    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.SearchMethod = "SETPROJECTSETTING";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Projects setup";
@@ -75,7 +75,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "SetProjectSetting";
-    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.SearchMethod = "SETPROJECTSETTING";
     NewLine.Parameter = "--key";
     NewLine.Description = "Project setting key";
     NewLine.Region = "Projects setup";
@@ -83,7 +83,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "SetProjectSetting";
-    NewLine.SearchMethod = "SetProjectSetting";
+    NewLine.SearchMethod = "SETPROJECTSETTING";
     NewLine.Parameter = "--value";
     NewLine.Description = "Value of project setting";
     NewLine.Region = "Projects setup";
@@ -342,7 +342,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "ClearHandlerArguments";
-    NewLine.SearchMethod = "CLEARHANDLERARGUMENT";
+    NewLine.SearchMethod = "CLEARHANDLERARGUMENTS";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Argument setting";
@@ -351,7 +351,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "ClearHandlerArguments";
-    NewLine.SearchMethod = "CLEARHANDLERARGUMENT";
+    NewLine.SearchMethod = "CLEARHANDLERARGUMENTS";
     NewLine.Parameter = "--handler";
     NewLine.Description = "Handlers key";
     NewLine.Region = "Argument setting";

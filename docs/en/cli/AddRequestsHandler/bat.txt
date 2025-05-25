@@ -1,0 +1,5 @@
+oint  AddRequestsHandler ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\t3dchd35.3aw" ^
+  --lib "telegram" ^
+  --func "SendTextMessage" ^
+  --method "get"

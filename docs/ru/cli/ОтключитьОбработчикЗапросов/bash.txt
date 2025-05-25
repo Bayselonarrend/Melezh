@@ -1,3 +1,3 @@
 oint  ОтключитьОбработчикЗапросов \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\04ezleax.m3w" \
-  --handler "069619267"
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\w5n1fqum.rsk" \
+  --handler "46a452c66"

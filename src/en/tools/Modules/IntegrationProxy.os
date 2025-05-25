@@ -161,7 +161,13 @@ Function FillProjectSettings(Val Project, Val Settings) Export
         CurrentValue = Setting["value"];
 
         If OPI_Tools.CollectionFieldExist(Settings, Setting["name"], CurrentValue) Then
-            Setting["value"] = CurrentValue;
+
+            If TypeOf(CurrentValue) = Type("Boolean") Then
+                Setting["value"] = ?(CurrentValue, "true", "false");
+            Else
+                Setting["value"] = String(CurrentValue);
+            EndIf;
+
         EndIf
 
     EndDo;
@@ -193,13 +199,28 @@ EndFunction
 // Setting - String - Project setting key - key
 // Value - String - Value of project setting - value
 // Returns:
-// Structure Of KeyAndValue - Project settings list
+// Structure Of KeyAndValue - Setting result
 Function SetProjectSetting(Val Project, Val Setting, Val Value) Export
 
     OPI_TypeConversion.GetLine(Setting);
     OPI_TypeConversion.GetLine(Value);
 
     Return FillProjectSettings(Project, New Structure(Setting, Value));
+
+EndFunction
+
+// Update UI password
+// Changes the password for logging into the web console
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Password - String - New password - pass
+// Returns:
+// Structure Of KeyAndValue - Result of password change
+Function UpdateUIPassword(Val Project, Val Password) Export
+
+    OPI_TypeConversion.GetLine(Password);
+    Return SetProjectSetting(Project, "ui_password", Password);
 
 EndFunction
 

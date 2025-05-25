@@ -1,0 +1,5 @@
+# JSON данные также могут быть переданы как путь к файлу .json
+
+oint  FillProjectSettings \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\t3dchd35.3aw" \
+  --set "{'logs_req_headers':false,'logs_req_body':false}"

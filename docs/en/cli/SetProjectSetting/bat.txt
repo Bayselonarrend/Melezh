@@ -1,0 +1,4 @@
+oint  SetProjectSetting ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\t3dchd35.3aw" ^
+  --key "***" ^
+  --value "yo"

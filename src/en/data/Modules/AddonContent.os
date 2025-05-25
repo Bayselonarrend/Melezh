@@ -90,6 +90,23 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
+    NewLine.Method = "UpdateUIPassword";
+    NewLine.SearchMethod = "UPDATEUIPASSWORD";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Projects setup";
+    NewLine.MethodDescription = "Changes the password for logging into the web console";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "UpdateUIPassword";
+    NewLine.SearchMethod = "UPDATEUIPASSWORD";
+    NewLine.Parameter = "--pass";
+    NewLine.Description = "New password";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
     NewLine.Method = "AddRequestsHandler";
     NewLine.SearchMethod = "ADDREQUESTSHANDLER";
     NewLine.Parameter = "--proj";

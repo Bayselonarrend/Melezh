@@ -1,0 +1,3 @@
+oint  СменитьПарольUI ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\w5n1fqum.rsk" ^
+  --pass "***"

@@ -1,0 +1,11 @@
+﻿    {
+ "data": {
+  "active": 1,
+  "function": "ОтправитьТекстовоеСообщение",
+  "key": "5f937c77f",
+  "library": "telegram",
+  "method": "GET",
+  "args": []
+ },
+ "result": true
+}

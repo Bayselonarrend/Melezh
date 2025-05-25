@@ -20,18 +20,21 @@ EndProcedure
 
 Function ReturnProjectSettingsFull() Export
 	
+	FillSettings();
 	Return FullProjectSettings;
 	
 EndFunction
 
 Function ReturnProjectSettingsUI() Export
 	
+	FillSettings();
 	Return ProjectSettingsUI;
 	
 EndFunction
 
 Function ReturnSetting(Val Name) Export
 	
+	FillSettings();
 	Return ProjectSettings.Get(Name);
 	
 EndFunction

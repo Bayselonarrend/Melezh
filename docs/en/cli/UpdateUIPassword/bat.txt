@@ -1,0 +1,3 @@
+oint  UpdateUIPassword ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\t3dchd35.3aw" ^
+  --pass "***"

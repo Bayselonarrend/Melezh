@@ -695,6 +695,168 @@ EndFunction
 
 #EndRegion
 
+#Region VariableManagement
+
+// Get variable
+// Gets the value of an existing variable
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Name - String - Variable name - var
+// Returns:
+// Structure Of KeyAndValue - Getting result
+Function GetVariable(Val Project, Val Name) Export
+
+    OPI_TypeConversion.GetLine(Name);
+    
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    FilterStructure = New Structure;
+    FilterStructure.Insert("field", "name");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", Name);
+    FilterStructure.Insert("raw" , False);
+
+    VariableTableName = ConstantValue("VariableTable");
+    Result = OPI_SQLite.GetRecords(VariableTableName, "*", FilterStructure, 1);
+
+    If Result["result"] = True Then
+
+        If Result["data"].Count() > 0 Then
+            Result["data"] = Result["data"][0];
+        Else
+            Result = New Structure("result,error", False, "Variable not found");
+        EndIf;
+
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+// Declare variable
+// Declares a new variable for use in query processing
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Name - String - Variable name - var
+// Returns:
+// Structure Of KeyAndValue - Declaration result
+Function DeclareVariable(Val Project, Val Name, Val InitialValue = "") Export
+
+    OPI_TypeConversion.GetLine(Name);
+    OPI_TypeConversion.GetLine(InitialValue);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    RecordStructure = New Structure;
+    RecordStructure.Insert("name" , Name);
+    RecordStructure.Insert("value", InitialValue);
+
+    VariableTableName = ConstantValue("VariableTable");
+    Result = OPI_SQLite.AddRecords(VariableTableName, RecordStructure, False, Project);
+
+    If Result["result"] Then
+
+          Result = New Structure;
+          Result.Insert("result", True);
+
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+// Delete variable
+// Deletes a previously declared variable
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Name - String - Variable name - var
+// Returns:
+// Structure Of KeyAndValue - Deleting result
+Function DeleteVariable(Val Project, Val Name) Export
+
+    OPI_TypeConversion.GetLine(Name);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("VariableTable");
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "name");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", Name);
+    FilterStructure.Insert("raw" , False);
+
+    Result = OPI_SQLite.DeleteRecords(Table, FilterStructure, Project);
+
+    Return Result;
+
+EndFunction
+
+// Set variable value
+// Sets the value of an existing variable
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// Name - String - Variable name - var
+// Value - String - Variable value - val
+// Returns:
+// Structure Of KeyAndValue - Setting result
+Function SetVariableValue(Val Project, Val Name, Val Value) Export
+
+    OPI_TypeConversion.GetLine(Name);
+    OPI_TypeConversion.GetLine(Value);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("VariableTable");
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "name");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", Name);
+    FilterStructure.Insert("raw" , False);
+
+    FieldsStructure = New Structure;
+    FieldsStructure.Insert("name" , Name);
+    FieldsStructure.Insert("value", Value);
+
+    Result = OPI_SQLite.UpdateRecords(Table, FieldsStructure, FilterStructure, Project);
+
+    Return Result;
+
+EndFunction
+
+#EndRegion
+
 #EndRegion
 
 #Region Internal
@@ -846,6 +1008,7 @@ Function TableConstantNames(Val HandlersOnly = True)
 
     If Not HandlersOnly Then
         ArrayOfNames.Add("SettingsTable");
+        ArrayOfNames.Add("VariableTable");
     EndIf;
 
     Return ArrayOfNames;

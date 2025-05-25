@@ -356,6 +356,82 @@ Function GetComposition() Export
     NewLine.Description = "Handlers key";
     NewLine.Region = "Argument setting";
 
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "GetVariable";
+    NewLine.SearchMethod = "GETVARIABLE";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Variable management";
+    NewLine.MethodDescription = "Gets the value of an existing variable";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "GetVariable";
+    NewLine.SearchMethod = "GETVARIABLE";
+    NewLine.Parameter = "--var";
+    NewLine.Description = "Variable name";
+    NewLine.Region = "Variable management";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeclareVariable";
+    NewLine.SearchMethod = "DECLAREVARIABLE";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Variable management";
+    NewLine.MethodDescription = "Declares a new variable for use in query processing";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeclareVariable";
+    NewLine.SearchMethod = "DECLAREVARIABLE";
+    NewLine.Parameter = "--var";
+    NewLine.Description = "Variable name";
+    NewLine.Region = "Variable management";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeleteVariable";
+    NewLine.SearchMethod = "DELETEVARIABLE";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Variable management";
+    NewLine.MethodDescription = "Deletes a previously declared variable";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeleteVariable";
+    NewLine.SearchMethod = "DELETEVARIABLE";
+    NewLine.Parameter = "--var";
+    NewLine.Description = "Variable name";
+    NewLine.Region = "Variable management";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetVariableValue";
+    NewLine.SearchMethod = "SETVARIABLEVALUE";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Variable management";
+    NewLine.MethodDescription = "Sets the value of an existing variable";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetVariableValue";
+    NewLine.SearchMethod = "SETVARIABLEVALUE";
+    NewLine.Parameter = "--var";
+    NewLine.Description = "Variable name";
+    NewLine.Region = "Variable management";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "SetVariableValue";
+    NewLine.SearchMethod = "SETVARIABLEVALUE";
+    NewLine.Parameter = "--val";
+    NewLine.Description = "Variable value";
+    NewLine.Region = "Variable management";
+
     Return CompositionTable;
 EndFunction
 

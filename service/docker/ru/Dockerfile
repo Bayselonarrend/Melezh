@@ -3,7 +3,7 @@ FROM ubuntu:22.04
 
 # Обновляем систему и устанавливаем зависимости
 RUN apt-get update && \
-    apt-get install -y wget sudo dpkg libicu-dev && \
+    apt-get install -y bash wget sudo dpkg libicu-dev && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/*
 

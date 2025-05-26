@@ -49,7 +49,7 @@
 	СтруктураАнг.Вставить("ПутьCLIP", ПутьКРепозиторию + "\src\en");
 	СтруктураАнг.Вставить("Описание", "Melezh -gateway, providing a unified customizable API for working with various services from the OpenIntegrations set and user modules via HTTP");
 	СтруктураАнг.Вставить("Префикс" , "en");
-	СтруктураРус.Вставить("Docker"  , "\service\docker\release\en\Dockerfile");
+	СтруктураАнг.Вставить("Docker"  , "\service\docker\release\en\Dockerfile");
  
 	МассивЛокализаций.Добавить(СтруктураРус);
 	МассивЛокализаций.Добавить(СтруктураАнг); 

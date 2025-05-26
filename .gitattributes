@@ -1,0 +1,6 @@
+*.sh         text eol=lf
+
+*.iss linguist-vendored
+*.bat linguist-vendored
+
+

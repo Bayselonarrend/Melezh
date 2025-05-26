@@ -1,0 +1,12 @@
+pipeline {
+    agent any
+    stages {
+
+        stage('Release') {
+            steps {
+                    bat 'oscript ./ci/os/releasemaker.os'
+                    archiveArtifacts artifacts: '0.1.0/*'
+            }
+        }
+    }
+}

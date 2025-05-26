@@ -1,3 +1,3 @@
-oint  УдалитьОбработчикЗапросов ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" ^
+melezh  УдалитьОбработчикЗапросов ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" ^
   --handler "my-key"

@@ -1,5 +1,5 @@
-oint  УстановитьАргументОбработчика \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" \
+melezh  УстановитьАргументОбработчика \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" \
   --handler "my-key" \
   --arg "text" \
   --value "Hello world!" \

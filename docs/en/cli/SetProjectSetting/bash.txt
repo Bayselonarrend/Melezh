@@ -1,4 +1,4 @@
-oint  SetProjectSetting \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" \
+melezh  SetProjectSetting \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" \
   --key "***" \
   --value "yo"

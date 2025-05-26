@@ -1,4 +1,4 @@
-oint  ОбновитьКлючОбработчика \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" \
-  --handler "713a46af9" \
+melezh  ОбновитьКлючОбработчика \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" \
+  --handler "b9c2024cc" \
   --key "***"

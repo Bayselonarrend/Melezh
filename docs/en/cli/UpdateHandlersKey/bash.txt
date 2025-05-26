@@ -1,4 +1,4 @@
-oint  UpdateHandlersKey \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" \
-  --handler "72664bcac" \
+melezh  UpdateHandlersKey \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" \
+  --handler "432f926ef" \
   --key "***"

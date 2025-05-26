@@ -1,5 +1,5 @@
-oint  AddRequestsHandler ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" ^
+melezh  AddRequestsHandler ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" ^
   --lib "telegram" ^
   --func "SendTextMessage" ^
   --method "get"

@@ -1,6 +1,6 @@
-oint  ИзменитьОбработчикЗапросов ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" ^
-  --handler "1ac850b2f" ^
+melezh  ИзменитьОбработчикЗапросов ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" ^
+  --handler "47fd2bb24" ^
   --lib "vk" ^
   --func "СоздатьПост" ^
   --method "FORM"

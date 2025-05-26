@@ -1,5 +1,5 @@
-oint  ДобавитьОбработчикЗапросов ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\5detvcw2.10g" ^
+melezh  ДобавитьОбработчикЗапросов ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" ^
   --lib "telegram" ^
   --func "ОтправитьТекстовоеСообщение" ^
   --method "get"

@@ -1,2 +1,2 @@
-oint  СоздатьПроект ^
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\mkt4kuw2.prf"
+melezh  СоздатьПроект ^
+  --path "C:\Users\bayselonarrend\AppData\Local\Temp\ruh02faf.zoh"

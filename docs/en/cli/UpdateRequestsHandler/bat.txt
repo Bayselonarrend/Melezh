@@ -1,6 +1,6 @@
-oint  UpdateRequestsHandler ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" ^
-  --handler "c6399e448" ^
+melezh  UpdateRequestsHandler ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" ^
+  --handler "d31270363" ^
   --lib "vk" ^
   --func "CreatePost" ^
   --method "FORM"

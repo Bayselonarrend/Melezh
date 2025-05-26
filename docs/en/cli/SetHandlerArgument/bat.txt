@@ -1,5 +1,5 @@
-oint  SetHandlerArgument ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\4fegeedu.sny" ^
+melezh  SetHandlerArgument ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" ^
   --handler "my-key" ^
   --arg "text" ^
   --value "Hello world!" ^

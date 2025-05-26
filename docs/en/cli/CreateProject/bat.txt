@@ -1,2 +1,2 @@
-oint  CreateProject ^
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\mq0enn4a.2vp"
+melezh  CreateProject ^
+  --path "C:\Users\bayselonarrend\AppData\Local\Temp\qmq35w2b.ehh"

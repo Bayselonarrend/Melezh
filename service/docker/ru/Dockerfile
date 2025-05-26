@@ -18,7 +18,10 @@ ENV Melezh_URL="https://api.athenaeum.digital/tc/job/Melezh_Release/lastSuccessf
 RUN wget -O packageA.deb "$OInt_URL" && \
     wget -O packageB.deb "$Melezh_URL" && \
     sudo dpkg -i packageA.deb packageB.deb || apt-get install -f -y
-        
+    
+
+RUN sed -i '1i #!/bin/bash' /usr/bin/melezh 
+    
 RUN sudo melezh СоздатьПроект --path proj.melezh
 
 # Порт можно менять при запуске через -p хост:контейнер

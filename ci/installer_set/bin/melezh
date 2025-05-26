@@ -1,1 +1,2 @@
+#!/bin/bash
 /usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"

@@ -1,3 +1,3 @@
 melezh  ClearHandlerArguments \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\jsub1xa2.j5n" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\anxujp4k.bmi" \
   --handler "my-key"

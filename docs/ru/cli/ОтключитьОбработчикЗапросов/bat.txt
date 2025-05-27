@@ -1,3 +1,3 @@
 melezh  ОтключитьОбработчикЗапросов ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\diujk5r0.pdy" ^
-  --handler "47fd2bb24"
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\osb5ekwx.44f" ^
+  --handler "713bc7899"

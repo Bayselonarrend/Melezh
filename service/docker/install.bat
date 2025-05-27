@@ -24,7 +24,7 @@ echo V Docker is installed.
 :: Build Docker image
 echo.
 echo O Building Docker image...
-docker build -t %IMAGE_NAME% .
+docker build --no-cache -t %IMAGE_NAME% .
 
 if %ERRORLEVEL% neq 0 (
     echo X Failed to build Docker image.

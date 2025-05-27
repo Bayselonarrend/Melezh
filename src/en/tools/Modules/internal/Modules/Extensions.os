@@ -3,8 +3,14 @@ Procedure CompleteCompositionWithExtensions(OPIObject, ExtensionsCatalog) Export
     ExtensionFiles = FindFiles(ExtensionsCatalog, "*.os");
 
     For Each FileExtension In ExtensionFiles Do
-        ParametersTable = ParseModule(FileExtension);
-        OPIObject.CompleteCompositionCache(FileExtension.NameWithoutExtension, ParametersTable);
+
+        Try
+            ParametersTable = ParseModule(FileExtension);
+            OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable);
+        Except
+            Message(StrTemplate("Error applying the extension %1", DetailErrorDescription(ErrorInfo())));
+        EndTry;
+
     EndDo;
 
 EndProcedure
@@ -171,7 +177,7 @@ Procedure FormParamsDescriptionTable(Val ParameterArray, Val Method, Composition
         EndIf;
 
         Value = GetParametersDefaultValue(Name1C, Method);
-        Library = Module.NameWithoutExtension;
+        Library = Module.BaseName;
         
         If ValueIsFilled(Value) Then
             Description = Description + " (optional, def. val. - " + Value + ")";

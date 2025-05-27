@@ -17,7 +17,7 @@ echo "V Docker is installed."
 
 # Build the image
 echo "O Building Docker image..."
-docker build -t "$IMAGE_NAME" .
+docker build --no-cache -t "$IMAGE_NAME" .
 
 # Check if container exists
 if [ "$(docker ps -a -f "name=$CONTAINER_NAME" --format "{{.Status}}")" ]; then

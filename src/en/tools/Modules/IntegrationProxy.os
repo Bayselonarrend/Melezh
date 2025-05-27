@@ -96,13 +96,13 @@ Function RunProject(Val Port, Val Project) Export
     ServerCatalogs = GetServerCatalogs();
 
     Root = ServerCatalogs["Root"];
-    Static = ServerCatalogs["Static"];
-    Extensions = ServerCatalogs["Extensions"];
+    StaticCatalog = ServerCatalogs["Static"];
+    ExtensionsCatalog = ServerCatalogs["Extensions"];
 
-    Extensions.CompleteCompositionWithExtensions(OintContent, Extensions);
+    Extensions.CompleteCompositionWithExtensions(OintContent, ExtensionsCatalog);
     Handler.Initialize(Project, IntegrationProxy, OintContent, Root);
 
-    WebServer.SetWebRoot(Static);
+    WebServer.SetWebRoot(StaticCatalog);
     WebServer.SetServerDir(Root);
     WebServer.UseStaticFiles();
 

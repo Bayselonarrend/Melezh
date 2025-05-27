@@ -1,3 +1,3 @@
 melezh  GetHandlerArguments ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\anxujp4k.bmi" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\zyu1bxem.yut" ^
   --handler "my-key"

@@ -1,4 +1,4 @@
 melezh  ОбновитьКлючОбработчика ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\osb5ekwx.44f" ^
-  --handler "a8c6d2d38" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5" ^
+  --handler "408cf844b" ^
   --key "***"

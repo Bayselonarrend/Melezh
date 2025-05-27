@@ -1,4 +1,4 @@
 melezh  UpdateHandlersKey \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\anxujp4k.bmi" \
-  --handler "a8b779075" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\zyu1bxem.yut" \
+  --handler "20b4efd32" \
   --key "***"

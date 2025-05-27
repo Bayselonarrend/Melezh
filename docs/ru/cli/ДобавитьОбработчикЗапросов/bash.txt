@@ -1,5 +1,5 @@
 melezh  ДобавитьОбработчикЗапросов \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\osb5ekwx.44f" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5" \
   --lib "telegram" \
   --func "ОтправитьТекстовоеСообщение" \
   --method "get"

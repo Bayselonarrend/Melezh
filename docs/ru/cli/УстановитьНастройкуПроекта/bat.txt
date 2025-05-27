@@ -1,4 +1,4 @@
 melezh  УстановитьНастройкуПроекта ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\osb5ekwx.44f" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5" ^
   --key "***" ^
   --value "yo"

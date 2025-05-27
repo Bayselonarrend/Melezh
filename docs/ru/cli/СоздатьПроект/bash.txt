@@ -1,2 +1,2 @@
 melezh  СоздатьПроект \
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\ikacftkh.cnv"
+  --path "C:\Users\bayselonarrend\AppData\Local\Temp\jteshx1c.t02"

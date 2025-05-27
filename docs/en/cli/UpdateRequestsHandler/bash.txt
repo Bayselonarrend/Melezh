@@ -1,6 +1,6 @@
 melezh  UpdateRequestsHandler \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\anxujp4k.bmi" \
-  --handler "cdf15d862" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\zyu1bxem.yut" \
+  --handler "3dcc074a6" \
   --lib "vk" \
   --func "CreatePost" \
   --method "FORM"

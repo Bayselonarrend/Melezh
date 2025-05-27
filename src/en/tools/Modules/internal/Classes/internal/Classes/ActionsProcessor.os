@@ -1,5 +1,6 @@
 #Use oint
 #Use "./internal"
+#Use "../../../../../../extensions"
 
 Var OPIObject;
 Var ProxyModule;

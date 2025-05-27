@@ -44,13 +44,13 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 		EndIf;
 		
 		RecordRequestBody = SettingsVault.ReturnSetting("logs_req_body");
-		RecordRequestBody = ?(ValueIsFilled(RecordRequestBody), Boolean(RecordRequestBody), False);
+		RecordRequestBody = ?(ValueIsFilled(RecordRequestBody), GetBoolean(RecordRequestBody), False);
 
 		RecordRequestHeaders = SettingsVault.ReturnSetting("logs_req_headers");
-		RecordRequestHeaders = ?(ValueIsFilled(RecordRequestHeaders), Boolean(RecordRequestHeaders), False);
+		RecordRequestHeaders = ?(ValueIsFilled(RecordRequestHeaders), GetBoolean(RecordRequestHeaders), False);
 
 		RecordResponseBody = SettingsVault.ReturnSetting("logs_res_body");
-		RecordResponseBody = ?(ValueIsFilled(RecordResponseBody), Boolean(RecordResponseBody), False);
+		RecordResponseBody = ?(ValueIsFilled(RecordResponseBody), GetBoolean(RecordResponseBody), False);
 		
 		MaxRequestSize = SettingsVault.ReturnSetting("logs_req_max_size");
 		MaxRequestSize = ?(ValueIsFilled(MaxRequestSize), Number(MaxRequestSize), 0);
@@ -334,5 +334,23 @@ Procedure WriteLogFile(LogPath, FileName, Data)
 	Data.Write(StrTemplate("%1/%2", LogPath, FileName));
 	
 EndProcedure
+
+Function GetBoolean(Val Value)
+
+	If TypeOf(Value) = Type("String") Then
+		Value = Upper(Value);
+	EndIf;
+
+	BoolMap = New Map();
+	BoolMap.Insert(True , True);
+	BoolMap.Insert(1 , True);
+	BoolMap.Insert("1" , True);
+	BoolMap.Insert("TRUE", True);
+	BoolMap.Insert("TRUE" , True);
+
+	BooleanValue = BoolMap.Get(Value);
+	Return ?(BooleanValue = Undefined, False, True);
+	
+EndFunction
 
 #EndRegion

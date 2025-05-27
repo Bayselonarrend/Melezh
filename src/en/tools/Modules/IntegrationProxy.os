@@ -39,6 +39,7 @@
 #Use oint
 #Use oint-cli
 #Use "./internal"
+#Use "../../env"
 
 #Region Public
 
@@ -96,7 +97,9 @@ Function RunProject(Val Port, Val Project) Export
 
     Root = ServerCatalogs["Root"];
     Static = ServerCatalogs["Static"];
+    Extensions = ServerCatalogs["Extensions"];
 
+    Extensions.CompleteCompositionWithExtensions(OintContent, Extensions);
     Handler.Initialize(Project, IntegrationProxy, OintContent, Root);
 
     WebServer.SetWebRoot(Static);
@@ -695,168 +698,6 @@ EndFunction
 
 #EndRegion
 
-#Region VariableManagement
-
-// Get variable
-// Gets the value of an existing variable
-//
-// Parameters:
-// Project - String - Project filepath - proj
-// Name - String - Variable name - var
-// Returns:
-// Structure Of KeyAndValue - Getting result
-Function GetVariable(Val Project, Val Name) Export
-
-    OPI_TypeConversion.GetLine(Name);
-    
-    Result = CheckProjectExistence(Project);
-
-    If Not Result["result"] Then
-        Return Result;
-    Else
-        Project = Result["path"];
-    EndIf;
-
-    FilterStructure = New Structure;
-    FilterStructure.Insert("field", "name");
-    FilterStructure.Insert("type" , "=");
-    FilterStructure.Insert("value", Name);
-    FilterStructure.Insert("raw" , False);
-
-    VariableTableName = ConstantValue("VariableTable");
-    Result = OPI_SQLite.GetRecords(VariableTableName, "*", FilterStructure, 1);
-
-    If Result["result"] = True Then
-
-        If Result["data"].Count() > 0 Then
-            Result["data"] = Result["data"][0];
-        Else
-            Result = New Structure("result,error", False, "Variable not found");
-        EndIf;
-
-    EndIf;
-
-    Return Result;
-
-EndFunction
-
-// Declare variable
-// Declares a new variable for use in query processing
-//
-// Parameters:
-// Project - String - Project filepath - proj
-// Name - String - Variable name - var
-// Returns:
-// Structure Of KeyAndValue - Declaration result
-Function DeclareVariable(Val Project, Val Name, Val InitialValue = "") Export
-
-    OPI_TypeConversion.GetLine(Name);
-    OPI_TypeConversion.GetLine(InitialValue);
-
-    Result = CheckProjectExistence(Project);
-
-    If Not Result["result"] Then
-        Return Result;
-    Else
-        Project = Result["path"];
-    EndIf;
-
-    RecordStructure = New Structure;
-    RecordStructure.Insert("name" , Name);
-    RecordStructure.Insert("value", InitialValue);
-
-    VariableTableName = ConstantValue("VariableTable");
-    Result = OPI_SQLite.AddRecords(VariableTableName, RecordStructure, False, Project);
-
-    If Result["result"] Then
-
-          Result = New Structure;
-          Result.Insert("result", True);
-
-    EndIf;
-
-    Return Result;
-
-EndFunction
-
-// Delete variable
-// Deletes a previously declared variable
-//
-// Parameters:
-// Project - String - Project filepath - proj
-// Name - String - Variable name - var
-// Returns:
-// Structure Of KeyAndValue - Deleting result
-Function DeleteVariable(Val Project, Val Name) Export
-
-    OPI_TypeConversion.GetLine(Name);
-
-    Result = CheckProjectExistence(Project);
-
-    If Not Result["result"] Then
-        Return Result;
-    Else
-        Project = Result["path"];
-    EndIf;
-
-    Table = ConstantValue("VariableTable");
-
-    FilterStructure = New Structure;
-
-    FilterStructure.Insert("field", "name");
-    FilterStructure.Insert("type" , "=");
-    FilterStructure.Insert("value", Name);
-    FilterStructure.Insert("raw" , False);
-
-    Result = OPI_SQLite.DeleteRecords(Table, FilterStructure, Project);
-
-    Return Result;
-
-EndFunction
-
-// Set variable value
-// Sets the value of an existing variable
-//
-// Parameters:
-// Project - String - Project filepath - proj
-// Name - String - Variable name - var
-// Value - String - Variable value - val
-// Returns:
-// Structure Of KeyAndValue - Setting result
-Function SetVariableValue(Val Project, Val Name, Val Value) Export
-
-    OPI_TypeConversion.GetLine(Name);
-    OPI_TypeConversion.GetLine(Value);
-
-    Result = CheckProjectExistence(Project);
-
-    If Not Result["result"] Then
-        Return Result;
-    Else
-        Project = Result["path"];
-    EndIf;
-
-    Table = ConstantValue("VariableTable");
-
-    FilterStructure = New Structure;
-
-    FilterStructure.Insert("field", "name");
-    FilterStructure.Insert("type" , "=");
-    FilterStructure.Insert("value", Name);
-    FilterStructure.Insert("raw" , False);
-
-    FieldsStructure = New Structure;
-    FieldsStructure.Insert("name" , Name);
-    FieldsStructure.Insert("value", Value);
-
-    Result = OPI_SQLite.UpdateRecords(Table, FieldsStructure, FilterStructure, Project);
-
-    Return Result;
-
-EndFunction
-
-#EndRegion
-
 #EndRegion
 
 #Region Internal
@@ -994,7 +835,6 @@ Function ConstantValue(Val Key)
     If Key = "HandlersTable" Then Return "handlers"
     ElsIf Key = "ArgsTable" Then Return "arguments"
     ElsIf Key = "SettingsTable" Then Return "settings"
-    ElsIf Key = "VariableTable" Then Return "variables"
 
     Else Return "" EndIf;
 
@@ -1008,7 +848,6 @@ Function TableConstantNames(Val HandlersOnly = True)
 
     If Not HandlersOnly Then
         ArrayOfNames.Add("SettingsTable");
-        ArrayOfNames.Add("VariableTable");
     EndIf;
 
     Return ArrayOfNames;
@@ -1042,13 +881,6 @@ Function CreateNewProject(Path)
     EndIf;
 
     Result = SetDefaultSettings(Path);
-
-    If Not Result["result"] Then
-        DeleteFiles(Path);
-        Return Result;
-    EndIf;
-
-    Result = CreateVariableTable(Path);
 
     If Not Result["result"] Then
         DeleteFiles(Path);
@@ -1098,19 +930,6 @@ Function CreateSettingsTable(Path)
     TableStructure.Insert("value" , "TEXT");
 
     SettingTableName = ConstantValue("SettingsTable");
-    Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
-
-    Return Result;
-
-EndFunction
-
-Function CreateVariableTable(Path)
-
-    TableStructure = New Map();
-    TableStructure.Insert("name" , "TEXT PRIMARY KEY NOT NULL UNIQUE");
-    TableStructure.Insert("value", "TEXT");
-
-    SettingTableName = ConstantValue("VariableTable");
     Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
 
     Return Result;
@@ -1246,10 +1065,13 @@ Function GetServerCatalogs()
     PathParts.Delete(PathParts.UBound());
     PathParts.Delete(PathParts.UBound());
 
-    RootCatalog = StrConcat(PathParts, "/") + "/ui" ;
+    MainDirectory = StrConcat(PathParts, "/");
+
+    ExtensionsCatalog = MainDirectory + "/extensions/Modules";
+    RootCatalog = MainDirectory + "/ui" ;
     StaticCatalog = RootCatalog + "/static";
 
-    Return New Structure("Root,Static", RootCatalog, StaticCatalog);
+    Return New Structure("Root,Static,Extensions", RootCatalog, StaticCatalog, ExtensionsCatalog);
 
 EndFunction
 

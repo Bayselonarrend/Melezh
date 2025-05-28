@@ -109,6 +109,7 @@
 	Приостановить(1000);
 
 	ЗапуститьПриложение("xcopy """ + ОСкрипт + "lib\melezh"" "".\ci\installer_set\share\oint\lib\melezh"" /e /y /i", , Истина);
+	ЗапуститьПриложение("xcopy """ + ОСкрипт + "lib\opm"" "".\ci\installer_set\share\oint\lib\opm"" /e /y /i", , Истина);
 
 	Сообщить("End OSPX");
 

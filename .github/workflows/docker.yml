@@ -1,0 +1,84 @@
+name: Build and Push Docker Images (Manual)
+
+on:
+  workflow_dispatch:
+    inputs:
+      oint_version:
+        type: string
+        description: 'Version of OInt, e.g. 1.24.0'
+        required: true
+      melezh_version:
+        type: string
+        description: 'Version of Melezh, e.g. 0.1.0'
+        required: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      packages: write
+      contents: read
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set version
+        id: vars
+        run: |
+          echo "OINT_VERSION=${{ github.event.inputs.oint_version }}" >> $GITHUB_ENV
+          echo "MELEZH_VERSION=${{ github.event.inputs.melezh_version }}" >> $GITHUB_ENV
+
+      - name: Create build directory
+        run: |
+          mkdir -p /tmp/melezh-build/{en,ru}
+
+      - name: Download English DEB files from Draft Release (auth)
+        env:
+          OINT_VERSION: ${{ env.OINT_VERSION }}
+          MELEZH_VERSION: ${{ env.MELEZH_VERSION }}
+        run: |
+          # Английские пакеты
+          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+               -O /tmp/melezh-build/en/oint.deb \
+               "https://github.com/ ${{ github.repository }}/releases/download/v$MELEZH_VERSION/oint_$OINT_VERSION\_all_en.deb"
+
+          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+               -O /tmp/melezh-build/en/melezh.deb \
+               "https://github.com/ ${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION\_all_en.deb"
+
+          # Русские пакеты
+          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+               -O /tmp/melezh-build/ru/oint.deb \
+               "https://github.com/ ${{ github.repository }}/releases/download/v$MELEZH_VERSION/oint_$OINT_VERSION\_all_ru.deb"
+
+          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+               -O /tmp/melezh-build/ru/melezh.deb \
+               "https://github.com/ ${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION\_all_ru.deb"
+
+      - name: Log in to GHCR
+        run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
+
+      - name: Build and Push English image
+        run: |
+          cd service/ghcr/en
+          cp /tmp/melezh-build/en/oint.deb .
+          cp /tmp/melezh-build/en/melezh.deb .
+          docker build \
+            --build-arg OINT_VERSION=${{ env.OINT_VERSION }} \
+            --build-arg MELEZH_VERSION=${{ env.MELEZH_VERSION }} \
+            --build-arg LANG=en \
+            -t ghcr.io/${{ github.actor }}/melezh:${{ env.MELEZH_VERSION }}-en .
+          docker push ghcr.io/${{ github.actor }}/melezh:${{ env.MELEZH_VERSION }}-en
+
+      - name: Build and Push Russian image
+        run: |
+          cd service/ghcr/ru
+          cp /tmp/melezh-build/ru/oint.deb .
+          cp /tmp/melezh-build/ru/melezh.deb .
+          docker build \
+            --build-arg OINT_VERSION=${{ env.OINT_VERSION }} \
+            --build-arg MELEZH_VERSION=${{ env.MELEZH_VERSION }} \
+            --build-arg LANG=ru \
+            -t ghcr.io/${{ github.actor }}/melezh:${{ env.MELEZH_VERSION }}-ru .
+          docker push ghcr.io/${{ github.actor }}/melezh:${{ env.MELEZH_VERSION }}-ru

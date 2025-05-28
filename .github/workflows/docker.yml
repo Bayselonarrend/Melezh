@@ -41,20 +41,20 @@ jobs:
           # Английские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/oint.deb \
-               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
+               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION_all_en.deb"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/melezh.deb \
-               "https://github.com/${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION\_all_en.deb"
+               "https://github.com/${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION_all_en.deb"
 
           # Русские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.deb \
-               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
+               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION_all_en.deb"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/melezh.deb \
-               "https://github.com/${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION\_all_ru.deb"
+               "https://github.com/${{ github.repository }}/releases/download/v$MELEZH_VERSION/melezh_$MELEZH_VERSION_all_ru.deb"
 
       - name: Log in to GHCR
         run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

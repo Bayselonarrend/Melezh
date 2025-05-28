@@ -4,7 +4,7 @@ setlocal enabledelayedexpansion
 :: Configuration
 set IMAGE_NAME=melezh-server
 set CONTAINER_NAME=melezh-app
-set PORT=8080
+set PORT=1921
 
 echo.
 echo ##############################################

@@ -24,7 +24,7 @@ RUN sudo dpkg -i /tmp/oint.deb /tmp/melezh.deb || apt-get install -f -y
 # Создание проекта зависит от языка
 RUN sudo melezh CreateProject --path proj.melezh
 
-EXPOSE 8080
+EXPOSE 1921
 
 # Запуск сервера зависит от языка
-CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "8080"]
+CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "1921"]

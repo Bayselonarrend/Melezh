@@ -4,7 +4,7 @@ set -e
 # Configuration
 IMAGE_NAME="melezh-server"
 CONTAINER_NAME="melezh-app"
-PORT=8080
+PORT=1921
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null

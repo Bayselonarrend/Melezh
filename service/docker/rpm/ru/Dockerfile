@@ -26,7 +26,7 @@ RUN sudo rpm -ivh packageA.rpm packageB.rpm || \
 RUN sudo melezh СоздатьПроект --path proj.melezh
 
 # Порт
-EXPOSE 8080
+EXPOSE 1921
 
 # Запускаем сервер
-CMD ["melezh", "ЗапуститьПроект", "--proj", "proj.melezh", "--port", "8080"]
+CMD ["melezh", "ЗапуститьПроект", "--proj", "proj.melezh", "--port", "1921"]

@@ -23,6 +23,7 @@ on:
         type: string
         description: 'URL of Melezh (en)'
         required: true
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -38,23 +39,20 @@ jobs:
         run: |
           mkdir -p /tmp/melezh-build/{en,ru}
 
-      - name: Download English DEB files from Draft Release (auth)
+      - name: Download DEB files from Draft Release (auth)
         run: |
-          # Английские пакеты
-          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+          # English packages
+          wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/oint.deb \
                "${{ github.event.inputs.oint_en }}"
-
-          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+          wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/melezh.deb \
                "${{ github.event.inputs.melezh_en }}"
-
-          # Русские пакеты
-          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+          # Russian packages
+          wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.deb \
                "${{ github.event.inputs.oint_ru }}"
-
-          wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
+          wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/melezh.deb \
                "${{ github.event.inputs.melezh_ru }}"
 
@@ -77,4 +75,4 @@ jobs:
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \
             -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-ru .
-          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.version }}-ru
+          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-ru

@@ -1,4 +1,4 @@
-// Echo field
+// Fields echo
 // Returns the fields from the request in the response
 //
 // Parameters:

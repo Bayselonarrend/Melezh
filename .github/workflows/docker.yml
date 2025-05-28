@@ -3,15 +3,26 @@ name: Build and Push Docker Images (Manual)
 on:
   workflow_dispatch:
     inputs:
-      oint_version:
+      version:
         type: string
-        description: 'Version of OInt, e.g. 1.24.0'
+        description: 'Image version'
         required: true
-      melezh_version:
+      oint_ru:
         type: string
-        description: 'Version of Melezh, e.g. 0.1.0'
+        description: 'URL of OInt (ru)'
         required: true
-
+      oint_en:
+        type: string
+        description: 'URL of OInt (en)'
+        required: true
+      melezh_ru:
+        type: string
+        description: 'URL of Melezh (ru)'
+        required: true
+      melezh_en:
+        type: string
+        description: 'URL of Melezh (en)'
+        required: true
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -32,20 +43,20 @@ jobs:
           # Английские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/oint.deb \
-               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_en.deb"
+               "${{ github.event.inputs.oint_en }}"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/melezh.deb \
-               "https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_en.deb"
+               "${{ github.event.inputs.melezh_en }}"
 
           # Русские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.deb \
-               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_en.deb"
+               "${{ github.event.inputs.oint_ru }}"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/melezh.deb \
-               "https://github.com/${{ github.repository }}/releases/download/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_ru.deb"
+               "${{ github.event.inputs.melezh_ru }}"
 
       - name: Log in to GHCR
         run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
@@ -56,8 +67,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
           docker build \
-            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.melezh_version }}-en .
-          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.melezh_version }}-en
+            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-en .
+          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-en
 
       - name: Build and Push Russian image
         run: |
@@ -65,5 +76,5 @@ jobs:
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \
-            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.melezh_version }}-ru .
-          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.melezh_version }}-ru
+            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-ru .
+          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.version }}-ru

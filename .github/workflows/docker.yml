@@ -65,8 +65,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
           docker build \
-            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-en .
-          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-en
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-en .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-en
 
       - name: Build and Push Russian image
         run: |
@@ -74,5 +74,5 @@ jobs:
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \
-            -t ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-ru .
-          docker push ghcr.io/${{ github.actor }}/melezh:${{ github.event.inputs.version }}-ru
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-ru .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-ru

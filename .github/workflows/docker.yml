@@ -61,7 +61,7 @@ jobs:
 
       - name: Build and Push English image
         run: |
-          cd service/ghcr/en
+          cd ./service/docker/ghcr/en
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
           docker build \
@@ -70,7 +70,7 @@ jobs:
 
       - name: Build and Push Russian image
         run: |
-          cd service/ghcr/ru
+          cd ./service/docker/ghcr/ru
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \

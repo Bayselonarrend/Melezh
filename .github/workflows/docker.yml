@@ -41,7 +41,7 @@ jobs:
           # Английские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/oint.deb \
-               "https://github.com/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
+               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/en/melezh.deb \
@@ -50,7 +50,7 @@ jobs:
           # Русские пакеты
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.deb \
-               "https://github.com/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
+               "https://github.com/Bayselonarrend/OpenIntegrations/releases/download/$OINT_VERSION/oint_$OINT_VERSION\_all_en.deb"
 
           wget -H "Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/melezh.deb \

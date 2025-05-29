@@ -37,15 +37,17 @@ jobs:
         run: |
           if ${{ github.event.inputs.push_to_stable }}; then
             echo "REPO=melezh" >> $GITHUB_OUTPUT
+            echo "PUSH_LATEST=true" >> $GITHUB_OUTPUT
           else
             echo "REPO=melezh-dev" >> $GITHUB_OUTPUT
+            echo "PUSH_LATEST=false" >> $GITHUB_OUTPUT
           fi
 
       - name: Create build directory
         run: |
           mkdir -p /tmp/melezh-build/{en,ru}
 
-      - name: Download DEB files from Draft Release (auth)
+      - name: Download packages
         run: |
           # English packages (deb)
           wget -O /tmp/melezh-build/en/oint.deb \
@@ -76,38 +78,64 @@ jobs:
       - name: Log in to GHCR
         run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
-      - name: Build and Push English image (deb)
+      - name: Build and Push English DEB image
         run: |
           cd ./service/docker/ghcr/en-deb
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
-          docker build \
-            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en .
+          
+          # Build with version tag
+          docker build -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en .
           docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en
+          
+          # Additional push as latest if stable
+          if ${{ steps.repo.outputs.PUSH_LATEST }}; then
+            docker tag ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en \
+                      ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-deb-en
+            docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-deb-en
+          fi
 
-      - name: Build and Push Russian image (deb)
+      - name: Build and Push Russian DEB image
         run: |
           cd ./service/docker/ghcr/ru-deb
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
-          docker build \
-            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru .
+          
+          docker build -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru .
           docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru
+          
+          if ${{ steps.repo.outputs.PUSH_LATEST }}; then
+            docker tag ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru \
+                      ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-deb-ru
+            docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-deb-ru
+          fi
 
-      - name: Build and Push English image (rpm)
+      - name: Build and Push English RPM image
         run: |
           cd ./service/docker/ghcr/en-rpm
           cp /tmp/melezh-build/en/oint.rpm .
           cp /tmp/melezh-build/en/melezh.rpm .
-          docker build \
-            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en .
+          
+          docker build -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en .
           docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en
+          
+          if ${{ steps.repo.outputs.PUSH_LATEST }}; then
+            docker tag ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en \
+                      ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-rpm-en
+            docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-rpm-en
+          fi
 
-      - name: Build and Push Russian image (rpm)
+      - name: Build and Push Russian RPM image
         run: |
           cd ./service/docker/ghcr/ru-rpm
           cp /tmp/melezh-build/ru/oint.rpm .
           cp /tmp/melezh-build/ru/melezh.rpm .
-          docker build \
-            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru .
+          
+          docker build -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru .
           docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru
+          
+          if ${{ steps.repo.outputs.PUSH_LATEST }}; then
+            docker tag ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru \
+                      ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-rpm-ru
+            docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:latest-rpm-ru
+          fi

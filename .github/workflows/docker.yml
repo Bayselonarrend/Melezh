@@ -15,6 +15,11 @@ on:
         type: string
         description: 'OInt version'
         required: true
+      push_to_stable:
+        type: boolean
+        description: 'Push to stable repo (melezh) instead of dev (melezh-dev)'
+        required: false
+        default: false
 
 jobs:
   build:
@@ -26,6 +31,15 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
+
+      - name: Determine target repository
+        id: repo
+        run: |
+          if ${{ github.event.inputs.push_to_stable }}; then
+            echo "REPO=melezh" >> $GITHUB_OUTPUT
+          else
+            echo "REPO=melezh-dev" >> $GITHUB_OUTPUT
+          fi
 
       - name: Create build directory
         run: |
@@ -68,8 +82,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-en .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-en
+            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en .
+          docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-en
 
       - name: Build and Push Russian image (deb)
         run: |
@@ -77,8 +91,8 @@ jobs:
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-ru .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-ru
+            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru .
+          docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-deb-ru
 
       - name: Build and Push English image (rpm)
         run: |
@@ -86,8 +100,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.rpm .
           cp /tmp/melezh-build/en/melezh.rpm .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-en .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-en
+            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en .
+          docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-en
 
       - name: Build and Push Russian image (rpm)
         run: |
@@ -95,5 +109,5 @@ jobs:
           cp /tmp/melezh-build/ru/oint.rpm .
           cp /tmp/melezh-build/ru/melezh.rpm .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru
+            -t ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru .
+          docker push ghcr.io/bayselonarrend/${{ steps.repo.outputs.REPO }}:${{ github.event.inputs.version }}-rpm-ru

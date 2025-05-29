@@ -3,6 +3,10 @@ name: Build and Push Docker Images (Manual)
 on:
   workflow_dispatch:
     inputs:
+      version:
+        type: string
+        description: 'Image version'
+        required: true
       melezh_version:
         type: string
         description: 'Melezh version'
@@ -64,8 +68,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.deb .
           cp /tmp/melezh-build/en/melezh.deb .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-deb-en .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-deb-en
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-en .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-en
 
       - name: Build and Push Russian image (deb)
         run: |
@@ -73,8 +77,8 @@ jobs:
           cp /tmp/melezh-build/ru/oint.deb .
           cp /tmp/melezh-build/ru/melezh.deb .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-deb-ru .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-deb-ru
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-ru .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-deb-ru
 
       - name: Build and Push English image (rpm)
         run: |
@@ -82,8 +86,8 @@ jobs:
           cp /tmp/melezh-build/en/oint.rpm .
           cp /tmp/melezh-build/en/melezh.rpm .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-rpm-ru .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-rpm-en
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-en
 
       - name: Build and Push Russian image (rpm)
         run: |
@@ -91,5 +95,5 @@ jobs:
           cp /tmp/melezh-build/ru/oint.rpm .
           cp /tmp/melezh-build/ru/melezh.rpm .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-rpm-ru .
-          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.melezh_version }}-rpm-ru
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru .
+          docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru

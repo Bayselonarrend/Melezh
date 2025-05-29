@@ -86,7 +86,7 @@ jobs:
           cp /tmp/melezh-build/en/oint.rpm .
           cp /tmp/melezh-build/en/melezh.rpm .
           docker build \
-            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-ru .
+            -t ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-en .
           docker push ghcr.io/bayselonarrend/melezh:${{ github.event.inputs.version }}-rpm-en
 
       - name: Build and Push Russian image (rpm)

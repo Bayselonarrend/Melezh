@@ -54,7 +54,18 @@
         <tbody class="divide-y divide-gray-200">
           <template x-for="handler in handlers" :key="handler.key">
             <tr class="hover:bg-gray-50">
-              <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="handler.key"></td>
+              <td class="px-4 py-2 whitespace-nowrap text-sm">
+                <a :href="handler.key" target="_blank" rel="noopener noreferrer"
+                  class="group inline-flex items-center gap-1 text-green-600 hover:text-green-800 transition-all">
+                  <span x-text="handler.key"></span>
+                  <svg xmlns="http://www.w3.org/2000/svg"
+                    class="w-3 h-3 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-0.5 transition-all"
+                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                      d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6l-7 7" />
+                  </svg>
+                </a>
+              </td>
               <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="handler.method"></td>
               <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="handler.library"></td>
               <td class="px-4 py-2 whitespace-nowrap">
@@ -109,7 +120,8 @@
         class="w-12 h-12 mx-auto mb-2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
       </svg>
-      <p class="text-sm"><b>Нет доступных обработчиков.</b> Вы можете создать новый обработчик, нажав значок "+" в правом верхнем углу</p>
+      <p class="text-sm"><b>Нет доступных обработчиков.</b> Вы можете создать новый обработчик, нажав значок "+" в
+        правом верхнем углу</p>
     </div>
   </div>
 </div>

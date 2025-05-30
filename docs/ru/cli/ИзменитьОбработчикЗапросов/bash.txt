@@ -1,6 +1,6 @@
 melezh  ИзменитьОбработчикЗапросов \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5" \
-  --handler "22cd242eb" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g" \
+  --handler "0928d5b1d" \
   --lib "vk" \
   --func "СоздатьПост" \
   --method "FORM"

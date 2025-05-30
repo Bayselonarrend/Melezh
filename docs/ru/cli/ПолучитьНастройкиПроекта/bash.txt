@@ -1,2 +1,2 @@
 melezh  ПолучитьНастройкиПроекта \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5"
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g"

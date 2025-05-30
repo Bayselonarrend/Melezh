@@ -1,5 +1,5 @@
 # JSON данные также могут быть переданы как путь к файлу .json
 
 melezh  FillProjectSettings \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\zyu1bxem.yut" \
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\e5z2ie0a.hnw" \
   --set "{'logs_req_headers':false,'logs_req_body':false}"

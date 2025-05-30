@@ -71,7 +71,7 @@ Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
     SessionsHandler.Initialize(SQLiteConnectionManager, SettingsVault);
 
     ActionsProcessor = New("ActionsProcessor");
-    ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger);
+    ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger, SettingsVault);
 
     APIProcessor = New("APIProcessor");
     APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger);

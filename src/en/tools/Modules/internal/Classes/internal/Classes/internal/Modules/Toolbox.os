@@ -75,4 +75,22 @@ Function HandlingError(Context, Code, Text) Export
 
 EndFunction
 
+Function GetBoolean(Val Value) Export
+
+	If TypeOf(Value) = Type("String") Then
+		Value = Upper(Value);
+	EndIf;
+
+	BoolMap = New Map();
+	BoolMap.Insert(True , True);
+	BoolMap.Insert(1 , True);
+	BoolMap.Insert("1" , True);
+	BoolMap.Insert("TRUE", True);
+	BoolMap.Insert("TRUE" , True);
+
+	BooleanValue = BoolMap.Get(Value);
+	Return ?(BooleanValue = Undefined, False, True);
+	
+EndFunction
+
 #EndRegion

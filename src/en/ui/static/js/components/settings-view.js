@@ -17,10 +17,7 @@ export const settingsPage = () => ({
 
       if (!result.success) throw new Error(result.message);
 
-      this.settings = (result.data || []).map(setting => ({
-        ...setting,
-        value: String(setting.value)
-      }));
+      this.settings = result.data || [];
 
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {

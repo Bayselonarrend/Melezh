@@ -1,5 +1,5 @@
 melezh  УстановитьАргументОбработчика ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\1ofribky.sq5" ^
+  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g" ^
   --handler "my-key" ^
   --arg "text" ^
   --value "Hello world!" ^

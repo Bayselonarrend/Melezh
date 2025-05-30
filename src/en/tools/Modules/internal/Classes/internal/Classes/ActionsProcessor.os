@@ -6,15 +6,17 @@ Var OPIObject;
 Var ProxyModule;
 Var ConnectionManager;
 Var Logger;
+Var SettingsVault;
 
 #Region Internal
 
-Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_) Export
+Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_) Export
 
 	OPIObject = OPIObject_;
 	ProxyModule = ProxyModule_;
 	ConnectionManager = ConnectionManager_;
     Logger = Logger_;
+    SettingsVault = SettingsVault_;
 
 EndProcedure
 
@@ -23,6 +25,7 @@ Function MainHandle(Val Context, Val Path) Export
     RequestBody = Undefined;
 
     Try
+
         HandlerDescription = GetRequestsHandler(Path);
 
         If HandlerDescription["result"] Then
@@ -198,7 +201,7 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
 
         Execute(ExecutionText);
 
-        If Not TypeOf(Response) = Type("BinaryData") Then
+        If Not TypeOf(Response) = Type("BinaryData") And SettingsVault.ReturnSetting("res_wrapper") Then
             Response = New Structure("result,data", True, Response);
         EndIf;
 

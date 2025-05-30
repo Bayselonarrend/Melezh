@@ -35,7 +35,9 @@ EndFunction
 Function ReturnSetting(Val Name) Export
 	
 	FillSettings();
-	Return ProjectSettings.Get(Name);
+	Setting = ProjectSettings.Get(Name);
+
+	Return Setting;
 	
 EndFunction
 

@@ -133,6 +133,27 @@ Function GetProjectSettings(Val Project) Export
     Table = ConstantValue("SettingsTable");
     Result = OPI_SQLite.GetRecords(Table, , , , , Project);
 
+    If Result["result"] Then
+
+        TDN = New TypeDescription("Number");
+        TDB = New TypeDescription("Boolean");
+
+        For Each SettingsPart In Result["data"] Do
+
+            DataType = SettingsPart["type"];
+
+            If DataType = "bool" Then
+                SettingsPart["value"] = TDB.AdjustValue(SettingsPart["value"]);
+            ElsIf DataType = "number" Then
+                SettingsPart["value"] = TDN.AdjustValue(SettingsPart["value"]);
+            Else
+                SettingsPart["value"] = String(SettingsPart["value"]);
+            EndIf;
+
+        EndDo;
+
+    EndIf;
+
     Return Result;
 
 EndFunction
@@ -162,16 +183,25 @@ Function FillProjectSettings(Val Project, Val Settings) Export
     For Each Setting In CurrentSettings Do
 
         CurrentValue = Setting["value"];
+        CurrentType = Setting["type"];
 
         If OPI_Tools.CollectionFieldExist(Settings, Setting["name"], CurrentValue) Then
 
-            If TypeOf(CurrentValue) = Type("Boolean") Then
+            If CurrentType = "bool" Then
+
+                OPI_TypeConversion.GetBoolean(CurrentValue);
                 Setting["value"] = ?(CurrentValue, "true", "false");
+
+            ElsIf CurrentType = "number" Then
+                
+                OPI_TypeConversion.GetNumber(CurrentValue);
+                Setting["value"] = String(CurrentValue);
+
             Else
                 Setting["value"] = String(CurrentValue);
             EndIf;
 
-        EndIf
+        EndIf;
 
     EndDo;
 
@@ -928,6 +958,7 @@ Function CreateSettingsTable(Path)
     TableStructure.Insert("name" , "TEXT PRIMARY KEY NOT NULL UNIQUE");
     TableStructure.Insert("description", "TEXT");
     TableStructure.Insert("value" , "TEXT");
+    TableStructure.Insert("type" , "TEXT");
 
     SettingTableName = ConstantValue("SettingsTable");
     Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
@@ -950,15 +981,16 @@ EndFunction
 Function GetDefaultSettings()
 
     SettingsList = New Array;
-    SettingsFields = "name,description,value";
+    SettingsFields = "name,description,value,type";
 
-    SettingsList.Add(New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory()));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600"));
+    SettingsList.Add(New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin", "string"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory(), "string"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true", "bool"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true", "bool"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
+    SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Add(New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
 
     Return SettingsList;
     

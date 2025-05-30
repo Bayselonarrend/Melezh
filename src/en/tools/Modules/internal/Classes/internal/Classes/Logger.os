@@ -23,6 +23,7 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 	RequestAmount = RequestAmount + 1;
 	
 	Try
+
 		LogPath = SettingsVault.ReturnSetting("logs_path");
 		
 		If Not ValueIsFilled(LogPath) Then
@@ -44,19 +45,10 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 		EndIf;
 		
 		RecordRequestBody = SettingsVault.ReturnSetting("logs_req_body");
-		RecordRequestBody = ?(ValueIsFilled(RecordRequestBody), GetBoolean(RecordRequestBody), False);
-
 		RecordRequestHeaders = SettingsVault.ReturnSetting("logs_req_headers");
-		RecordRequestHeaders = ?(ValueIsFilled(RecordRequestHeaders), GetBoolean(RecordRequestHeaders), False);
-
-		RecordResponseBody = SettingsVault.ReturnSetting("logs_res_body");
-		RecordResponseBody = ?(ValueIsFilled(RecordResponseBody), GetBoolean(RecordResponseBody), False);
-		
+		RecordResponseBody = SettingsVault.ReturnSetting("logs_res_body");	
 		MaxRequestSize = SettingsVault.ReturnSetting("logs_req_max_size");
-		MaxRequestSize = ?(ValueIsFilled(MaxRequestSize), Number(MaxRequestSize), 0);
-
 		ResponseMaxSize = SettingsVault.ReturnSetting("logs_res_max_size");
-		ResponseMaxSize = ?(ValueIsFilled(ResponseMaxSize), Number(ResponseMaxSize), 0);
 		
 		WriteRequestInfo(WritingPath, Context, RequestDate, BodySize, RequestUUID, Handler);
 
@@ -65,9 +57,7 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 		EndIf;
 		
 		If RecordRequestBody Then
-			
-			MaxRequestSize = MaxRequestSize;
-			
+
 			If RequestBody <> Undefined Then
 				
 				WriteRequestBody(WritingPath, RequestBody, MaxRequestSize);
@@ -327,30 +317,11 @@ Function WriteRequestInfo(Val LogPath, Val Context, Val RequestDate, Val BodySiz
 	
 EndFunction
 
-
 Procedure WriteLogFile(LogPath, FileName, Data)
 	
 	OPI_TypeConversion.GetBinaryData(Data);
 	Data.Write(StrTemplate("%1/%2", LogPath, FileName));
 	
 EndProcedure
-
-Function GetBoolean(Val Value)
-
-	If TypeOf(Value) = Type("String") Then
-		Value = Upper(Value);
-	EndIf;
-
-	BoolMap = New Map();
-	BoolMap.Insert(True , True);
-	BoolMap.Insert(1 , True);
-	BoolMap.Insert("1" , True);
-	BoolMap.Insert("TRUE", True);
-	BoolMap.Insert("TRUE" , True);
-
-	BooleanValue = BoolMap.Get(Value);
-	Return ?(BooleanValue = Undefined, False, True);
-	
-EndFunction
 
 #EndRegion

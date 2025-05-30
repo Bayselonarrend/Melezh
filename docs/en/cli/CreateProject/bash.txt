@@ -1,2 +1,2 @@
 melezh  CreateProject \
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\acvemkzn.a5c"
+  --path "/proj.melezh"

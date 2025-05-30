@@ -50,25 +50,13 @@ Procedure ReturnUIPage(Context)
 
 	If SessionsHandler.AuthorizedSession(Context) Then 
 
-		ReturnHTMLPage(Context, "console.html");
+		Toolbox.ReturnHTMLPage(Context, ServerPath, "console.html");
 
 	Else
 
-		ReturnHTMLPage(Context, "login.html");
+		Toolbox.ReturnHTMLPage(Context, ServerPath, "login.html");
 
 	EndIf;
-
-EndProcedure
-
-Procedure ReturnHTMLPage(Context, Path)
-
-	ResponsePath = Context.Response.Body;
-	ResponseRecord = New DataWriter(ResponsePath);
-
-	FileFullPath = StrTemplate("%1/%2", ServerPath, Path);
-	ResponseRecord.Write(New BinaryData(FileFullPath));
-
-	ResponseRecord.Close();
 
 EndProcedure
 

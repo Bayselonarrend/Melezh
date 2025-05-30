@@ -1,5 +1,5 @@
 :: JSON данные также могут быть переданы как путь к файлу .json
 
 melezh  ЗаполнитьНастройкиПроекта ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g" ^
+  --proj "/proj.melezh" ^
   --set "{'logs_req_headers':false,'logs_req_body':false}"

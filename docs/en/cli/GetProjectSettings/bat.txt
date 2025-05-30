@@ -1,2 +1,2 @@
 melezh  GetProjectSettings ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\e5z2ie0a.hnw"
+  --proj "/proj.melezh"

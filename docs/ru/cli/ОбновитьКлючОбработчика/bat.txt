@@ -1,4 +1,4 @@
 melezh  ОбновитьКлючОбработчика ^
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g" ^
-  --handler "fff98334f" ^
+  --proj "/proj.melezh" ^
+  --handler "755202778" ^
   --key "***"

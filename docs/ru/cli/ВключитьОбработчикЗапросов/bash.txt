@@ -1,3 +1,3 @@
 melezh  ВключитьОбработчикЗапросов \
-  --proj "C:\Users\bayselonarrend\AppData\Local\Temp\k32uscuk.e2g" \
-  --handler "0928d5b1d"
+  --proj "/proj.melezh" \
+  --handler "ddb5c6da8"

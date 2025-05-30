@@ -44,8 +44,19 @@ EndFunction
 Function Redirection(Context, Path) Export
 	Context.Response.StatusCode = 303;
 	Context.Response.Headers["Location"] = Path;
-	
 EndFunction
+
+Procedure ReturnHTMLPage(Context, ServerPath, Path) Export
+
+	ResponsePath = Context.Response.Body;
+	ResponseRecord = New DataWriter(ResponsePath);
+
+	FileFullPath = StrTemplate("%1/%2", ServerPath, Path);
+	ResponseRecord.Write(New BinaryData(FileFullPath));
+
+	ResponseRecord.Close();
+
+EndProcedure
 
 Function HandlingError(Context, Code, Text) Export
 

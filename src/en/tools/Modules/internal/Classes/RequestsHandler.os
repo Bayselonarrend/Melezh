@@ -51,12 +51,15 @@ Var Logger;
 Var SettingsVault;
 Var SessionsHandler;
 Var SQLiteConnectionManager;
+Var ServerPath;
 
 #EndRegion
 
 #Region Internal
 
 Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
+
+    ServerPath = ServerPath_;
 
     SQLiteConnectionManager = New("SQLiteConnectionManager");
     SQLiteConnectionManager.Initialize(ProjectPath_);
@@ -85,7 +88,7 @@ Procedure MainHandle(Context, NextHandler) Export
 
     Try
 
-        Context.Response.Headers["Server"] = "Melezh/0.0.1 (Kestrel)";
+        Context.Response.Headers["Server"] = "Melezh/0.1.0 (Kestrel)";
         
         Result = ProcessRequest(Context, NextHandler);
         
@@ -121,12 +124,15 @@ EndProcedure
 
 Function ProcessRequest(Context, NextHandler)
 
+    Result = Undefined;
     Path = Context.Request.Path;
 
     Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
     Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
 
-    If StrStartsWith(Path, "api") Then
+    If Not ValueIsFilled(Path) Then
+        Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html");
+    ElsIf StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);
     ElsIf StrStartsWith(Path, "ui") Then
         Result = UIProcessor.MainHandle(Context, Path);

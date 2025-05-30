@@ -40,7 +40,13 @@ Function MainHandle(Val Context, Val Path) Export
         EndIf;
 
     Except
-        Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+
+        ErrorInfo = ErrorInfo();
+        ExecutionError = StrEndsWith(ErrorInfo.ModuleName, ":<exec>");
+        ResponseCode = ?(ExecutionError, 400, 500);
+
+        Result = Toolbox.HandlingError(Context, ResponseCode, ErrorInfo);
+
     EndTry;
     
     Logger.WriteLog(Context, RequestBody, Result);

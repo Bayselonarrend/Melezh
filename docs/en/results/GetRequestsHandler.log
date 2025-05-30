@@ -2,7 +2,7 @@
  "data": {
   "active": 1,
   "function": "SendTextMessage",
-  "key": "df238d537",
+  "key": "3c068dd20",
   "library": "telegram",
   "method": "GET",
   "args": []

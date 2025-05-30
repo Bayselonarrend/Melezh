@@ -1,2 +1,2 @@
 melezh  СоздатьПроект ^
-  --path "C:\Users\bayselonarrend\AppData\Local\Temp\ylxlysw2.eob"
+  --path "/proj.melezh"

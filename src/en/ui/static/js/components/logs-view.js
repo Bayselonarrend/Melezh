@@ -7,7 +7,7 @@ const cachedState = {
 };
 
 export const logsView = () => ({
-  // State
+
   handler: cachedState.handler,
   date: cachedState.date,
   filtersCollapsed: false,
@@ -25,53 +25,57 @@ export const logsView = () => ({
   },
 
   init() {
-    const parseHash = () => {
-      const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-      const handler = urlParams.get('handler') || cachedState.handler || '';
-      const date = urlParams.get('date') || cachedState.date || '';
 
-      this.handler = handler;
-      this.date = date;
+    const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
+    cachedState.handler = urlParams.get('handler') || '';
+    cachedState.date = urlParams.get('date') || '';
 
-      cachedState.handler = handler;
-      cachedState.date = date;
-    };
+    this.$nextTick(() => {
+      this.handler = cachedState.handler;
+      this.date = cachedState.date;
 
-    parseHash();
-
-    if (!globalState.isInitialized) {
-      globalState.isInitialized = true;
-      this.loadEvents();
-    }
+      if (!globalState.isInitialized) {
+        globalState.isInitialized = true;
+        this.loadEvents();
+      }
+    });
   },
 
   async loadEvents() {
-    if (!this.hasFilters) return;
+
+    if (!this.handler.trim() || !this.date.trim()) return;
+
+    const focusedElement = document.activeElement;
 
     const newHash = `#logs?handler=${encodeURIComponent(this.handler)}&date=${encodeURIComponent(this.date)}`;
     if (window.location.hash !== newHash) {
       window.history.pushState(null, '', newHash);
     }
 
+    cachedState.handler = this.handler;
+    cachedState.date = this.date;
+
     this.isEventsLoading = true;
-    this.eventsErrorMessage = '';
 
     try {
       const url = `/api/getEvents?handler=${encodeURIComponent(this.handler)}&date=${encodeURIComponent(this.date)}`;
       const response = await fetch(url);
       const result = await handleFetchResponse(response);
 
-      if (!result.success) throw new Error(result.message);
-
       this.events = result.data || [];
+      this.eventsErrorMessage = '';
     } catch (error) {
-      console.error('Failed to fetch:', error);
       this.eventsErrorMessage = error.message;
     } finally {
-      this.isEventsLoaded = true;
       this.isEventsLoading = false;
-      cachedState.handler = this.handler;
-      cachedState.date = this.date;
+      this.isEventsLoaded = true;
+
+      // Inowithwithтаtoinлandinаем фotoуwith
+      this.$nextTick(() => {
+        if (focusedElement && focusedElement.tagName === 'INPUT') {
+          focusedElement.focus();
+        }
+      });
     }
   },
 

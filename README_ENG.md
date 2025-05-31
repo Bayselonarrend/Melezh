@@ -59,7 +59,7 @@ In addition to the CLI interface, for easier interactive configuration and manag
 
 If you’re just getting started with Melezh, this mode is recommended. Access the web console at `localhost:<your_port>/ui` after creating and launching the project
 
-## Установка
+## Installation
 
 <img src="/media/box_s.png" align="left" width="200">
 

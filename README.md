@@ -1,4 +1,4 @@
- <img src="media/eng.png?1" align="left" width="32"> *This package is also available in English: [Click!](https://github.com/Bayselonarrend/Melezh/blob/main/README_ENG.md)*
+ <img src="media/eng.png?1" align="left" width="32"> *This package is also available in English: [Click!](https://github.com/Bayselonarrend/Melezh/blob/master/README_ENG.md)*
 
  <hr>
 

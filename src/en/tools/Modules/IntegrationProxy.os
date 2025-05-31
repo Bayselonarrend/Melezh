@@ -984,13 +984,14 @@ Function GetDefaultSettings()
     SettingsFields = "name,description,value,type";
 
     SettingsList.Add(New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin", "string"));
+    SettingsList.Add(New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
+    SettingsList.Add(New Structure(SettingsFields, "req_max_size" , "The maximum allowed request body size (in bytes). Requests exceeding this limit will be rejected. 0 - no limitation", "209715200", "number"));
     SettingsList.Add(New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory(), "string"));
     SettingsList.Add(New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
-    SettingsList.Add(New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
 
     Return SettingsList;
     

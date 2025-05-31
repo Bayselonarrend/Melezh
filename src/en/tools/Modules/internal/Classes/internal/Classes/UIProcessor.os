@@ -31,7 +31,7 @@ Function MainHandle(Val Context, Val Path) Export
 		Toolbox.Redirection(Context, "/ui");
 
 	Else
-		Result = Toolbox.HandlingError(Context, 404, "Not found");
+		Result = Toolbox.HandlingError(Context, 404, "Not Found");
 	EndIf;
 
 	RunGarbageCollection();

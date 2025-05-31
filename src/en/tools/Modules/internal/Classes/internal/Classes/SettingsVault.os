@@ -3,6 +3,7 @@
 Var FullProjectSettings;
 Var ProjectSettingsUI;
 Var ProjectSettings;
+Var LastUpdate;
 
 Var ConnectionManager;
 Var ProxyModule;
@@ -13,8 +14,9 @@ Procedure Initialize(ConnectionManager_, ProxyModule_) Export
 	
 	ProxyModule = ProxyModule_;
 	ConnectionManager = ConnectionManager_;
+	LastUpdate = CurrentDate();
 	
-	FillSettings();
+	FillSettings(True);
 	
 EndProcedure
 
@@ -45,7 +47,7 @@ Function WriteProjectSettings(Val Data) Export
 	
 	ConnectionRW = ConnectionManager.GetRWConnection();
 	Result = ProxyModule.FillProjectSettings(ConnectionRW, Data);
-	FillSettings();
+	FillSettings(True);
 	
 	Return Result;
 	
@@ -55,7 +57,15 @@ EndFunction
 
 #Region Private
 
-Procedure FillSettings()
+Procedure FillSettings(Val Forced = False)
+
+	CurrentDate = CurrentDate();
+	
+	If Forced Or CurrentDate > LastUpdate + 60 Then
+		LastUpdate = CurrentDate;
+	Else
+		Return;
+	EndIf;
 	
 	ConnectionRO = ConnectionManager.GetROConnection();
 	BaseSettings = ProxyModule.GetProjectSettings(ConnectionRO);

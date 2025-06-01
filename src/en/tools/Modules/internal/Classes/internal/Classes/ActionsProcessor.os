@@ -314,9 +314,10 @@ Function SizeExceeded(Val Context, Val RequestBody)
         BodySize = RequestBody.Size();
     EndIf;
 
-    BodySize = ?(ValueIsFilled(BodySize), BodySize, 0);
     MaxBodySize = SettingsVault.ReturnSetting("req_max_size");
-
+    MaxBodySize = ?(ValueIsFilled(MaxBodySize), MaxBodySize, 0);
+    BodySize = ?(ValueIsFilled(BodySize), BodySize, 0);
+    
     If MaxBodySize <> 0 And BodySize > MaxBodySize Then
         Return True;
     Else

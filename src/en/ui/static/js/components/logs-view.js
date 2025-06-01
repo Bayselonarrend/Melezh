@@ -1,15 +1,10 @@
 import { handleFetchResponse } from '/js/error-fetch.js';
-import { globalState } from '/js/components/app.js';
-
-const cachedState = {
-  handler: '',
-  date: '',
-};
+import { globalState, logsState } from '/js/components/app.js';
 
 export const logsView = () => ({
 
-  handler: cachedState.handler,
-  date: cachedState.date,
+  handler: logsState.handler,
+  date: logsState.date,
   filtersCollapsed: false,
   isEventsLoading: false,
   isEventsLoaded: false,
@@ -27,12 +22,12 @@ export const logsView = () => ({
   init() {
 
     const urlParams = new URLSearchParams(window.location.hash.split('?')[1] || '');
-    cachedState.handler = urlParams.get('handler') || '';
-    cachedState.date = urlParams.get('date') || '';
+    logsState.handler = urlParams.get('handler') || logsState.handler || '';
+    logsState.date = urlParams.get('date') || logsState.date || '';
 
     this.$nextTick(() => {
-      this.handler = cachedState.handler;
-      this.date = cachedState.date;
+      this.handler = logsState.handler;
+      this.date = logsState.date;
 
       if (!globalState.isInitialized) {
         globalState.isInitialized = true;
@@ -52,8 +47,8 @@ export const logsView = () => ({
       window.history.pushState(null, '', newHash);
     }
 
-    cachedState.handler = this.handler;
-    cachedState.date = this.date;
+    logsState.handler = this.handler;
+    logsState.date = this.date;
 
     this.isEventsLoading = true;
 

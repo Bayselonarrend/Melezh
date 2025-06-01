@@ -5,6 +5,11 @@ export const globalState = {
   tooltipEl: null
 };
 
+export const logsState = {
+  handler: '',
+  date: '',
+};
+
 document.addEventListener('alpine:init', () => {
   const HASH_ROUTES = {
     dashboard: '#dashboard',

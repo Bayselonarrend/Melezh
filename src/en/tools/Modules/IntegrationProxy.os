@@ -161,6 +161,9 @@ EndFunction
 // Fill project settings
 // Fills in the settings from the passed collection
 //
+// Note
+// If values are modified in a running project, the changes may take up to 60 seconds to be applied
+//
 // Parameters:
 // Project - String - Project filepath - proj
 // Settings - Map Of KeyAndValue - Collection key and value to fill in the settings - set
@@ -227,6 +230,9 @@ EndFunction
 // Set project setting
 // Sets the value of the selected project setting
 //
+// Note
+// If a value is modified in a running project, the change may take up to 60 seconds to be applied
+//
 // Parameters:
 // Project - String - Project filepath - proj
 // Setting - String - Project setting key - key
@@ -244,6 +250,9 @@ EndFunction
 
 // Update UI password
 // Changes the password for logging into the web console
+//
+// Note
+// If a value is modified in a running project, the change may take up to 60 seconds to be applied
 //
 // Parameters:
 // Project - String - Project filepath - proj

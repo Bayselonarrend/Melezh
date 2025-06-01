@@ -1,4 +1,4 @@
- <img src="media/eng.png?1" align="left" width="32"> *This package is also available in English: [Click!](https://github.com/Bayselonarrend/Melezh/blob/master/README_ENG.md)*
+<img src="media/eng.png?1" align="left" width="32"> *This package is also available in English: [Click!](https://github.com/Bayselonarrend/Melezh/blob/master/README_ENG.md)*
 
  <hr>
 
@@ -81,3 +81,13 @@ Melezh может быть установлен при помощи Windows-ус
 <br>
 
 Больше информации о консольных командах, логировании, возможностях Web UI и работе с Melezh в целом можно найти в [онлайн-документации](https://openintegrations.dev/docs/Addons/Melezh). Она находится на том же портале, что и документация основного проекта - Открытого пакета интеграций, где вы также сможете найти информацию и о методах, доступных в качестве функций-обработчиков внутри Melezh. Текст документации доступен в двух вариантах - на русском и английском языках
+
+<br>
+
+## Поддержать проект
+
+![image](https://github.com/user-attachments/assets/4e3a6697-efdd-444b-9156-50e568eee2c7)
+
+Если вам нравится этот или другие мои проекты, то вы можете поддержать меня [на Boosty](https://boosty.to/bayselonarrend) или одним из альтернативных способов, перечисленных на правой панели данной страницы. При подписке на Boosty от 200 рублей открывается доступ в приватный чат, где можно задать интересующие вопросы о проекте и получить помощь от меня напрямую
+
+**Спасибо за вашу поддержку!**

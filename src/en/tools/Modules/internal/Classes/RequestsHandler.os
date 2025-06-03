@@ -128,7 +128,7 @@ Function ProcessRequest(Context, NextHandler)
     Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
     Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
     
-    If Not ValueIsFilled(Path) And SettingsVault.ReturnSetting("landing_enabled") Then
+    If Not ValueIsFilled(Path) Then
         Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html");
     ElsIf StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);

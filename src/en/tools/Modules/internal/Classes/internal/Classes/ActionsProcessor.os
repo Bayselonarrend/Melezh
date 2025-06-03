@@ -23,6 +23,7 @@ EndProcedure
 Function MainHandle(Val Context, Val Path) Export
     
     RequestBody = Undefined;
+    NotFound = False;
     
     Try
         
@@ -37,6 +38,7 @@ Function MainHandle(Val Context, Val Path) Export
             
         Else
             Result = Toolbox.HandlingError(Context, 404, "Not Found");
+            NotFound = True;
         EndIf;
         
     Except
@@ -49,7 +51,9 @@ Function MainHandle(Val Context, Val Path) Export
         
     EndTry;
     
-    Logger.WriteLog(Context, RequestBody, Result);
+    If Not NotFound Then
+        Logger.WriteLog(Context, RequestBody, Result);
+    EndIf;
     
     RunGarbageCollection();
     
@@ -199,6 +203,7 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
         
     EndDo;
     
+    ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
     ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method);
     
     Response = Undefined;
@@ -208,6 +213,7 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
     Else
         
         ExecutionText = ExecutionStructure["Result"];
+        ExecutionText = StrReplace(ExecutionText, "_melezhcontext = ""{MELEZHCONTEXT}""", "_melezhcontext = Context");
         
         Execute(ExecutionText);
         

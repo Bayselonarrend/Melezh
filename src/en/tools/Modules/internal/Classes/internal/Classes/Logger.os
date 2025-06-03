@@ -15,11 +15,7 @@ Procedure Initialize(SettingsVault_) Export
 EndProcedure
 
 Procedure WriteLog(Context, RequestBody, Val Result) Export
-	
-	If Context.Response.StatusCode = 404 Or Context.Response.StatusCode = 403 Then
-		Return;
-	EndIf;
-	
+		
 	RequestAmount = RequestAmount + 1;
 	
 	Try
@@ -32,6 +28,7 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 		
 		Handler = Context.Request.Path;
 		Handler = StrReplace(Handler, "/", "");
+		Handler = ?(ValueIsFilled(Handler), Handler, "/");
 		
 		RequestDate = CurrentDate();
 		Identifier = Left(String(New UUID), 8);

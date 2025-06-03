@@ -3,10 +3,12 @@
 // Parameters:
 // Directory - String - Folder path - catalog
 // FileName - String - File name with extension - file
+// MIME - String - MIME type - mime
+// Context - Arbitrary - Request context - melezhcontext
 //
 // Returns:
 // Structure Of KeyAndValue, BinaryData - file data or error info
-Function GetFileFromFolder(Val Directory, Val FileName) Export
+Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) Export
 
 	Directory = StrReplace(Directory, "\", "/");
 	Directory = ?(StrEndsWith(Directory, "/"), Directory, Directory + "/");
@@ -15,8 +17,13 @@ Function GetFileFromFolder(Val Directory, Val FileName) Export
 	PathFile = New File(FullPath);
 
 	If Not PathFile.Exist() Then
+
+		Context.Response.StatusCode = 404;
+		Context.Response.ContentType = "application/json";
 		Return New Structure("result,error", False, "Not Found");
+
 	Else
+		Context.Response.ContentType = MIME;
 		Return New BinaryData(FullPath);
 	EndIf;
 

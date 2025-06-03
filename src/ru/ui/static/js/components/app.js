@@ -92,7 +92,7 @@ document.addEventListener('alpine:init', () => {
         const result = await handleFetchResponse(response);
 
         if (result.success) {
-          window.location.href = '/ui';
+          window.location.reload();
         } else {
           window.dispatchEvent(new CustomEvent('show-error', {
             detail: { message: result.message || 'Неверный пароль' }

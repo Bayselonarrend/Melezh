@@ -172,8 +172,15 @@ Function ReturnArgumentList(Context)
 		OptionsArray = New Array;
 		
 		For Each Argument In ArgumentList Do
+			
 			CurrentParameter = StrReplace(Argument["Parameter"], "--", "");
+
+			If CurrentParameter = "melezhcontext" Then
+				Continue;
+			EndIf;
+
 			OptionsArray.Add(New Structure("arg,description", CurrentParameter, Argument["Description"]));
+
 		EndDo;
 		
 		Result = New Structure("result,data", True, OptionsArray);

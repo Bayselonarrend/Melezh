@@ -58,92 +58,88 @@ Var ServerPath;
 #Region Internal
 
 Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
-
+    
     ServerPath = ServerPath_;
-
+    
     SQLiteConnectionManager = New("SQLiteConnectionManager");
     SQLiteConnectionManager.Initialize(ProjectPath_);
-
+    
     SettingsVault = New("SettingsVault");
     SettingsVault.Initialize(SQLiteConnectionManager, ProxyModule_);
-
+    
     Logger = New("Logger");
     Logger.Initialize(SettingsVault);
-
+    
     SessionsHandler = New("SessionsHandler");
     SessionsHandler.Initialize(SQLiteConnectionManager, SettingsVault);
-
+    
     ActionsProcessor = New("ActionsProcessor");
     ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger, SettingsVault);
-
+    
     APIProcessor = New("APIProcessor");
     APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger);
-
+    
     UIProcessor = New("UIProcessor");
     UIProcessor.Initialize(ServerPath_, SessionsHandler);
-
+    
 EndProcedure
 
 Procedure MainHandle(Context, NextHandler) Export
-
+    
     Try
-
+        
         Context.Response.Headers["Server"] = "Melezh/0.1.0 (Kestrel)";
         
         Result = ProcessRequest(Context, NextHandler);
         
     Except
-
+        
         Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
-
+        
         If Context.Response.StatusCode = 200 Then
             Context.Response.StatusCode = 500;
         EndIf;
-
+        
     EndTry;
-
+    
     RunGarbageCollection();
-
+    
     If Result <> Undefined Then
-
+        
         If OPI_Tools.ThisIsCollection(Result) Then
-            Context.Response.WriteAsJson(Result);
-        Else
-
-            OPI_TypeConversion.GetBinaryData(Result, True, False);
-
-            DataWriter = New DataWriter(Context.Response.Body);
-            DataWriter.Write(Result);
-            DataWriter.Close();
-
+            Context.Response.Headers["Content-Type"] = "application/json;charset=utf-8";
         EndIf;
-
+        
+        OPI_TypeConversion.GetBinaryData(Result, True, False);
+        
+        DataWriter = New DataWriter(Context.Response.Body);
+        DataWriter.Write(Result);
+        DataWriter.Close();
+         
     EndIf;
-
+    
 EndProcedure
 
 Function ProcessRequest(Context, NextHandler)
-
+    
     Result = Undefined;
     Path = Context.Request.Path;
-
+    
     Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
     Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
-
-    If Not ValueIsFilled(Path) Then
+    
+    If Not ValueIsFilled(Path) And SettingsVault.ReturnSetting("landing_enabled") Then
         Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html");
     ElsIf StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);
     ElsIf StrStartsWith(Path, "ui") Then
         Result = UIProcessor.MainHandle(Context, Path);
-    ElsIf Not StrFind(Path, "/") Then
-        Result = ActionsProcessor.MainHandle(Context, Path);
     Else
-        Result = Toolbox.HandlingError(Context, 404, "Not Found");
+        Result = ActionsProcessor.MainHandle(Context, Path);
     EndIf;
-
+    
     Return Result;
-
+    
 EndFunction
 
 #EndRegion

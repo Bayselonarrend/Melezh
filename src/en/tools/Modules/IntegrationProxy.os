@@ -1001,6 +1001,7 @@ Function GetDefaultSettings()
     SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Add(New Structure(SettingsFields, "landing_enabled" , "nables or disables the use of the homepage at the root URL, allowing it to be processed by handlers", "true", "bool"));
 
     Return SettingsList;
     

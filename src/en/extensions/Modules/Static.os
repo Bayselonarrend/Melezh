@@ -4,7 +4,7 @@
 // Directory - String - Folder path - catalog
 // FileName - String - File name with extension - file
 // MIME - String - MIME type - mime
-// Context - Arbitrary - Request context - melezhcontext
+// Context - HTTPContext - Request context - melezhcontext
 //
 // Returns:
 // Structure Of KeyAndValue, BinaryData - file data or error info

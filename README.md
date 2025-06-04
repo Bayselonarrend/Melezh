@@ -70,7 +70,7 @@ http://localhost:7788/42281f11b?chat=123123123&text="Hello world!"
 <br>
 
 Melezh может быть установлен при помощи Windows-установщика, `rpm` или `deb`-пакета, пакета для OneScript, а также внутри Docker-контейнера. Необходимые файлы находятся в релизах данного репозитория <br><hr>
-*Узнать больше о способе и процессе установки можно на [соответствующей странице документации](https://openintegrations.org/docs/Addons/Melezh/Start/Installation)*
+*Узнать больше о способе и процессе установки можно на [соответствующей странице документации](https://openintegrations.dev/docs/Addons/Melezh/Start/Installation)*
 
 <br>
 

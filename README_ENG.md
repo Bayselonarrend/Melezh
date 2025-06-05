@@ -77,3 +77,11 @@ Melezh can be installed using a Windows installer, rpm or deb package, OneScript
 <br>
 
 More information about console commands, logging, Web UI capabilities, and working with Melezh in general can be found in the [online documentation](https://en.openintegrations.dev/docs/Addons/Melezh).  It is hosted on the same portal as the documentation for the main project - Open Integration Package, where you can also find information about methods available as handler functions within Melezh. The documentation is available in two language versions - Russian and English
+
+## Support the project
+
+![image](media/boosty.png)
+
+If you like this or my other projects, you can support me [on Boosty](https://boosty.to/bayselonarrend) (regularly or one-time). With a subscription of 500 rubles (~6 dollars) or more, you'll get access to a private Telegram chat where you can ask questions about the project and receive direct assistance from me.
+
+**Thanks for your support!**

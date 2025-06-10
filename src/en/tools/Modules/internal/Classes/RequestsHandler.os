@@ -80,7 +80,7 @@ Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
     APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger);
     
     UIProcessor = New("UIProcessor");
-    UIProcessor.Initialize(ServerPath_, SessionsHandler);
+    UIProcessor.Initialize(ServerPath_, SessionsHandler, SettingsVault);
     
 EndProcedure
 
@@ -123,13 +123,12 @@ EndProcedure
 Function ProcessRequest(Context, NextHandler)
     
     Result = Undefined;
-    Path = Context.Request.Path;
-    
-    Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
-    Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
+
+    BasePath = String(SettingsVault.GetSetting("base_path"));
+    Path = GetRequestPath(Context, BasePath);
     
     If Not ValueIsFilled(Path) Then
-        Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html");
+        Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html", BasePath);
     ElsIf StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);
     ElsIf StrStartsWith(Path, "ui") Then
@@ -139,6 +138,49 @@ Function ProcessRequest(Context, NextHandler)
     EndIf;
     
     Return Result;
+    
+EndFunction
+
+Function GetRequestPath(Context, BasePath)
+
+    Path = Context.Request.Path;
+    
+    Path = ?(StrStartsWith(Path , "/") , Right(Path, StrLen(Path) - 1) , Path);
+    Path = ?(StrEndsWith(Path, "/") , Left(Path , StrLen(Path) - 1) , Path);
+
+    If Not ValueIsFilled(BasePath) Or BasePath = "/" Then
+        Return Path;
+    EndIf;
+
+    BaseParts = StrSplit(BasePath, "/", False);
+
+    BasePartsCount = BaseParts.Count();
+
+    If BasePartsCount <> 0 Then
+
+        PathParts = StrSplit(Path, "/", False);
+        NewPath = New Array;
+        BasePassed = False;
+
+        For N = 0 To PathParts.Count() Do
+
+            CurrentPathPart = PathParts[N];
+
+            If N > BaseParts.UBound() Or CurrentPathPart <> BaseParts[N] Then
+                BasePassed = True;
+            EndIf;
+
+            If BasePassed Then
+                NewPath.Add(CurrentPathPart);
+            EndIf;
+            
+        EndDo;
+
+        Path = StrConcat(NewPath, "/");
+
+    EndIf;
+
+    Return Path;
     
 EndFunction
 

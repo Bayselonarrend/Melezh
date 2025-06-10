@@ -3,13 +3,15 @@
 
 Var ServerPath;
 Var SessionsHandler;
+Var SettingsVault;
 
 #Region Internal
 
-Procedure Initialize(ServerPath_, SessionsHandler_) Export
+Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export
 
 	ServerPath = ServerPath_;
 	SessionsHandler = SessionsHandler_;
+	SettingsVault = SettingsVault_;
 
 EndProcedure
 
@@ -46,15 +48,16 @@ EndFunction
 
 Procedure ReturnUIPage(Context)
 
+	BasePath = String(SettingsVault.GetSetting("base_path"));
 	Context.Response.StatusCode = 200;
-
+	
 	If SessionsHandler.AuthorizedSession(Context) Then 
 
-		Toolbox.ReturnHTMLPage(Context, ServerPath, "console.html");
+		Toolbox.ReturnHTMLPage(Context, ServerPath, "console.html", BasePath);
 
 	Else
 
-		Toolbox.ReturnHTMLPage(Context, ServerPath, "login.html");
+		Toolbox.ReturnHTMLPage(Context, ServerPath, "login.html", BasePath);
 
 	EndIf;
 

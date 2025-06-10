@@ -46,14 +46,22 @@ Function Redirection(Context, Path) Export
 	Context.Response.Headers["Location"] = Path;
 EndFunction
 
-Procedure ReturnHTMLPage(Context, ServerPath, Path) Export
+Procedure ReturnHTMLPage(Context, ServerPath, Path, BasePath) Export
+
+    FileFullPath = StrTemplate("%1/%2", ServerPath, Path);
+
+    BasePath = ?(StrStartsWith(BasePath , "/"), BasePath, "/" + BasePath);
+    BasePath = ?(StrEndsWith(BasePath, "/"), BasePath, BasePath + "/");
+
+    Page = New BinaryData(FileFullPath);
+    Page = ПолучитьСтрокуИзДвоичныхДанных(Page);
+    Page = StrTemplate(Page, BasePath);
+    Page = ПолучитьДвоичныеДанныеИзСтроки(Page);
 
 	ResponsePath = Context.Response.Body;
 	ResponseRecord = New DataWriter(ResponsePath);
-
-	FileFullPath = StrTemplate("%1/%2", ServerPath, Path);
-	ResponseRecord.Write(New BinaryData(FileFullPath));
-
+	
+	ResponseRecord.Write(Page);
 	ResponseRecord.Close();
 
 EndProcedure

@@ -9,8 +9,8 @@
 # Melezh
 
 [![OpenIntegrations](media/addon.svg)](https://github.com/Bayselonarrend/OpenIntegrations)
-[![OneScript](media/boosty.svg)](https://boosty.to/bayselonarrend)
 [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) 
+[![OneScript](media/boosty.svg)](https://boosty.to/bayselonarrend)
 
 
 Серверная версия Открытого пакета интеграций, предоставляющая единый настраиваемый HTTP API для доступа к его библиотекам и произвольным `.os` скриптам (расширениям), с возможностью установки значений по умолчанию, веб-консолью и встроенным логированием входящих запросов

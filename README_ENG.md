@@ -6,6 +6,7 @@
 
 [![OpenIntegrations](media/addon.svg)](https://github.com/Bayselonarrend/OpenIntegrations)
 [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript)
+[![OneScript](media/boosty.svg)](https://boosty.to/bayselonarrend)
 
 
 Server version of the Open Integrations Package, providing a unified configurable HTTP API for accessing its libraries and custom `.os` scripts (extensions), with support for default values, a web console, and built-in logging of incoming requests

@@ -88,7 +88,7 @@ Procedure MainHandle(Context, NextHandler) Export
     
     Try
         
-        Context.Response.Headers["Server"] = "Melezh/0.1.0 (Kestrel)";
+        Context.Response.Headers["Server"] = "Melezh/0.2.0 (Kestrel)";
         
         Result = ProcessRequest(Context, NextHandler);
         

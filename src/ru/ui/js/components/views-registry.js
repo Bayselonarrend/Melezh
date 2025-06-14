@@ -4,6 +4,7 @@ import { handlerFormView } from '#melezh_base_path#js/components/handler-form-vi
 import { settingsPage } from '#melezh_base_path#js/components/settings-view.js';
 import { logsView } from '#melezh_base_path#js/components/logs-view.js';
 import { logDetailsView } from '#melezh_base_path#js/components/log-details-view.js';
+import { extensionsView } from '#melezh_base_path#js/components/extensions-view.js';
 
 document.addEventListener('alpine:init', () => {
   Alpine.data('dashboardView', dashboardView);
@@ -12,4 +13,6 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('settingsPage', settingsPage);
   Alpine.data('logsView', logsView);
   Alpine.data('logDetailsView', logDetailsView);
+  Alpine.data('extensionsView', extensionsView);
+
 });

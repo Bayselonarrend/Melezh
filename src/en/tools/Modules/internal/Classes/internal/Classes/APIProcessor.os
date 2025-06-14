@@ -4,6 +4,7 @@
 Var ProxyModule;
 Var ConnectionManager;
 Var SessionsHandler;
+Var ExtensionsProcessor;
 Var OPIObject;
 Var LibraryTable;
 Var SettingsVault;
@@ -13,7 +14,7 @@ Var AdviceArray;
 
 #Region Internal
 
-Procedure Initialize(ProxyModule_, ConnectionManager_, SessionsHandler_, OPIObject_, SettingsVault_, Logger_) Export
+Procedure Initialize(ProxyModule_, ConnectionManager_, SessionsHandler_, OPIObject_, SettingsVault_, Logger_, ExtensionsProcessor_) Export
 	
 	ProxyModule = ProxyModule_;
 	ConnectionManager = ConnectionManager_;
@@ -22,6 +23,7 @@ Procedure Initialize(ProxyModule_, ConnectionManager_, SessionsHandler_, OPIObje
 	SettingsVault = SettingsVault_;
 	Logger = Logger_;
 	StartDate = CurrentDate();
+	ExtensionsProcessor = ExtensionsProcessor_;
 	
 	FillLibraryContent();
 	FillAdvices();
@@ -77,6 +79,10 @@ Function MainHandle(Val Context, Val Path) Export
 			Result = ReturnRandomAdvice(Context);
 		ElsIf Command = "geteventdata" Then
 			Result = ReturnEventInfo(Context);
+		ElsIf Command = "getextensionslist" Then
+			Result = ReturnExtensionsList(Context);
+		ElsIf Command = "updateextensionsscache" Then
+			Result = UpdateExtensionsCache(Context);
 		Else
 			NotFound = True;
 		EndIf;
@@ -607,6 +613,31 @@ Function UpdateHandler(Context)
 	
 	Return Result;
 	
+EndFunction
+
+Function ReturnExtensionsList(Context)
+
+	Try
+		Result = ExtensionsProcessor.GetExtensionsList();
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
+
+Function UpdateExtensionsCache(Context)
+
+	Try
+		Result = ExtensionsProcessor.UpdateExtensionsList();
+		FillLibraryContent();
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
 EndFunction
 
 Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)

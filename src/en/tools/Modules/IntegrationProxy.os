@@ -93,11 +93,7 @@ Function RunProject(Val Port, Val Project) Export
 
     ServerCatalogs = GetServerCatalogs();
 
-    Root = ServerCatalogs["Root"];
-    ExtensionsCatalog = ServerCatalogs["Extensions"];
-
-    Extensions.CompleteCompositionWithExtensions(OintContent, ExtensionsCatalog);
-    Handler.Initialize(Project, IntegrationProxy, OintContent, Root);
+    Handler.Initialize(Project, IntegrationProxy, OintContent, ServerCatalogs);
 
     WebServer.AddRequestsHandler(Handler, "MainHandle");
     WebServer.Run();
@@ -1057,6 +1053,7 @@ Function GetDefaultSettings()
     SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
     SettingsList.Add(New Structure(SettingsFields, "base_path" , "Base path of the API. All routes will be available with the specified prefix. For example: /melezh", "", "string"));
+    SettingsList.Add(New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart to apply)", "", "string"));
     
     Return SettingsList;
     
@@ -1169,6 +1166,27 @@ Function GetServerCatalogs()
     RootCatalog = MainDirectory + "/ui" ;
 
     Return New Structure("Root,Extensions", RootCatalog, ExtensionsCatalog);
+
+EndFunction
+
+Function GetSetting(Val Name, Val Project) 
+
+    BaseSettings = GetProjectSettings(Project);
+    Result = Undefined;
+	
+	If Not BaseSettings["result"] Then
+		Raise BaseSettings["error"];	
+	EndIf;
+		
+	For Each Setting In BaseSettings["data"] Do
+
+		If Setting["name"] = Name Then
+			Result = Setting["value"];
+		EndIf;
+
+	EndDo;
+
+    Return Result;
 
 EndFunction
 

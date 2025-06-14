@@ -1,19 +1,89 @@
-Procedure CompleteCompositionWithExtensions(OPIObject, ExtensionsCatalog) Export
+Var OPIObject;
+Var SettingsVault;
+Var ExtensionsCatalog;
+Var ExtensionsCache;
 
-    ExtensionFiles = FindFiles(ExtensionsCatalog, "*.os");
+#Region Internal
 
-    For Each FileExtension In ExtensionFiles Do
+Procedure Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_) Export
+	
+	OPIObject = OPIObject_;
+	SettingsVault = SettingsVault_;
+    ExtensionsCatalog = ExtensionsCatalog_;
+    ExtensionsCache = New Map;
 
-        Try
-            ParametersTable = ParseModule(FileExtension);
-            OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable);
-        Except
-            Message(StrTemplate("Error applying the extension %1", DetailErrorDescription(ErrorInfo())));
-        EndTry;
+    CompleteCompositionWithExtensions();
+	
+EndProcedure
+
+Procedure CompleteCompositionWithExtensions() Export
+
+    ExtensionsDirectories = New Array;
+    ExtensionsDirectories.Add(ExtensionsCatalog);
+    
+    ExtensionsAdditionalDirectory = SettingsVault.ReturnSetting("ext_path");
+
+    If ValueIsFilled(ExtensionsAdditionalDirectory) Then
+        ExtensionsDirectories.Add(ExtensionsAdditionalDirectory);
+    EndIf;
+
+    For Each ExtensionsCatalog In ExtensionsDirectories Do
+        
+        ExtensionFiles = FindFiles(ExtensionsCatalog, "*.os");
+
+        For Each FileExtension In ExtensionFiles Do
+
+            Try
+
+                ParametersTable = ParseModule(FileExtension);
+                OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable);
+
+            Except
+
+                TroubleDescription = StrTemplate("Error applying the extension %1", DetailErrorDescription(ErrorInfo()));
+
+                AddExtensionToCache(FileExtension.BaseName, FileExtension.FullName, TroubleDescription);
+                Message(TroubleDescription);
+
+            EndTry;
+
+        EndDo;
 
     EndDo;
 
 EndProcedure
+
+Function GetExtensionsList() Export
+
+    ExtensionsArray = New Array;
+
+    For Each Extension In ExtensionsCache Do
+
+        CurrentExtension = New Structure;
+        CurrentExtension.Insert("name" , Extension.Key);
+        CurrentExtension.Insert("filepath", Extension.Value["filepath"]);
+        CurrentExtension.Insert("count" , Extension.Value["count"]);
+        
+        ExtensionsArray.Add(CurrentExtension);
+
+    EndDo;
+
+    Return New Structure("result,data", True, ExtensionsArray);
+
+EndFunction
+
+Function UpdateExtensionsList() Export
+
+    OPIObject.InitializeCommonLists();
+    CompleteCompositionWithExtensions();
+    
+    Return New Structure("result", True);
+
+EndFunction
+
+#EndRegion
+
+#Region Private
 
 Function ParseModule(Module)
     
@@ -35,6 +105,7 @@ Function ParseModule(Module)
     ModuleStructure = Parser.Parse(ModuleText);
     CurrentRegion = "Common methods";
 
+    MethodCounter = 0;
     For Each Method In ModuleStructure.Declarations Do
   
         If Method.Type = "InstructionPreprocessorRegion" Then
@@ -42,10 +113,18 @@ Function ParseModule(Module)
         EndIf;
         
         If Method.Type = "MethodDeclaration" And Method.Signature.Export = True Then
-            ParseMethodComment(ModuleDocument, Method, Module, CurrentRegion, CompositionTable);	       
+
+            ParseMethodComment(ModuleDocument, Method, Module, CurrentRegion, CompositionTable);	 
+
+            If ValueIsFilled(CompositionTable) Then
+                MethodCounter = MethodCounter + 1;      
+            EndIf;
+
         EndIf;
         
     EndDo;
+
+    AddExtensionToCache(Module.BaseName, Module.FullName, MethodCounter);
 
     Return CompositionTable;
 
@@ -257,3 +336,12 @@ Function Synonymizer(PropName)
     Return Synonym;
     
 EndFunction
+
+Procedure AddExtensionToCache(Val Name, Val Path, Val Count)
+
+    CacheStructure = New Structure("filepath,count", Path, Count);
+    ExtensionsCache.Insert(Name, CacheStructure);
+
+EndProcedure
+
+#EndRegion

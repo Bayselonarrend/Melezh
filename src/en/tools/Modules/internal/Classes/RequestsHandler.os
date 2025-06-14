@@ -47,6 +47,7 @@
 Var ActionsProcessor;
 Var APIProcessor;
 Var UIProcessor;
+Var ExtensionsProcessor;
 Var Logger;
 Var SettingsVault;
 Var SessionsHandler;
@@ -57,10 +58,11 @@ Var ServerPath;
 
 #Region Internal
 
-Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
+Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerCatalogs_) Export
     
-    ServerPath = ServerPath_;
-    
+    ServerPath = ServerCatalogs_["Root"];
+    ExtensionsPath = ServerCatalogs_["Extensions"];
+
     SQLiteConnectionManager = New("SQLiteConnectionManager");
     SQLiteConnectionManager.Initialize(ProjectPath_);
     
@@ -75,12 +77,15 @@ Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerPath_) Export
     
     ActionsProcessor = New("ActionsProcessor");
     ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger, SettingsVault);
-    
-    APIProcessor = New("APIProcessor");
-    APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger);
-    
+        
     UIProcessor = New("UIProcessor");
-    UIProcessor.Initialize(ServerPath_, SessionsHandler, SettingsVault);
+    UIProcessor.Initialize(ServerPath, SessionsHandler, SettingsVault);
+
+    ExtensionsProcessor = New("ExtensionsProcessor");
+    ExtensionsProcessor.Initialize(OPIObject_, SettingsVault, ExtensionsPath);
+
+    APIProcessor = New("APIProcessor");
+    APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger, ExtensionsProcessor);
     
 EndProcedure
 

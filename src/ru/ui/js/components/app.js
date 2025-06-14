@@ -12,12 +12,13 @@ export const logsState = {
 
 document.addEventListener('alpine:init', () => {
   const HASH_ROUTES = {
-    dashboard: '#dashboard',
-    handlers: '#handlers',
+    'dashboard': '#dashboard',
+    'handlers': '#handlers',
     'handler-form': '#handler-form',
-    logs: '#logs',
+    'logs': '#logs',
     'log-details': '#log',
-    settings: '#settings'
+    'settings': '#settings',
+    'extensions': '#extensions',
   };
 
   const viewCache = new Map();
@@ -194,7 +195,7 @@ document.addEventListener('alpine:init', () => {
 
 
   Alpine.directive('tooltip', (el, { expression }, { evaluate, cleanup }) => {
-    // Глобальный tooltip контейнер
+
     let tooltipEl = document.getElementById('global-tooltip');
 
     if (!tooltipEl) {
@@ -209,7 +210,7 @@ document.addEventListener('alpine:init', () => {
         'opacity-0', 'transition-opacity', 'duration-200'
       );
       tooltipEl.style.whiteSpace = 'normal';
-      tooltipEl.style.transform = 'translate(-50%, -8px)';
+      tooltipEl.style.transform = 'translate(-50%, 10px)';
       document.body.appendChild(tooltipEl);
     }
 

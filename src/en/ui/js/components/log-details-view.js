@@ -1,5 +1,5 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
-import { jsonViewer } from '/js/json-viewer.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
+import { jsonViewer } from '#melezh_base_path#js/json-viewer.js';
 
 export const logDetailsView = () => ({
   isLoading: true,
@@ -21,7 +21,7 @@ export const logDetailsView = () => ({
     }
 
     try {
-      const response = await fetch(`/api/getEventData?key=${encodeURIComponent(key)}`);
+      const response = await fetch(`api/getEventData?key=${encodeURIComponent(key)}`);
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.message);

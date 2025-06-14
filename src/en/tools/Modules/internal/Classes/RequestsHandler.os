@@ -124,17 +124,25 @@ Function ProcessRequest(Context, NextHandler)
     
     Result = Undefined;
 
-    BasePath = String(SettingsVault.GetSetting("base_path"));
+    BasePath = String(SettingsVault.ReturnSetting("base_path"));
     Path = GetRequestPath(Context, BasePath);
-    
-    If Not ValueIsFilled(Path) Then
-        Toolbox.ReturnHTMLPage(Context, ServerPath, "index.html", BasePath);
-    ElsIf StrStartsWith(Path, "api") Then
+
+    If StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);
-    ElsIf StrStartsWith(Path, "ui") Then
-        Result = UIProcessor.MainHandle(Context, Path);
     Else
+
         Result = ActionsProcessor.MainHandle(Context, Path);
+
+        If Context.Response.StatusCode = 404 Then
+
+            UIResult = UIProcessor.MainHandle(Context, Path);
+
+            If Context.Response.StatusCode <> 404 Then
+                Result = UIResult;
+            EndIf;
+
+        EndIf;
+
     EndIf;
     
     Return Result;
@@ -162,7 +170,7 @@ Function GetRequestPath(Context, BasePath)
         NewPath = New Array;
         BasePassed = False;
 
-        For N = 0 To PathParts.Count() Do
+        For N = 0 To PathParts.Count() - 1 Do
 
             CurrentPathPart = PathParts[N];
 

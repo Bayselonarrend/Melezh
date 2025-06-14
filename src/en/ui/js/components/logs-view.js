@@ -1,5 +1,5 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
-import { globalState, logsState } from '/js/components/app.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
+import { globalState, logsState } from '#melezh_base_path#js/components/app.js';
 
 export const logsView = () => ({
 
@@ -53,7 +53,7 @@ export const logsView = () => ({
     this.isEventsLoading = true;
 
     try {
-      const url = `/api/getEvents?handler=${encodeURIComponent(this.handler)}&date=${encodeURIComponent(this.date)}`;
+      const url = `api/getEvents?handler=${encodeURIComponent(this.handler)}&date=${encodeURIComponent(this.date)}`;
       const response = await fetch(url);
       const result = await handleFetchResponse(response);
 

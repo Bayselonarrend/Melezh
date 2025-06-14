@@ -3,7 +3,9 @@
 
 Var ServerPath;
 Var SessionsHandler;
+Var StaticProcessor;
 Var SettingsVault;
+Var BasePath;
 
 #Region Internal
 
@@ -13,11 +15,21 @@ Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export
 	SessionsHandler = SessionsHandler_;
 	SettingsVault = SettingsVault_;
 
+	StaticProcessor = New("StaticProcessor");
+	StaticProcessor.Initialize(SettingsVault, ServerPath);
+
 EndProcedure
 
 Function MainHandle(Val Context, Val Path) Export
 
 	Result = Undefined;
+	Path = ?(ValueIsFilled(Path), Path, "index.html");
+
+	Context.Response.StatusCode = 200;
+
+	If StaticProcessor.ReturnStatic(Path, Context) Then
+		Return Result;
+	EndIf;
 
 	If Path = "ui" Then
 
@@ -48,16 +60,15 @@ EndFunction
 
 Procedure ReturnUIPage(Context)
 
-	BasePath = String(SettingsVault.GetSetting("base_path"));
 	Context.Response.StatusCode = 200;
 	
 	If SessionsHandler.AuthorizedSession(Context) Then 
 
-		Toolbox.ReturnHTMLPage(Context, ServerPath, "console.html", BasePath);
+		StaticProcessor.ReturnStatic("console.html", Context);
 
 	Else
 
-		Toolbox.ReturnHTMLPage(Context, ServerPath, "login.html", BasePath);
+		StaticProcessor.ReturnStatic("login.html", Context);
 
 	EndIf;
 

@@ -76,12 +76,10 @@ Function RunProject(Val Port, Val Project) Export
 
     OPI_TypeConversion.GetNumber(Port);
 
-    Result = CheckProjectExistence(Project);
+    Check = CheckRestoreProject(Project);
 
-    If Not Result["result"] Then
-        Return Result;
-    Else
-        Project = Result["path"];
+    If Not Check["result"] Then
+        Return Check;
     EndIf;
 
     TypeServer = Type("WebServer");
@@ -96,15 +94,10 @@ Function RunProject(Val Port, Val Project) Export
     ServerCatalogs = GetServerCatalogs();
 
     Root = ServerCatalogs["Root"];
-    StaticCatalog = ServerCatalogs["Static"];
     ExtensionsCatalog = ServerCatalogs["Extensions"];
 
     Extensions.CompleteCompositionWithExtensions(OintContent, ExtensionsCatalog);
     Handler.Initialize(Project, IntegrationProxy, OintContent, Root);
-
-    WebServer.SetWebRoot(StaticCatalog);
-    WebServer.SetServerDir(Root);
-    WebServer.UseStaticFiles();
 
     WebServer.AddRequestsHandler(Handler, "MainHandle");
     WebServer.Run();
@@ -857,6 +850,34 @@ Function NormalizeProject(Path)
 
 EndFunction
 
+Function CheckRestoreProject(Val Path)
+
+    OPI_TypeConversion.GetLine(Path);
+    OPI_Tools.RestoreEscapeSequences(Path);
+
+    BaseFile = New File(Path);
+    FullPath = BaseFile.FullName;
+
+    If Not BaseFile.Exist() Then
+        Text = "The project file does not exist at the specified location!";
+        Response = FormResponse(False, Text, FullPath);
+    Else
+        
+        Result = CreateNewProject(FullPath);
+
+        If Result["result"] Then
+            Text = "The project file has been checked and converted to the required format!";
+            Response = FormResponse(True, Text, FullPath);
+        Else
+            Response = Result;
+        EndIf;
+
+    EndIf;
+
+    Return Response;
+
+EndFunction
+
 Function FormResponse(Val Result, Val Text, Val Path = "")
 
     Response = New Structure("result,message", Result, Text);
@@ -895,8 +916,12 @@ EndFunction
 
 Function CreateNewProject(Path)
 
-    EmptyFile = ПолучитьДвоичныеДанныеИзСтроки("");
-    EmptyFile.Write(Path);
+    FileObject = New File(Path);
+
+    If Not FileObject.Exist() Then
+        EmptyFile = ПолучитьДвоичныеДанныеИзСтроки("");
+        EmptyFile.Write(Path);
+    EndIf;
 
     Result = CreateHandlersTable(Path);
 
@@ -939,8 +964,8 @@ Function CreateHandlersTable(Path)
     TableStructure.Insert("method" , "TEXT");
     TableStructure.Insert("active" , "BOOLEAN");
 
-    HandlersTableName = ConstantValue("HandlersTable");
-    Result = OPI_SQLite.CreateTable(HandlersTableName, TableStructure, Path);
+    HandlersTableName = ConstantValue("HandlersTable");  
+    Result = OPI_SQLite.EnsureTable(HandlersTableName, TableStructure, Path);
 
     Return Result;
 
@@ -955,7 +980,7 @@ Function CreateArgsTable(Path)
     TableStructure.Insert("strict" , "BOOLEAN");
 
     ArgsTableName = ConstantValue("ArgsTable");
-    Result = OPI_SQLite.CreateTable(ArgsTableName, TableStructure, Path);
+    Result = OPI_SQLite.EnsureTable(ArgsTableName, TableStructure, Path);
 
     Return Result;
 
@@ -970,7 +995,7 @@ Function CreateSettingsTable(Path)
     TableStructure.Insert("type" , "TEXT");
 
     SettingTableName = ConstantValue("SettingsTable");
-    Result = OPI_SQLite.CreateTable(SettingTableName, TableStructure, Path);
+    Result = OPI_SQLite.EnsureTable(SettingTableName, TableStructure, Path);
 
     Return Result;
 
@@ -980,6 +1005,36 @@ Function SetDefaultSettings(Path)
 
     DefaultSettings = GetDefaultSettings();
     SettingTableName = ConstantValue("SettingsTable");
+
+    Existing = OPI_SQLite.GetRecords(SettingTableName, "name", , , , Path);
+
+    If Not Existing["result"] Then
+        Return Existing;
+    EndIf;
+
+    CurrentSettings = Existing["data"];
+
+    If ValueIsFilled(CurrentSettings) Then
+
+        CurrentList = New ValueList();
+
+        For Each Setting In CurrentSettings Do
+            CurrentList.Add(Setting["name"]);
+        EndDo;
+
+        DefaultSettings_ = New Array;
+
+        For Each DefaultSetting In DefaultSettings Do
+
+            If CurrentList.FindByValue(DefaultSetting["name"]) = Undefined Then
+                DefaultSettings_.Add(DefaultSetting);
+            EndIf;
+
+        EndDo;
+
+        DefaultSettings = DefaultSettings_;
+
+    EndIf;
 
     Result = OPI_SQLite.AddRecords(SettingTableName, DefaultSettings, , Path);
 
@@ -1001,6 +1056,7 @@ Function GetDefaultSettings()
     SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
     SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Add(New Structure(SettingsFields, "base_path" , "Base path of the API. All routes will be available with the specified prefix. For example: /melezh", "", "string"));
     
     Return SettingsList;
     
@@ -1111,9 +1167,8 @@ Function GetServerCatalogs()
 
     ExtensionsCatalog = MainDirectory + "/extensions/Modules";
     RootCatalog = MainDirectory + "/ui" ;
-    StaticCatalog = RootCatalog + "/static";
 
-    Return New Structure("Root,Static,Extensions", RootCatalog, StaticCatalog, ExtensionsCatalog);
+    Return New Structure("Root,Extensions", RootCatalog, ExtensionsCatalog);
 
 EndFunction
 

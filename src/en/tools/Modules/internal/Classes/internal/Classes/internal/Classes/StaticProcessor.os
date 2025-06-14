@@ -19,6 +19,14 @@ Function ReturnStatic(Val Path, Val Context) Export
 
 EndFunction
 
+Function Redirection(Val Path, Val Context) Export
+
+    BasePath = GetNormalizedBasePath();
+    Context.Response.StatusCode = 303;
+	Context.Response.Headers["Location"] = BasePath + Path;
+
+EndFunction
+
 #EndRegion
 
 #Region Private

@@ -41,11 +41,6 @@ Function GetJSON(Context) Export
 
 EndFunction
 
-Function Redirection(Context, Path) Export
-	Context.Response.StatusCode = 303;
-	Context.Response.Headers["Location"] = Path;
-EndFunction
-
 Function HandlingError(Context, Code, Text) Export
 
     If TypeOf(Text) = Type("ErrorInfo") Then

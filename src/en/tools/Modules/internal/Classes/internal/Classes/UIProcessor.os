@@ -42,7 +42,7 @@ Function MainHandle(Val Context, Val Path) Export
 	ElsIf Path = "ui/logout" Then
 
 		SessionsHandler.DeleteSession(Context);
-		Toolbox.Redirection(Context, "/ui");
+		StaticProcessor.Redirection("ui", Context);
 
 	Else
 		Result = Toolbox.HandlingError(Context, 404, "Not Found");

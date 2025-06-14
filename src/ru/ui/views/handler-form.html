@@ -120,7 +120,7 @@
               :class="{ 'bg-gray-100': isLibrariesLoading || isLoading, 'text-gray-500': !formData.library }">
               <span class="flex items-center">
                 <template x-if="formData.library">
-                  <img :src="`/img/libs/${formData.library.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
+                  <img :src="`img/libs/${formData.library.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
                     @error="handleImageError">
                 </template>
                 <span class="block truncate" :class="{ 'ml-3': formData.library }"
@@ -141,7 +141,7 @@
                   class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100 text-left"
                   :class="{ 'bg-green-50': formData.library === lib.name }">
                   <div class="flex items-center">
-                    <img :src="`/img/libs/${lib.name.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
+                    <img :src="`img/libs/${lib.name.replace(/\s+/g, '')}.png`" class="h-5 w-5 flex-shrink-0"
                       @error="handleImageError">
                     <span class="ml-3 block truncate" x-text="lib.title"></span>
                   </div>

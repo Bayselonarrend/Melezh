@@ -1,4 +1,4 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const dashboardView = () => ({
   isEventsLoading: false,
@@ -30,7 +30,7 @@ export const dashboardView = () => ({
     this.eventsErrorMessage = '';
 
     try {
-      const response = await fetch('/api/getLastEvents');
+      const response = await fetch('api/getLastEvents');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.message);
@@ -56,7 +56,7 @@ export const dashboardView = () => ({
     this.serverStartTime = null;
 
     try {
-      const response = await fetch('/api/getSessionInfo');
+      const response = await fetch('api/getSessionInfo');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.error || result.message);
@@ -132,7 +132,7 @@ export const dashboardView = () => ({
 
   async loadRandomAdvice() {
     try {
-      const response = await fetch('/api/getRandomAdvice');
+      const response = await fetch('api/getRandomAdvice');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.error || result.message);

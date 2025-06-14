@@ -1,4 +1,4 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const handlersView = () => ({
   handlers: [],
@@ -13,7 +13,7 @@ export const handlersView = () => ({
 
     try {
 
-      const response = await fetch('/api/getHandlersList');
+      const response = await fetch('api/getHandlersList');
       const result = await handleFetchResponse(response);
       if (!result.success) throw new Error(result.message);
       this.handlers = result.data || [];
@@ -39,7 +39,7 @@ export const handlersView = () => ({
       formData.append('key', handler.key);
       formData.append('active', newStatus);
 
-      const response = await fetch('/api/updateStatus', {
+      const response = await fetch('api/updateStatus', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -73,7 +73,7 @@ export const handlersView = () => ({
     formData.append('key', handler.key);
 
     try {
-      const response = await fetch('/api/getHandler', {
+      const response = await fetch('api/getHandler', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -117,7 +117,7 @@ export const handlersView = () => ({
     const formData = new URLSearchParams();
     formData.append('key', handler.key);
 
-    fetch('/api/deleteHandler', {
+    fetch('api/deleteHandler', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/x-www-form-urlencoded'

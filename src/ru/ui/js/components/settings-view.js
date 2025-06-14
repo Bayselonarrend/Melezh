@@ -1,4 +1,4 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const settingsPage = () => ({
   settings: [],
@@ -12,7 +12,7 @@ export const settingsPage = () => ({
     this.isLoading = true;
 
     try {
-      const response = await fetch('/api/getSettings');
+      const response = await fetch('api/getSettings');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.message);
@@ -39,7 +39,7 @@ export const settingsPage = () => ({
     });
 
     try {
-      const response = await fetch('/api/saveSettings', {
+      const response = await fetch('api/saveSettings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'

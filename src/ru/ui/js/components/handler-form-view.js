@@ -1,4 +1,4 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const handlerFormView = () => ({
   formData: {
@@ -67,7 +67,7 @@ export const handlerFormView = () => ({
   async loadLibraries() {
     try {
 
-      const response = await fetch('/api/getLibraries');
+      const response = await fetch('api/getLibraries');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.message);
@@ -90,7 +90,7 @@ export const handlerFormView = () => ({
       const formData = new URLSearchParams();
       formData.append('library', libraryName);
 
-      const response = await fetch('/api/getFunctions', {
+      const response = await fetch('api/getFunctions', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -165,7 +165,7 @@ export const handlerFormView = () => ({
         args: activeArgs
       };
 
-      const url = this.isEditMode ? '/api/editHandler' : '/api/createHandler';
+      const url = this.isEditMode ? 'api/editHandler' : 'api/createHandler';
 
       const response = await fetch(url, {
         method: 'POST',
@@ -203,7 +203,7 @@ export const handlerFormView = () => ({
       formData.append('library', libraryName);
       formData.append('function', functionName);
 
-      const response = await fetch('/api/getArgs', {
+      const response = await fetch('api/getArgs', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/x-www-form-urlencoded'
@@ -244,7 +244,7 @@ export const handlerFormView = () => ({
   async generateNewKey() {
     try {
 
-      const response = await fetch('/api/getNewKey');
+      const response = await fetch('api/getNewKey');
       const result = await handleFetchResponse(response);
 
       if (!result.success) throw new Error(result.message);
@@ -256,7 +256,7 @@ export const handlerFormView = () => ({
   },
 
   handleImageError(event) {
-    event.target.src = '/img/libs/default.png';
+    event.target.src = 'img/libs/default.png';
     event.target.onerror = null;
   }
 });

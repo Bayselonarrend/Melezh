@@ -1,4 +1,4 @@
-import { handleFetchResponse } from '/js/error-fetch.js';
+import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const globalState = {
   isInitialized: false,
@@ -79,7 +79,7 @@ document.addEventListener('alpine:init', () => {
       this.isLoading = true;
 
       try {
-        const response = await fetch('/ui/login', {
+        const response = await fetch('ui/login', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -153,7 +153,7 @@ document.addEventListener('alpine:init', () => {
           return;
         }
 
-        const response = await fetch(`/views/${viewName}.html`);
+        const response = await fetch(`views/${viewName}.html`);
         if (!response.ok) {
           const result = await handleFetchResponse(response);
           if (!result.success) throw new Error(result.message);
@@ -186,7 +186,7 @@ document.addEventListener('alpine:init', () => {
     logout() {
       const form = document.createElement('form');
       form.method = 'POST';
-      form.action = '/ui/logout';
+      form.action = 'ui/logout';
       document.body.appendChild(form);
       form.submit();
     }

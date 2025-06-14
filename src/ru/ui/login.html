@@ -2,29 +2,29 @@
 <html lang="ru" x-data="app()">
 
 <head>
-  <base href="%1" />
+  <base href="#melezh_base_path#" />
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Вход | Melezh</title>
-  <link rel="stylesheet" href="/css/style.css" />
-  <script src="/js/tailwind.js"></script>
-  <script type="module" src="/js/error-fetch.js"></script>
-  <script type="module" src="/js/components/app.js"></script>
-  <script type="module" src="/js/components/views-registry.js"></script>
-  <script type="module" src="/js/components/message-toast.js"></script>
-  <script type="module" src="/js/alpine.js"></script>
-  <link rel="icon" href="/favicon.ico" />
+  <link rel="stylesheet" href="css/style.css" />
+  <script src="js/tailwind.js"></script>
+  <script type="module" src="js/error-fetch.js"></script>
+  <script type="module" src="js/components/app.js"></script>
+  <script type="module" src="js/components/views-registry.js"></script>
+  <script type="module" src="js/components/message-toast.js"></script>
+  <script type="module" src="js/alpine.js"></script>
+  <link rel="icon" href="favicon.ico" />
 </head>
 
 <body class="bg-gray-100 flex items-center justify-center min-h-screen">
   <div class="w-full max-w-md bg-white shadow-lg rounded-lg p-10 space-y-6">
 
     <div class="flex flex-col items-center text-center space-y-4">
-      <img src="/img/cover_g.png" alt="Логотип" class="h-21 w-auto" />
+      <img src="img/cover_g.png" alt="Логотип" class="h-21 w-auto" />
       <h2 class="text-2xl font-bold text-gray-800">Вход в панель управления</h2>
     </div>
 
-    <form action="/ui/login" method="POST" class="space-y-4" @submit.prevent="handleLoginSubmit">
+    <form action="ui/login" method="POST" class="space-y-4" @submit.prevent="handleLoginSubmit">
       <div>
         <label for="password" class="block text-sm font-medium text-gray-700 mb-1">Пароль</label>
         <input id="password" name="password" type="password" x-model="loginPassword" required

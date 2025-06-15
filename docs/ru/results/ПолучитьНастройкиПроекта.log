@@ -7,10 +7,22 @@
    "value": "admin"
   },
   {
+   "description": "Признак использования {'result':true, 'data': <основной ответ>} обертки Melezh над оригинальными ответами функций (не влияет на не-JSON ответы)",
+   "name": "res_wrapper",
+   "type": "bool",
+   "value": true
+  },
+  {
+   "description": "Максимальный размер тела запроса, при превышении которого он не будет обработан (в байтах). 0 - без ограничений",
+   "name": "req_max_size",
+   "type": "number",
+   "value": 209715200
+  },
+  {
    "description": "Путь сохранения логов. Для отключения логирования установите пустое значение",
    "name": "logs_path",
    "type": "string",
-   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/47536e82-60be-4e63-975a-67f42966127e"
+   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/a513fa06-72a3-4625-8819-13d4c02ae469"
   },
   {
    "description": "Логирование заголовков входящих запросов",
@@ -43,10 +55,16 @@
    "value": 104857600
   },
   {
-   "description": "Признак использования {'result':true, 'data': <основной ответ>} обертки Melezh над оригинальными ответами функций (не влияет на не-JSON ответы)",
-   "name": "res_wrapper",
-   "type": "bool",
-   "value": true
+   "description": "Базовый путь API. Все маршруты будут доступны с указанного префикса. Например: /melezh",
+   "name": "base_path",
+   "type": "string",
+   "value": ""
+  },
+  {
+   "description": "Дополнительный каталог расширений (для применения требуется перезагрузка)",
+   "name": "ext_path",
+   "type": "string",
+   "value": ""
   }
  ],
  "result": true

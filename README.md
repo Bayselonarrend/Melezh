@@ -9,6 +9,7 @@
 # Melezh
 
 [![OpenIntegrations](media/addon.svg)](https://github.com/Bayselonarrend/OpenIntegrations)
+[![OpenYellow](https://img.shields.io/endpoint?url=https://openyellow.org/data/badges/6/976752838.json)](https://openyellow.org/grid?data=top&repo=976752838)
 [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) 
 [![OneScript](media/boosty.svg)](https://boosty.to/bayselonarrend)
 

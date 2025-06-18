@@ -22,7 +22,7 @@
    "description": "Путь сохранения логов. Для отключения логирования установите пустое значение",
    "name": "logs_path",
    "type": "string",
-   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/a513fa06-72a3-4625-8819-13d4c02ae469"
+   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/decf6034-4b9e-4d08-a89f-04bef7e1f490"
   },
   {
    "description": "Логирование заголовков входящих запросов",
@@ -61,7 +61,7 @@
    "value": ""
   },
   {
-   "description": "Дополнительный каталог расширений (для применения требуется перезагрузка)",
+   "description": "Дополнительный каталог расширений (для применения требуется обновление кэша или перезагрузка)",
    "name": "ext_path",
    "type": "string",
    "value": ""

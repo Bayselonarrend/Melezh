@@ -3,7 +3,7 @@
   {
    "active": 1,
    "function": "SendTextMessage",
-   "key": "2a9d8b43f",
+   "key": "cf100ee73",
    "library": "telegram",
    "method": "GET"
   }

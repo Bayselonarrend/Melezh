@@ -2,7 +2,7 @@
  "data": {
   "active": 1,
   "function": "CreatePost",
-  "key": "eb20994e1",
+  "key": "39a8803a4",
   "library": "vk",
   "method": "FORM",
   "args": []

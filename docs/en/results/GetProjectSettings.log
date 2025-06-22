@@ -22,7 +22,7 @@
    "description": "Logs save path. To disable logging, set the value to empty",
    "name": "logs_path",
    "type": "string",
-   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/5fef3fc7-5544-4258-a6dc-41efd80ce5cc"
+   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/12065400-8322-4785-b84b-94f9085a5e18"
   },
   {
    "description": "Logging of incoming request headers",
@@ -61,7 +61,7 @@
    "value": ""
   },
   {
-   "description": "Additional extensions directory (requires restart to apply)",
+   "description": "Additional extensions directory (requires restart or cache update to apply)",
    "name": "ext_path",
    "type": "string",
    "value": ""

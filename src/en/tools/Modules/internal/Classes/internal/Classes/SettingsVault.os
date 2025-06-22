@@ -43,6 +43,17 @@ Function ReturnSetting(Val Name) Export
 	
 EndFunction
 
+Function ReturnBasePath() Export
+
+	BasePath = String(ReturnSetting("base_path"));
+
+    BasePath = ?(StrStartsWith(BasePath , "/"), BasePath, "/" + BasePath);
+    BasePath = ?(StrEndsWith(BasePath, "/"), BasePath, BasePath + "/");
+
+	Return BasePath;
+
+EndFunction
+
 Function WriteProjectSettings(Val Data) Export
 	
 	ConnectionRW = ConnectionManager.GetRWConnection();

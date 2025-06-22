@@ -21,7 +21,7 @@ EndFunction
 
 Function Redirection(Val Path, Val Context) Export
 
-    BasePath = GetNormalizedBasePath();
+    BasePath = SettingsVault.ReturnBasePath();
     Context.Response.StatusCode = 303;
 	Context.Response.Headers["Location"] = BasePath + Path;
 
@@ -52,7 +52,7 @@ Function WriteFileInResponse(Path, Context) Export
 
 		If StrFind(Page, MBP) > 0 Then
 
-			BasePath = GetNormalizedBasePath();
+			BasePath = SettingsVault.ReturnBasePath();
     		Page = StrReplace(Page, MBP, BasePath);
     		
 		EndIf;
@@ -68,17 +68,6 @@ Function WriteFileInResponse(Path, Context) Export
 	ResponseRecord.Close();
 
 	Return True;
-
-EndFunction
-
-Function GetNormalizedBasePath()
-
-	BasePath = String(SettingsVault.ReturnSetting("base_path"));
-
-    BasePath = ?(StrStartsWith(BasePath , "/"), BasePath, "/" + BasePath);
-    BasePath = ?(StrEndsWith(BasePath, "/"), BasePath, BasePath + "/");
-
-	Return BasePath;
 
 EndFunction
 

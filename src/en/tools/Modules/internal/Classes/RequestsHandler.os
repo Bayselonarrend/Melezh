@@ -129,7 +129,7 @@ Function ProcessRequest(Context, NextHandler)
     
     Result = Undefined;
 
-    BasePath = String(SettingsVault.ReturnSetting("base_path"));
+    BasePath = SettingsVault.ReturnBasePath();
     Path = GetRequestPath(Context, BasePath);
 
     If StrStartsWith(Path, "api") Then

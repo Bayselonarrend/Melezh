@@ -52,7 +52,7 @@ Function MainHandle(Val Context, Val Path) Export
     EndTry;
     
     If Not NotFound Then
-        Logger.WriteLog(Context, RequestBody, Result);
+        Logger.WriteLog(Context, Path, RequestBody, Result);
     EndIf;
     
     RunGarbageCollection();
@@ -67,7 +67,7 @@ EndFunction
 
 Function PerformHandling(Context, Handler, RequestBody)
     
-    If Handler["active"] = 0 Then
+    If Not ValueIsFilled(Handler["active"]) Then
         Return Toolbox.HandlingError(Context, 403, "Forbidden");
     EndIf;
     
@@ -195,6 +195,13 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
             TFArray.Add(TFN);
             
             ParametersBoiler.Insert(CurrentKey, TFN);
+
+        ElsIf OPI_Tools.ThisIsCollection(CurrentValue) Then
+
+            CurrentValue = OPI_Tools.JSONString(CurrentValue, , False);
+            OPI_TypeConversion.GetLine(CurrentValue);
+
+            ParametersBoiler.Insert(CurrentKey, CurrentValue);
             
         Else
             OPI_TypeConversion.GetLine(CurrentValue);

@@ -14,7 +14,7 @@ Procedure Initialize(SettingsVault_) Export
 	
 EndProcedure
 
-Procedure WriteLog(Context, RequestBody, Val Result) Export
+Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 		
 	RequestAmount = RequestAmount + 1;
 	
@@ -25,15 +25,12 @@ Procedure WriteLog(Context, RequestBody, Val Result) Export
 		If Not ValueIsFilled(LogPath) Then
 			Return;		
 		EndIf;
-		
-		Handler = Context.Request.Path;
-		Handler = StrReplace(Handler, "/", "");
-		Handler = ?(ValueIsFilled(Handler), Handler, "/");
-		
+
 		RequestDate = CurrentDate();
 		Identifier = Left(String(New UUID), 8);
-		RequestUUID = StrTemplate("%1-%2-%3", Format(RequestDate, "DF=hh-mm-ss"), Identifier, Handler);
-		WritingPath = OrganizeLogCatalog(LogPath, RequestDate, Handler, RequestUUID);
+		HandlerEscaped = StrReplace(String(Handler), "/", "%2F");
+		RequestUUID = StrTemplate("%1-%2-%3", Format(RequestDate, "DF=hh-mm-ss"), Identifier, HandlerEscaped);
+		WritingPath = OrganizeLogCatalog(LogPath, RequestDate, HandlerEscaped, RequestUUID);
 		
 		If RequestBody = Undefined Then
 			BodySize = Context.Request.ContentLength;
@@ -205,6 +202,7 @@ Function ReturnActions(Handler, Date) Export
 	
 	Result = New Array;
 	LogPath = SettingsVault.ReturnSetting("logs_path");
+	HandlerEscaped = StrReplace(String(Handler), "/", "%2F");
 	
 	If Not ValueIsFilled(LogPath) Then
 		Return Result;		
@@ -213,7 +211,7 @@ Function ReturnActions(Handler, Date) Export
 	LogPath = StrReplace(LogPath, "\", "/");
 	LogPath = ?(StrEndsWith(LogPath, "/"), Left(LogPath, StrLen(LogPath) - 1), LogPath);
 	
-	LogPath = StrTemplate("%1/%2/%3", LogPath, Handler, Date);
+	LogPath = StrTemplate("%1/%2/%3", LogPath, HandlerEscaped, Date);
 	PathFile = New File(LogPath);
 	
 	If Not PathFile.Exist() Then
@@ -254,8 +252,8 @@ EndFunction
 Function OrganizeLogCatalog(Val LogPath, Val Date, Val Handler, Val UUID)
 	
 	PrimaryLogsCatalog = CheckCreateFolder(LogPath);
-	
-	HandlerCatalog = StrTemplate("%1/%2", PrimaryLogsCatalog, String(Handler));
+		
+	HandlerCatalog = StrTemplate("%1/%2", PrimaryLogsCatalog, Handler);
 	HandlerCatalog = CheckCreateFolder(HandlerCatalog);
 	
 	DateCatalog = StrTemplate("%1/%2", HandlerCatalog, Format(Date, "DF=yyyy-MM-dd"));

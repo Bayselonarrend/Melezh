@@ -27,9 +27,9 @@ Procedure CompleteCompositionWithExtensions() Export
         ExtensionsDirectories.Add(ExtensionsAdditionalDirectory);
     EndIf;
 
-    For Each ExtensionsCatalog In ExtensionsDirectories Do
+    For Each CurrentExtensionsCatalog In ExtensionsDirectories Do
         
-        ExtensionFiles = FindFiles(ExtensionsCatalog, "*.os");
+        ExtensionFiles = FindFiles(CurrentExtensionsCatalog, "*.os");
 
         For Each FileExtension In ExtensionFiles Do
 
@@ -74,6 +74,7 @@ EndFunction
 
 Function UpdateExtensionsList() Export
 
+    ExtensionsCache = New Map;
     OPIObject.InitializeCommonLists();
     CompleteCompositionWithExtensions();
     

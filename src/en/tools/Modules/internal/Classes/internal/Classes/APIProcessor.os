@@ -303,6 +303,7 @@ Function ReturnEventInfo(Context)
 	Try
 		
 		LogKey = String(Context.Request.Parameters["key"]);
+		LogKey = StrReplace(LogKey, "/", "%2F");
 		LogPath = SettingsVault.ReturnSetting("logs_path");
 		
 		If Not ValueIsFilled(LogPath) Then

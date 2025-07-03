@@ -1,0 +1,486 @@
+{
+  "id": "0eb26377-0957-4aa9-94bb-9d8114de784a",
+  "version": "3.0",
+  "name": "Melezh",
+  "url": "http://www.google.com",
+  "urls": [
+    "http://www.google.com"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "c79da6f0-a687-42d5-aa9e-78f09a378432",
+      "name": "New Suite",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "a24f48c7-74e2-4153-874d-60f33bd557d7"
+      ],
+      "timeout": 30000
+    }
+  ],
+  "tests": [
+    {
+      "id": "a24f48c7-74e2-4153-874d-60f33bd557d7",
+      "name": "Index -> UI",
+      "commands": [
+        {
+          "command": "open",
+          "target": "http://localhost:1921/",
+          "value": "",
+          "id": "9b178f9b-324b-4054-9215-efb715b62690"
+        },
+        {
+          "command": "click",
+          "target": "linkText=Web UI",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c42281ed-360f-4fe9-92d7-220bb2577aff",
+          "targets": [
+            [
+              "linkText=Web UI",
+              "linkText"
+            ],
+            [
+              "css=.bg-green-600",
+              "css:finder"
+            ],
+            [
+              "xpath=(//a[contains(text(),'Web UI')])[1]",
+              "xpath:link"
+            ],
+            [
+              "xpath=(//a[contains(@href, 'ui')])[1]",
+              "xpath:href"
+            ],
+            [
+              "xpath=//a[contains(.,'Web UI')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForElementPresent",
+          "target": "css=.h-21",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9a55ebcb-6e32-42cb-b051-c0f5f04c48f6",
+          "targets": [
+            [
+              "css=.h-21",
+              "css:finder"
+            ],
+            [
+              "xpath=(//img[@alt='Логотип'])[1]",
+              "xpath:img"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.text-2xl",
+          "value": "Вход в панель управления",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "04bc9dde-5f88-4fcc-a343-146332e47db2",
+          "targets": [
+            [
+              "css=.text-2xl",
+              "css:finder"
+            ],
+            [
+              "xpath=//h2[contains(.,'Вход в панель управления')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForElementPresent",
+          "target": "id=password",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "06901d07-99a2-42d2-9e69-c15c853a950b",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "waitForElementPresent",
+          "target": "css=.bg-green-600",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "9bcf3472-2e9d-40d3-bbd2-944d111a697a",
+          "targets": [
+            [
+              "css=.bg-green-600",
+              "css:finder"
+            ],
+            [
+              "xpath=//button[contains(.,'Войти')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.text-xs",
+          "value": "Пароль по умолчанию - admin. Сменить пароль можно в любое время при помощи команды СменитьПарольUI в консольной версии Melezh",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "692f062e-9810-4dd9-a94c-49d97cf51fdf",
+          "targets": [
+            [
+              "css=.text-xs",
+              "css:finder"
+            ]
+          ]
+        }
+      ]
+    },
+    {
+      "id": "f95704d7-08e9-462d-98b5-966073b82526",
+      "name": "LogIn",
+      "commands": [
+        {
+          "id": "20fdfb3f-7c07-4719-ba3f-3086af5b0ef6",
+          "command": "open",
+          "target": "http://localhost:1921/ui",
+          "value": "",
+          "opensWindow": false,
+          "windowHandleName": "root"
+        },
+        {
+          "command": "click",
+          "target": "id=password",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "c587e6a7-6cd0-446a-9e48-c6b4e743b611",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "type",
+          "target": "id=password",
+          "value": "admin",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0d8e1d51-8b23-461c-bf87-3920db85cc49",
+          "targets": [
+            [
+              "id=password",
+              "id"
+            ],
+            [
+              "name=password",
+              "name"
+            ],
+            [
+              "css=#password",
+              "css:finder"
+            ],
+            [
+              "xpath=(//input[@id='password'])[1]",
+              "xpath:attributes"
+            ]
+          ]
+        },
+        {
+          "command": "click",
+          "target": "css=.bg-green-600",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "72dd0dba-087b-4958-b16c-268ec02dc7f5",
+          "targets": [
+            [
+              "css=.bg-green-600",
+              "css:finder"
+            ],
+            [
+              "xpath=//button[contains(.,'Войти')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForElementPresent",
+          "target": "css=.text-lg > span",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "682323eb-a4b9-470c-9777-df591a842e5b",
+          "targets": [
+            [
+              "css=.text-lg > span",
+              "css:finder"
+            ],
+            [
+              "xpath=//span[contains(.,'Melezh')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.text-2xl",
+          "value": "Главная панель",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "0316518b-ed2f-4a36-967d-fb76e658e685",
+          "targets": [
+            [
+              "css=.text-2xl",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div/div[2]/h2)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h2[contains(.,'Главная панель')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForElementPresent",
+          "target": "css=.relative > .font-semibold",
+          "value": "",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b2078dcd-affe-428c-ac6e-0c21dc66b6cf",
+          "targets": [
+            [
+              "css=.relative > .font-semibold",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div/h3)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//h3[contains(.,'Статистика')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.bg-green-50 .block",
+          "value": "Успешные (2xx)",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "11a7ebad-9e2e-4219-998c-b585ac2ca0c2",
+          "targets": [
+            [
+              "css=.bg-green-50 .block",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div/div/div/div/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Успешные (2xx)')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.bg-yellow-50 .block",
+          "value": "Клиентские ошибки (4xx)",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b1d4a04b-3df5-4c00-9244-f981807b7e3d",
+          "targets": [
+            [
+              "css=.bg-yellow-50 .block",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div/div/div[2]/div/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Клиентские ошибки (4xx)')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.bg-red-50 .block",
+          "value": "Серверные ошибки (5xx)",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b5dbb7b8-b9ec-494f-b81c-be12f7775dc7",
+          "targets": [
+            [
+              "css=.bg-red-50 .block",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div/div/div[3]/div/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Серверные ошибки (5xx)')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=.mt-4 > p",
+          "value": "Данные на основе 30 последних событий текущего сеанса",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "b525ff5e-6ccf-44d9-80a6-c6e62fa305e3",
+          "targets": [
+            [
+              "css=.mt-4 > p",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div/div[2]/p)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//p[contains(.,'Данные на основе 30 последних событий текущего сеанса')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=div:nth-child(1) > .font-medium:nth-child(1)",
+          "value": "Старт сервера:",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7da2cee9-c5a0-4ff8-9ac4-5a5768de4edf",
+          "targets": [
+            [
+              "css=div:nth-child(1) > .font-medium:nth-child(1)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div[2]/div[2]/div/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Старт сервера:')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=div:nth-child(2) > .font-medium:nth-child(1)",
+          "value": "Аптайм:",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "7f787d4c-6543-407b-bfc9-72dff2b27f3a",
+          "targets": [
+            [
+              "css=div:nth-child(2) > .font-medium:nth-child(1)",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div[2]/div[2]/div[2]/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Аптайм:')]",
+              "xpath:innerText"
+            ]
+          ]
+        },
+        {
+          "command": "waitForText",
+          "target": "css=div:nth-child(4) > .font-medium",
+          "value": "Среднее в час:",
+          "insertBeforeLastCommand": false,
+          "frameLocation": "root",
+          "winHandleId": "root",
+          "id": "fc608d42-3c55-408d-a1ce-8f4db519e02d",
+          "targets": [
+            [
+              "css=div:nth-child(4) > .font-medium",
+              "css:finder"
+            ],
+            [
+              "xpath=(//div[@id='view-container']/div/div[2]/div[2]/div[2]/div[4]/span)[1]",
+              "xpath:idRelative"
+            ],
+            [
+              "xpath=//span[contains(.,'Среднее в час:')]",
+              "xpath:innerText"
+            ]
+          ]
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

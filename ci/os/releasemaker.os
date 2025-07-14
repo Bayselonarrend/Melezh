@@ -18,9 +18,9 @@
 	//Локальные данные
 	Кугвин            = "C:\cygwin64\bin\";
 	ОСкрипт           = "C:\Program Files\OneScript\";
-	ПутьДвижка        = "/cygdrive/c/engine/linux/";
+	ПутьДвижка        = "/mnt/c/engine/linux/";
 
-	ПутьКРепозиторию  = "C:\ProgramData\Jenkins\.jenkins\workspace\Melezh_Release";
+	ПутьКРепозиторию  = "C:\ProgramData\Jenkins\.jenkins\workspace\MelezhRelease";
 	
 	DockerSh  = ПутьКРепозиторию + "\service\docker\install.sh";
 	DockerBat = ПутьКРепозиторию + "\service\docker\install.bat";
@@ -99,10 +99,12 @@
 
 	//OSPX
 	
-	СборкаOS         = "opm b -o ""C:/"" """ + ПутьCLIP + """";
+	СборкаOS         = "opm b -o ""C:/Dev/"" """ + ПутьCLIP + """";
 
 	ЗапуститьПриложение(СборкаOS, , Истина);
-	ПереместитьФайл("C:\" + СтандартноеИмяOSPX, КонечныйПутьOSPX);
+	ПереместитьФайл("C:\Dev\" + СтандартноеИмяOSPX, КонечныйПутьOSPX);
+
+	УдалитьФайлы(Оскрипт + "lib\melezh");
 
 	Приостановить(1000);
 	ЗапуститьПриложение("opm install -f """ + КонечныйПутьOSPX + """", , Истина);
@@ -143,13 +145,14 @@
 		MakeSh  = ПутьВыгрузки + "make" + Пакет.Ключ + ".sh";
 		MakeBat = ПутьВыгрузки + "make" + Пакет.Ключ + ".bat";
 		
+		Дистрибутив = ?(Пакет.Ключ = "deb", "Ubuntu", "OracleLinux_9_1");
 
 		FPM = "chmod +x ../ci/installer_set/bin/melezh
 		|fpm -t " + Пакет.Ключ + " -p " + Пакет.Значение + " "  + СоответствиеДополнений[Пакет.Ключ] + ТекстSh;
 		FPM = ПолучитьДвоичныеДанныеИзСтроки(FPM);
 		FPM.Записать(MakeSh);
 
-		ТекстBat = "C:\cygwin64\bin\bash.exe """ + "make" + Пакет.Ключ + ".sh" + """";
+		ТекстBat = "wsl -d " + Дистрибутив + " ""./make" + Пакет.Ключ + ".sh" + """";
 		ТекстBat = ПолучитьДвоичныеДанныеИзСтроки(ТекстBat, "CP866");
 		ТекстBat.Записать(MakeBat);
 

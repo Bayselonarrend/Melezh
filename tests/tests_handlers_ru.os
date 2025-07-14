@@ -169,8 +169,8 @@
 	.НовыйЗапрос()
 	.Инициализировать(СтрШаблон("http://localhost:%1/echo_form", Порт))
 	.НачатьЗаписьТелаMultipart()
-	.ДобавитьФайлMultipartFormData("field1", "FILE1.png", "https://api.athenaeum.digital/test_data/picture.jpg", "image/png")
-	.ДобавитьФайлMultipartFormData("field2", "FILE2.png", "https://api.athenaeum.digital/test_data/picture.jpg", "image/png")
+	.ДобавитьФайлMultipartFormData("field1", "FILE1.png", "https://hut.openintegrations.dev/test_data/picture.jpg", "image/png")
+	.ДобавитьФайлMultipartFormData("field2", "FILE2.png", "https://hut.openintegrations.dev/test_data/picture.jpg", "image/png")
 	.ДобавитьПолеMultipartFormData("field3", "Text")
 	.ОбработатьЗапрос("POST")
 	.ВернутьОтветКакJSONКоллекцию();
@@ -184,7 +184,7 @@
 	Ожидаем.Что(Результат["data"]["field2"]).Равно("Field 2 value (strict)");
 	Ожидаем.Что(Результат["data"]["field3"]).Равно("Text");
 
-	КартинкаОригинал = "https://api.athenaeum.digital/test_data/picture.jpg";
+	КартинкаОригинал = "https://hut.openintegrations.dev/test_data/picture.jpg";
 	OPI_ПреобразованиеТипов.ПолучитьДвоичныеДанные(КартинкаОригинал);
 
 	Логи = ПолучитьЛоги(КаталогПроекта + "\logs\echo_form");

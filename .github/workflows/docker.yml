@@ -61,29 +61,29 @@ jobs:
         run: |
           # English packages (deb)
           wget -O /tmp/melezh-build/en/oint.deb \
-               "https://api.athenaeum.digital/tc/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_en.deb"
+               "https://jenkins.openintegrations.dev/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_en.deb"
           wget -O /tmp/melezh-build/en/melezh.deb \
-               "https://api.athenaeum.digital/tc/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_en.deb"
+               "https://jenkins.openintegrations.dev/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_en.deb"
 
           # Russian packages (deb)
           wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.deb \
-               "https://api.athenaeum.digital/tc/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_ru.deb"
+               "https://jenkins.openintegrations.dev/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint_${{ github.event.inputs.oint_version }}_all_ru.deb"
           wget -O /tmp/melezh-build/ru/melezh.deb \
-               "https://api.athenaeum.digital/tc/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_ru.deb"
+               "https://jenkins.openintegrations.dev/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh_${{ github.event.inputs.melezh_version }}_all_ru.deb"
 
           # English packages (rpm)
           wget -O /tmp/melezh-build/en/oint.rpm \
-               "https://api.athenaeum.digital/tc/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint-${{ github.event.inputs.oint_version }}-1.noarch_en.rpm"
+               "https://jenkins.openintegrations.dev/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint-${{ github.event.inputs.oint_version }}-1.noarch_en.rpm"
           wget -O /tmp/melezh-build/en/melezh.rpm \
-               "https://api.athenaeum.digital/tc/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh-${{ github.event.inputs.melezh_version }}-1.noarch_en.rpm"
+               "https://jenkins.openintegrations.dev/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh-${{ github.event.inputs.melezh_version }}-1.noarch_en.rpm"
 
           # Russian packages (rpm)
           wget --header="Authorization: Bearer ${{ secrets.TOKEN }}" \
                -O /tmp/melezh-build/ru/oint.rpm \
-               "https://api.athenaeum.digital/tc/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint-${{ github.event.inputs.oint_version }}-1.noarch_ru.rpm"
+               "https://jenkins.openintegrations.dev/job/Release/${{ github.event.inputs.oint_build_id }}/artifact/${{ github.event.inputs.oint_version }}/oint-${{ github.event.inputs.oint_version }}-1.noarch_ru.rpm"
           wget -O /tmp/melezh-build/ru/melezh.rpm \
-               "https://api.athenaeum.digital/tc/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh-${{ github.event.inputs.melezh_version }}-1.noarch_ru.rpm"
+               "https://jenkins.openintegrations.dev/job/Melezh_Release/${{ github.event.inputs.melezh_build_id }}/artifact/${{ github.event.inputs.melezh_version }}/melezh-${{ github.event.inputs.melezh_version }}-1.noarch_ru.rpm"
 
       - name: Log in to GHCR
         run: echo "${{ secrets.TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin

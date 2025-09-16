@@ -1,12 +1,12 @@
 #Use oint
 #Use "./internal"
-#Use "../../../../../../extensions"
 
 Var OPIObject;
 Var ProxyModule;
 Var ConnectionManager;
 Var Logger;
 Var SettingsVault;
+Var ActiveExtensionsList;
 
 #Region Internal
 
@@ -17,6 +17,8 @@ Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, Sett
     ConnectionManager = ConnectionManager_;
     Logger = Logger_;
     SettingsVault = SettingsVault_;
+
+    ActiveExtensionsList = New ValueList;
     
 EndProcedure
 
@@ -60,6 +62,21 @@ Function MainHandle(Val Context, Val Path) Export
     Return Result;
     
 EndFunction
+
+Procedure ConnectExtensionScript(Val Path, Val Name) Export
+
+    Try
+        AttachScript(Path, Name);
+        ActiveExtensionsList.Add(Name);
+    Except
+        Message("Failed to connect extension script. It may already be connected.");
+    EndTry;
+
+EndProcedure
+
+Procedure ClearActiveExtensionsList() Export
+    ActiveExtensionsList = New ValueList();
+EndProcedure
 
 #EndRegion
 
@@ -211,7 +228,7 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
     EndDo;
     
     ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
-    ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method);
+    ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method, False);
     
     Response = Undefined;
     
@@ -221,6 +238,12 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
         
         ExecutionText = ExecutionStructure["Result"];
         ExecutionText = StrReplace(ExecutionText, "_melezhcontext = ""{MELEZHCONTEXT}""", "_melezhcontext = Context");
+
+        If ActiveExtensionsList.FindByValue(Command) <> Undefined Then
+            ExecutionText = StrTemplate("%1 = New %1;", Command) 
+                + Chars.LF 
+                + ExecutionText;
+        EndIf;
         
         Execute(ExecutionText);
         

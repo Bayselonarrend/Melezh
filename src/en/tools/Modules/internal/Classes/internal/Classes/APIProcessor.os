@@ -143,10 +143,12 @@ Function ReturnFunctionList(Context)
 	Try
 		
 		Library = Context.Request.Form["library"][0];
-		Content = OPIObject.GetComposition(Library).Copy();
-		Content.GroupBy("Method");
+
+		Index = OPIObject.GetIndexData(Library);
+		Composition = Index["Composition"].Copy();
+		Composition.GroupBy("Method");
 		
-		FunctionArray = Content.UnloadColumn("Method");
+		FunctionArray = Composition.UnloadColumn("Method");
 		OptionsArray = New Array;
 		
 		For Each OintFunction In FunctionArray Do
@@ -170,10 +172,11 @@ Function ReturnArgumentList(Context)
 		Library = Context.Request.Form["library"][0];
 		Method = Context.Request.Form["function"][0];
 		
-		Content = OPIObject.GetComposition(Library).Copy();
-		Content.GroupBy("Method,Parameter,Description");
+		Index = OPIObject.GetIndexData(Library);
+		Composition = Index["Composition"].Copy();
+		Composition.GroupBy("Method,Parameter,Description");
 		
-		ArgumentList = Content.FindRows(New Structure("Method", Method));
+		ArgumentList = Composition.FindRows(New Structure("Method", Method));
 		
 		OptionsArray = New Array;
 		

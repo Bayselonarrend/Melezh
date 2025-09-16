@@ -82,7 +82,7 @@ Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerCatalogs_) Ex
     UIProcessor.Initialize(ServerPath, SessionsHandler, SettingsVault);
 
     ExtensionsProcessor = New("ExtensionsProcessor");
-    ExtensionsProcessor.Initialize(OPIObject_, SettingsVault, ExtensionsPath);
+    ExtensionsProcessor.Initialize(OPIObject_, SettingsVault, ExtensionsPath, ActionsProcessor);
 
     APIProcessor = New("APIProcessor");
     APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger, ExtensionsProcessor);

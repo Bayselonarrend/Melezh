@@ -261,7 +261,7 @@ EndProcedure
 Procedure ReportResult(Val Text, Val Status = "")
 
 	If Not ValueIsFilled(Status) Then
-		Status = MessageStatus.NoStatus;
+		Status = MessageStatus.WithoutStatus;
 	EndIf;
 
 	If ValueIsFilled(OutputFile) Then

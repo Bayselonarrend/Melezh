@@ -2,15 +2,17 @@ Var OPIObject;
 Var SettingsVault;
 Var ExtensionsCatalog;
 Var ExtensionsCache;
+Var ActionsProcessor;
 
 #Region Internal
 
-Procedure Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_) Export
+Procedure Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_, ActionsProcessor_) Export
 	
 	OPIObject = OPIObject_;
 	SettingsVault = SettingsVault_;
     ExtensionsCatalog = ExtensionsCatalog_;
     ExtensionsCache = New Map;
+    ActionsProcessor = ActionsProcessor_;
 
     CompleteCompositionWithExtensions();
 	
@@ -36,7 +38,8 @@ Procedure CompleteCompositionWithExtensions() Export
             Try
 
                 ParametersTable = ParseModule(FileExtension);
-                OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable);
+                OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable); 
+                ActionsProcessor.ConnectExtensionScript(FileExtension.FullName, FileExtension.BaseName);
 
             Except
 
@@ -76,6 +79,7 @@ Function UpdateExtensionsList() Export
 
     ExtensionsCache = New Map;
     OPIObject.InitializeCommonLists();
+    ActionsProcessor.ClearActiveExtensionsList();
     CompleteCompositionWithExtensions();
     
     Return New Structure("result", True);

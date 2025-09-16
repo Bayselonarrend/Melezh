@@ -124,12 +124,28 @@ Function GetProjectSettings(Val Project) Export
 
     If Result["result"] Then
 
+        SettingsDefinition = Undefined;
+
         TDN = New TypeDescription("Number");
         TDB = New TypeDescription("Boolean");
 
         For Each SettingsPart In Result["data"] Do
 
             DataType = SettingsPart["type"];
+
+            If Not ValueIsFilled(DataType) Then
+
+                If Not ValueIsFilled(SettingsDefinition) Then
+                    SettingsDefinition = GetDefaultSettings();
+                EndIf;
+
+                CurrentDefinition = SettingsDefinition.Get(SettingsPart["name"]);
+
+                If ValueIsFilled(CurrentDefinition) Then
+                    DataType = CurrentDefinition["type"];
+                EndIf;
+
+            EndIf;
 
             If DataType = "bool" Then
                 SettingsPart["value"] = TDB.AdjustValue(SettingsPart["value"]);
@@ -577,6 +593,66 @@ EndFunction
 
 #EndRegion
 
+#Region HandlersOptions
+
+Function SetHandlerOption(Val Project, Val HandlersKey, Val Option, Val Value) Export
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    OPI_TypeConversion.GetLine(HandlersKey);
+    OPI_TypeConversion.GetLine(Option);
+
+    FiltersArray = New Array;
+
+    FilterStructure = New Structure;
+    FilterStructure.Insert("field", "key");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", HandlersKey);
+    FilterStructure.Insert("raw" , False);
+    FiltersArray.Add(FilterStructure);
+
+    FilterStructure = New Structure;
+    FilterStructure.Insert("field", "option");
+    FilterStructure.Insert("value", Option);
+    FiltersArray.Add(FilterStructure);
+
+    Table = ConstantValue("HandlersOptionTable");
+    Result = OPI_SQLite.GetRecords(Table, , FiltersArray, , , Project);
+
+    If Result["result"] Then
+
+        RecordAmount = Result["data"].Count();
+
+        RecordStructure = New Structure("value", Value);
+
+        If RecordAmount <> 0 Then
+            Result = OPI_SQLite.UpdateRecords(Table, RecordStructure, FiltersArray, Project);
+        Else
+            Result = New Structure("result,error", False, "Option not found!");
+        EndIf;
+
+        If Result["result"] Then
+            Result = GetHandlerOption(Project, HandlersKey);
+        EndIf;
+
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+Function GetHandlerOption(Val Project, Val HandlersKey) Export
+
+EndFunction
+
+#EndRegion
+
 #Region ArgumentSetting
 
 // Set handler argument
@@ -891,6 +967,7 @@ Function ConstantValue(Val Key)
     If Key = "HandlersTable" Then Return "handlers"
     ElsIf Key = "ArgsTable" Then Return "arguments"
     ElsIf Key = "SettingsTable" Then Return "settings"
+    ElsIf Key = "HandlersOptionTable" Then Return "options"
 
     Else Return "" EndIf;
 
@@ -927,6 +1004,13 @@ Function CreateNewProject(Path)
     EndIf;
 
     Result = CreateArgsTable(Path);
+
+    If Not Result["result"] Then
+        DeleteFiles(Path);
+        Return Result;
+    EndIf;
+
+    Result = CreateOptionTable(Path);
 
     If Not Result["result"] Then
         DeleteFiles(Path);
@@ -982,6 +1066,22 @@ Function CreateArgsTable(Path)
 
 EndFunction
 
+Function CreateOptionTable(Path)
+
+    TableStructure = New Map();
+    TableStructure.Insert("key" , "TEXT");
+    TableStructure.Insert("option" , "TEXT");
+    TableStructure.Insert("value" , "TEXT");
+    TableStructure.Insert("type" , "TEXT");
+    TableStructure.Insert("description", "TEXT");
+
+    ArgsTableName = ConstantValue("HandlersOptionTable");
+    Result = OPI_SQLite.EnsureTable(ArgsTableName, TableStructure, Path);
+
+    Return Result;
+
+EndFunction
+
 Function CreateSettingsTable(Path)
 
     TableStructure = New Map();
@@ -1010,27 +1110,25 @@ Function SetDefaultSettings(Path)
 
     CurrentSettings = Existing["data"];
 
-    If ValueIsFilled(CurrentSettings) Then
+    CurrentList = New ValueList();
 
-        CurrentList = New ValueList();
+    For Each Setting In CurrentSettings Do
+        CurrentList.Add(Setting["name"]);
+    EndDo;
 
-        For Each Setting In CurrentSettings Do
-            CurrentList.Add(Setting["name"]);
-        EndDo;
+    DefaultSettings_ = New Array;
 
-        DefaultSettings_ = New Array;
+    For Each DefaultSetting In DefaultSettings Do
 
-        For Each DefaultSetting In DefaultSettings Do
+        SettingValue = DefaultSetting.Value;
 
-            If CurrentList.FindByValue(DefaultSetting["name"]) = Undefined Then
-                DefaultSettings_.Add(DefaultSetting);
-            EndIf;
+        If CurrentList.FindByValue(SettingValue["name"]) = Undefined Then
+            DefaultSettings_.Add(SettingValue);
+        EndIf;
 
-        EndDo;
+    EndDo;
 
-        DefaultSettings = DefaultSettings_;
-
-    EndIf;
+    DefaultSettings = DefaultSettings_;
 
     Result = OPI_SQLite.AddRecords(SettingTableName, DefaultSettings, , Path);
 
@@ -1040,20 +1138,20 @@ EndFunction
 
 Function GetDefaultSettings()
 
-    SettingsList = New Array;
+    SettingsList = New Map();
     SettingsFields = "name,description,value,type";
 
-    SettingsList.Add(New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin", "string"));
-    SettingsList.Add(New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
-    SettingsList.Add(New Structure(SettingsFields, "req_max_size" , "The maximum allowed request body size (in bytes). Requests exceeding this limit will be rejected. 0 - no limitation", "209715200", "number"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory(), "string"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true", "bool"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true", "bool"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
-    SettingsList.Add(New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
-    SettingsList.Add(New Structure(SettingsFields, "base_path" , "Base path of the API. All routes will be available with the specified prefix. For example: /melezh", "", "string"));
-    SettingsList.Add(New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart or cache update to apply)", "", "string"));
+    SettingsList.Insert("ui_password" , New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin", "string"));
+    SettingsList.Insert("res_wrapper" , New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
+    SettingsList.Insert("req_max_size" , New Structure(SettingsFields, "req_max_size" , "The maximum allowed request body size (in bytes). Requests exceeding this limit will be rejected. 0 - no limitation", "209715200", "number"));
+    SettingsList.Insert("logs_path" , New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory(), "string"));
+    SettingsList.Insert("logs_req_headers" , New Structure(SettingsFields, "logs_req_headers" , "Logging of incoming request headers", "true", "bool"));
+    SettingsList.Insert("logs_req_body" , New Structure(SettingsFields, "logs_req_body" , "Logging the body of incoming requests", "true", "bool"));
+    SettingsList.Insert("logs_req_max_size", New Structure(SettingsFields, "logs_req_max_size", "Disable logging logs_req_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Insert("logs_res_body" , New Structure(SettingsFields, "logs_res_body" , "Logging the body of outgoing responses", "true", "bool"));
+    SettingsList.Insert("logs_res_max_size", New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
+    SettingsList.Insert("base_path" , New Structure(SettingsFields, "base_path" , "Base path of the API. All routes will be available with the specified prefix. For example: /melezh", "", "string"));
+    SettingsList.Insert("ext_path" , New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart or cache update to apply)", "", "string"));
     
     Return SettingsList;
     

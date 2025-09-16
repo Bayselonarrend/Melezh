@@ -1,6 +1,6 @@
 melezh  ИзменитьОбработчикЗапросов \
   --proj "/proj.melezh" \
-  --handler "ec9e026a2" \
+  --handler "3db4f3806" \
   --lib "vk" \
   --func "СоздатьПост" \
   --method "FORM"

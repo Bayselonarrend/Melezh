@@ -22,7 +22,7 @@
    "description": "Logs save path. To disable logging, set the value to empty",
    "name": "logs_path",
    "type": "string",
-   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/12065400-8322-4785-b84b-94f9085a5e18"
+   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/a5079f4d-e730-42fb-9565-75e14795390c"
   },
   {
    "description": "Logging of incoming request headers",

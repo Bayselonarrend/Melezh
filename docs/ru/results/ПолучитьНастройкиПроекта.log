@@ -22,7 +22,7 @@
    "description": "Путь сохранения логов. Для отключения логирования установите пустое значение",
    "name": "logs_path",
    "type": "string",
-   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/61ba3c71-fdb7-432e-b3c3-bb6e9767fd65"
+   "value": "C:/Users/bayselonarrend/AppData/Local/Temp/Melezh/9ae5dca8-eba9-4128-8710-56e757acdd78"
   },
   {
    "description": "Логирование заголовков входящих запросов",

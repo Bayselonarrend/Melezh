@@ -7,7 +7,7 @@ RUN apt-get update && \
 
 WORKDIR /app
 
-ENV OInt_URL="https://github.com/Bayselonarrend/OpenIntegrations/releases/download/1.26.0/oint_1.26.0_all_ru.deb"
+ENV OInt_URL="https://github.com/Bayselonarrend/OpenIntegrations/releases/download/1.27.0/oint_1.27.0_all_ru.deb"
 ENV Melezh_URL="https://github.com/Bayselonarrend/Melezh/releases/download/0.4.0/melezh_0.4.0_all_ru.deb"
 
 RUN wget -O packageA.deb "$OInt_URL" && \

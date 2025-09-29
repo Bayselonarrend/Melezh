@@ -15,6 +15,31 @@
   <script type="module" src="js/alpine.js"></script>
   <script type="module" src="js/prism.js"></script>
   <link rel="icon" href="favicon.ico" />
+
+    <script>
+    window.addEventListener('error', (event) => {
+      if (event.message?.includes('Property description must be an object') &&
+          event.filename?.includes('monaco.contribution.js')) {
+        console.warn('Ignored known Monaco CSS contribution error');
+        event.preventDefault();
+        return true;
+      }
+    });
+  </script>
+
+<script>
+  window.MonacoEnvironment = {
+    globalAPI: true,
+    getWorkerUrl: function(workerId, label) {
+      return 'js/lib/monaco/vs/base/worker/workerMain.js';
+    }
+  };
+</script>
+<script src="js/lib/monaco/vs/loader.js"></script>
+<script>
+  require.config({ paths: { 'vs': 'js/lib/monaco/vs' } });
+</script>
+
 </head>
 
 <body class="bg-gray-100 text-gray-900" x-data="app()">

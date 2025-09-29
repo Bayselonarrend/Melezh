@@ -1,45 +1,44 @@
-<!-- views/code-editor.html -->
-<div x-data="codeEditorView" x-init="init()">
+<div x-data="codeEditorView" x-on:alpine:destroy="destroy()">
   <div class="flex space-x-4 items-center mb-6">
     <div class="text-gray-400">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12">
-        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15.75h3.75M15 12h3.75M15 15.75h3.75M6.75 6h10.5M6.75 9h10.5M6.75 12h10.5M6.75 15.75h10.5M6.75 18h10.5" />
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
       </svg>
     </div>
     <div class="space-y-1">
       <h2 class="text-2xl font-bold">Редактор кода</h2>
-      <p x-text="fileName ? `Файл: ${fileName}` : 'Файл не указан'"></p>
+      <p x-text="fileName ? `Модуль: ${fileName}` : 'Модуль не указан'"></p>
     </div>
   </div>
 
   <hr class="mb-6">
 
-  <!-- Единое редактируемое поле -->
-  <div class="bg-white p-4 rounded-lg shadow mb-4">
-    <pre
-      x-ref="editor"
-      class="language-bsl bg-transparent outline-none font-mono text-sm"
-      contenteditable="true"
-      @input="onInput"
-      @keydown="handleTab"
-      spellcheck="false"
-      style="min-height: 400px; tab-size: 2; white-space: pre; overflow: auto;"
-    ><code></code></pre>
+  <div class="flex gap-4">
+    <div class="flex-1 bg-white p-4 rounded-lg shadow">
+      <div x-ref="container" style="height: 70vh; border: 1px solid #ddd;"></div>
+    </div>
+
+    <div class="flex flex-col gap-2">
+      <button @click="save()" :disabled="isSaving" x-tooltip="'Сохранить'"
+        class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition disabled:opacity-50 disabled:cursor-not-allowed">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round"
+            d="M10.125 2.25h-4.5c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125v-9M10.125 2.25h.375a9 9 0 0 1 9 9v.375M10.125 2.25A3.375 3.375 0 0 1 13.5 5.625v1.5c0 .621.504 1.125 1.125 1.125h1.5a3.375 3.375 0 0 1 3.375 3.375M9 15l2.25 2.25L15 12" />
+        </svg>
+      </button>
+
+      <a href="#extensions" @click.prevent="setActiveTab('extensions')" x-tooltip="'Выйти'"
+        class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition inline-flex justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18 18 6M6 6l12 12" />
+        </svg>
+      </a>
+    </div>
   </div>
 
-  <div class="flex justify-between items-center">
-    <div>
-      <span x-show="saved" class="text-green-600 font-medium">✓ Сохранено</span>
-      <span x-show="error" class="text-red-600 font-medium" x-text="error"></span>
-    </div>
-    <button
-      @click="save()"
-      :disabled="isSaving || !isDirty"
-      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
-    >
-      <span x-show="!isSaving">💾 Сохранить</span>
-      <span x-show="isSaving">Сохранение...</span>
-    </button>
+  <div class="mt-4">
+    <span x-show="error" class="text-red-600 font-medium" x-text="error"></span>
   </div>
 </div>

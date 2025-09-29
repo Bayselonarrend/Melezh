@@ -19,6 +19,7 @@ document.addEventListener('alpine:init', () => {
     'log-details': '#log',
     'settings': '#settings',
     'extensions': '#extensions',
+    'code-editor': '#code-editor'
   };
 
   const viewCache = new Map();

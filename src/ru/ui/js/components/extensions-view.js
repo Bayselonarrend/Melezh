@@ -1,5 +1,6 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
+
 export const extensionsView = () => ({
   extensions: [],
   isLoading: false,

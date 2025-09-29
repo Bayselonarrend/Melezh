@@ -1,0 +1,45 @@
+<!-- views/code-editor.html -->
+<div x-data="codeEditorView" x-init="init()">
+  <div class="flex space-x-4 items-center mb-6">
+    <div class="text-gray-400">
+      <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
+        class="w-12 h-12">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M9 12h3.75M9 15.75h3.75M15 12h3.75M15 15.75h3.75M6.75 6h10.5M6.75 9h10.5M6.75 12h10.5M6.75 15.75h10.5M6.75 18h10.5" />
+      </svg>
+    </div>
+    <div class="space-y-1">
+      <h2 class="text-2xl font-bold">Редактор кода</h2>
+      <p x-text="fileName ? `Файл: ${fileName}` : 'Файл не указан'"></p>
+    </div>
+  </div>
+
+  <hr class="mb-6">
+
+  <!-- Единое редактируемое поле -->
+  <div class="bg-white p-4 rounded-lg shadow mb-4">
+    <pre
+      x-ref="editor"
+      class="language-bsl bg-transparent outline-none font-mono text-sm"
+      contenteditable="true"
+      @input="onInput"
+      @keydown="handleTab"
+      spellcheck="false"
+      style="min-height: 400px; tab-size: 2; white-space: pre; overflow: auto;"
+    ><code></code></pre>
+  </div>
+
+  <div class="flex justify-between items-center">
+    <div>
+      <span x-show="saved" class="text-green-600 font-medium">✓ Сохранено</span>
+      <span x-show="error" class="text-red-600 font-medium" x-text="error"></span>
+    </div>
+    <button
+      @click="save()"
+      :disabled="isSaving || !isDirty"
+      class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed"
+    >
+      <span x-show="!isSaving">💾 Сохранить</span>
+      <span x-show="isSaving">Сохранение...</span>
+    </button>
+  </div>
+</div>

@@ -81,12 +81,18 @@ Function MainHandle(Val Context, Val Path) Export
 			Result = ReturnEventInfo(Context);
 		ElsIf Command = "getextensionslist" Then
 			Result = ReturnExtensionsList(Context);
-		ElsIf Command = "updateextensionsscache" Then
+		ElsIf Command = "updateextensionscache" Then
 			Result = UpdateExtensionsCache(Context);
 	    ElsIf Command = "gettext" Then
 			Result = ReturnModuleText(Context);
 		ElsIf Command = "savetext" Then
 			Result = SaveModuleText(Context);
+		ElsIf Command = "getextensionscatalogs" Then
+			Result = ReturnExtensionDirectoryList(Context);
+		ElsIf Command = "createextension" Then
+			Result = CreateExtension(Context);
+		ElsIf Command = "deleteextension" Then
+			Result = DeleteExtension(Context);
 		Else
 			NotFound = True;
 		EndIf;
@@ -676,6 +682,61 @@ Function SaveModuleText(Context)
 		ModuleText = SavingStructure["code"];
 
 		Result = ExtensionsProcessor.SaveExtensionsText(ModuleName, ModuleText);
+
+		If Not Result["result"] Then
+			Context.Response.StatusCode = 404;	
+		EndIf;
+
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
+
+Function ReturnExtensionDirectoryList(Context)
+
+	Try
+		Result = ExtensionsProcessor.GetExtensionDirectoryList();
+	Except
+		Result = New Structure("result,error", False, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
+
+Function CreateExtension(Context)
+
+	Try
+
+		SavingStructure = Toolbox.GetJSON(Context);
+		ModuleName = SavingStructure["name"];
+		ExtensionsCatalog = SavingStructure["catalog"];
+
+		Result = ExtensionsProcessor.CreateExtensionFile(ModuleName, ExtensionsCatalog);
+
+		If Not Result["result"] Then
+			Context.Response.StatusCode = 403;	
+		EndIf;
+
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
+
+Function DeleteExtension(Context)
+
+	Try
+
+		SavingStructure = Toolbox.GetJSON(Context);
+		ModuleName = SavingStructure["name"];
+
+		Result = ExtensionsProcessor.DeleteExtensionFile(ModuleName);
 
 		If Not Result["result"] Then
 			Context.Response.StatusCode = 404;	

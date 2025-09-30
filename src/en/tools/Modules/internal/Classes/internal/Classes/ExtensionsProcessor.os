@@ -20,14 +20,7 @@ EndProcedure
 
 Procedure CompleteCompositionWithExtensions() Export
 
-    ExtensionsDirectories = New Array;
-    ExtensionsDirectories.Add(ExtensionsCatalog);
-    
-    ExtensionsAdditionalDirectory = SettingsVault.ReturnSetting("ext_path");
-
-    If ValueIsFilled(ExtensionsAdditionalDirectory) Then
-        ExtensionsDirectories.Add(ExtensionsAdditionalDirectory);
-    EndIf;
+    ExtensionsDirectories = GetExtensionDirectories();
 
     For Each CurrentExtensionsCatalog In ExtensionsDirectories Do
         
@@ -114,6 +107,60 @@ Function SaveExtensionsText(ModuleName, ModuleText) Export
         TextBD = ПолучитьДвоичныеДанныеИзСтроки(ModuleText);
         TextBD.Write(Extension["filepath"]);
 
+        Result = UpdateExtensionsList();
+
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+Function GetExtensionDirectoryList() Export
+    Return New Structure("result,data", True, GetExtensionDirectories());
+EndFunction
+
+Function CreateExtensionFile(ModuleName, CreationDirectory) Export
+
+    ExtensionsDirectories = GetExtensionDirectories();
+    IsAccessible = False;
+    
+    For Each CurrentExtensionsCatalog In ExtensionsDirectories Do
+
+        If CurrentExtensionsCatalog = CreationDirectory Then
+            IsAccessible = True;
+        EndIf;
+
+    EndDo;
+
+    If Not IsAccessible Then
+        Return New Structure("result,error", False, "The specified extension directory is incorrect");
+    EndIf;
+
+    If ExtensionsCache.Get(ModuleName) <> Undefined Then
+        Return New Structure("result,error", False, "An extension with this name already exists");
+    EndIf;
+
+    SavePath = StrReplace(CreationDirectory, "\", "/");
+    SavePath = ?(StrEndsWith(SavePath, "/"), SavePath, SavePath + "/");
+    SavePath = StrTemplate("%1%2.os", SavePath, ModuleName);
+
+    ПолучитьДвоичныеДанныеИзСтроки("").Write(SavePath);
+
+    Result = UpdateExtensionsList();
+
+    Return Result;
+    
+EndFunction
+
+Function DeleteExtensionFile(ModuleName) Export
+
+    Extension = ExtensionsCache.Get(ModuleName);
+
+    If Extension = Undefined Then
+        Result = New Structure("result,error", False, "Extension with the specified name not found!");
+    Else
+      
+        DeleteFiles(Extension["filepath"]);
         Result = UpdateExtensionsList();
 
     EndIf;
@@ -346,6 +393,21 @@ Function GetParametersDefaultValue(Val Name, Val Method)
     
     Return Value;
     
+EndFunction
+
+Function GetExtensionDirectories()
+
+    ExtensionsDirectories = New Array;
+    ExtensionsDirectories.Add(ExtensionsCatalog);
+    
+    ExtensionsAdditionalDirectory = SettingsVault.ReturnSetting("ext_path");
+
+    If ValueIsFilled(ExtensionsAdditionalDirectory) Then
+        ExtensionsDirectories.Add(ExtensionsAdditionalDirectory);
+    EndIf;
+
+    Return ExtensionsDirectories;
+
 EndFunction
 
 Function Synonymizer(PropName)

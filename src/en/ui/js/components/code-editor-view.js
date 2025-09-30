@@ -1,9 +1,9 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 let editorInstance = null; 
+let originalCode = ''; // daboutаinandм переменную for andwithхodbutгo toodа
 
 export const codeEditorView = () => ({
-    // editor: null, // <-- убрать from Alpine data
     code: '',
     fileName: null,
     isSaving: false,
@@ -20,7 +20,7 @@ export const codeEditorView = () => ({
         this.fileName = match ? decodeURIComponent(match[1]) : null;
 
         if (!this.fileName) {
-            this.error = 'Not specified file';
+            this.error = 'File not specified';
             return;
         }
 
@@ -58,6 +58,7 @@ export const codeEditorView = () => ({
             if (!data.result) throw new Error(data.error || 'Failed to fetch');
 
             this.code = data.text || '';
+            originalCode = this.code;
 
             editorInstance = monaco.editor.create(this.$refs.container, {
                 value: this.code,
@@ -87,7 +88,7 @@ export const codeEditorView = () => ({
         this.error = '';
 
         try {
-            const text = editorInstance.getValue(); // andwithtoльзуем editorInstance
+            const text = editorInstance.getValue();
 
             const res = await fetch('api/saveText', {
                 method: 'POST',
@@ -99,6 +100,9 @@ export const codeEditorView = () => ({
             if (!result.success) throw new Error(result.message);
 
             window.dispatchEvent(new CustomEvent('show-success', { detail: { message: 'Savedo' } }));
+            originalCode = text;
+
+
         } catch (err) {
             this.error = `Error: ${err.message}`;
             window.dispatchEvent(new CustomEvent('show-error', { detail: { message: this.error } }));
@@ -216,7 +220,7 @@ export const codeEditorView = () => ({
                     range: range
                 }));
 
-                // Filterацandя to ininеdёнbutму textу (регandstrheезаinandwithandмo)
+                // Filterацandя to ininеdёнbutму textу (регandstronotзаinandwithandмo)
                 const wordLower = word.word.toLowerCase();
                 const filtered = suggestions.filter(s =>
                     s.label.toLowerCase().startsWith(wordLower)
@@ -225,6 +229,20 @@ export const codeEditorView = () => ({
                 return { suggestions: filtered };
             }
         });
+    },
+
+    isDirty() {
+        // withраinнandinаем oрandгandtoльный and теtoущandй text
+        return editorInstance && editorInstance.getValue() !== originalCode;
+    },
+
+    tryExit() {
+        if (this.isDirty()) {
+            if (!confirm('У inаwith еwithть notwithхранённые change. Inыйтand without saving?')) {
+                return;
+            }
+        }
+        this.setActiveTab('extensions');
     },
 
 });

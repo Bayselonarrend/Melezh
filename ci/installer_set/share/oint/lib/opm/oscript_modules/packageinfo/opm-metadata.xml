@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<opm-metadata xmlns="http://oscript.io/schemas/opm-metadata/1.0">
+    <name>packageinfo</name>
+    <version>1.0</version>
+    <author>Egor ivanov</author>
+    <author-email>https://github.com/Segate-ekb</author-email>
+    <description>Библиотека получения информации о текущем пакете</description>
+    <engine-version>1.8.1</engine-version>
+    <depends-on name="1bdd" dev="true"/>
+    <depends-on name="1testrunner" dev="true"/>
+    <depends-on name="asserts" dev="true"/>
+    <depends-on name="coverage" dev="true"/>
+</opm-metadata>

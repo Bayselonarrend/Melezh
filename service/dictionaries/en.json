@@ -11827,5 +11827,12 @@
 "СохранитьТекстМодуля": "SaveModuleText",
 "ПолучитьТекстРасширения": "GetExtensionText",
 "СохранитьТекстРасширения": "SaveExtensionsText",
-"Расширение с указанным именем не найдено!": "Extension with the specified name not found!"
+"Расширение с указанным именем не найдено!": "Extension with the specified name not found!",
+"Редактор кода": "Code Editor",
+"Модуль не указан": "Module not specified",
+"Ошибка загрузки каталогов": "Failed to fetch catalogs",
+"Заполните все поля": "Fill in all fields",
+"Ошибка создания": "Creation error",
+"Вы уверены, что хотите удалить расширение": "Are you sure you want to delete the extension named",
+"Не указан файл": "File not specified"
 }

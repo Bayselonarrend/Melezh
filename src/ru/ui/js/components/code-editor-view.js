@@ -1,9 +1,9 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 let editorInstance = null; 
+let originalCode = ''; // добавим переменную для исходного кода
 
 export const codeEditorView = () => ({
-    // editor: null, // <-- убрать из Alpine data
     code: '',
     fileName: null,
     isSaving: false,
@@ -58,6 +58,7 @@ export const codeEditorView = () => ({
             if (!data.result) throw new Error(data.error || 'Ошибка загрузки');
 
             this.code = data.text || '';
+            originalCode = this.code;
 
             editorInstance = monaco.editor.create(this.$refs.container, {
                 value: this.code,
@@ -87,7 +88,7 @@ export const codeEditorView = () => ({
         this.error = '';
 
         try {
-            const text = editorInstance.getValue(); // используем editorInstance
+            const text = editorInstance.getValue();
 
             const res = await fetch('api/saveText', {
                 method: 'POST',
@@ -99,6 +100,9 @@ export const codeEditorView = () => ({
             if (!result.success) throw new Error(result.message);
 
             window.dispatchEvent(new CustomEvent('show-success', { detail: { message: 'Сохранено' } }));
+            originalCode = text;
+
+
         } catch (err) {
             this.error = `Ошибка: ${err.message}`;
             window.dispatchEvent(new CustomEvent('show-error', { detail: { message: this.error } }));
@@ -225,6 +229,20 @@ export const codeEditorView = () => ({
                 return { suggestions: filtered };
             }
         });
+    },
+
+    isDirty() {
+        // сравниваем оригинальный и текущий текст
+        return editorInstance && editorInstance.getValue() !== originalCode;
+    },
+
+    tryExit() {
+        if (this.isDirty()) {
+            if (!confirm('У вас есть несохранённые изменения. Выйти без сохранения?')) {
+                return;
+            }
+        }
+        this.setActiveTab('extensions');
     },
 
 });

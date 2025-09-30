@@ -1,2 +1,5 @@
 /.vscode
 *.ospx
+*.deb
+*.rpm
+melezh-docker*

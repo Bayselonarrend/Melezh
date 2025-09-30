@@ -1,6 +1,6 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
-let editorInstance = null; // <-- вне export
+let editorInstance = null; 
 
 export const codeEditorView = () => ({
     // editor: null, // <-- убрать из Alpine data
@@ -11,7 +11,9 @@ export const codeEditorView = () => ({
     _isInitialized: false,
 
     async init() {
+        
         if (this._isInitialized) return;
+
         this._isInitialized = true;
 
         const match = window.location.hash.match(/[?&]file=([^&]*)/);
@@ -24,6 +26,7 @@ export const codeEditorView = () => ({
 
         await this.loadMonaco();
         await this.loadCode();
+
     },
 
     loadMonaco() {
@@ -45,9 +48,6 @@ export const codeEditorView = () => ({
 
     async loadCode() {
         try {
-            if (editorInstance != null){
-                return;
-            };
 
             this.$refs.container.innerHTML = '';
 
@@ -104,14 +104,6 @@ export const codeEditorView = () => ({
             window.dispatchEvent(new CustomEvent('show-error', { detail: { message: this.error } }));
         } finally {
             this.isSaving = false;
-        }
-    },
-
-    destroy() {
-        this._isInitialized = false;
-        if (editorInstance && typeof editorInstance.dispose === 'function') {
-            editorInstance.dispose();
-            editorInstance = null;
         }
     },
 
@@ -235,13 +227,6 @@ export const codeEditorView = () => ({
         });
     },
 
-    destroy() {
-        this._isInitialized = false;
-        if (editorInstance && typeof editorInstance.dispose === 'function') {
-            editorInstance.dispose();
-            editorInstance = null;
-        }
-    }
 });
 
 
@@ -309,7 +294,7 @@ const BSL_FUNCTIONS = [
 ];
 
 const BSL_GLOBAL_OBJECTS = [
-   
+
 ];
 
 const BSL_CONSTANTS = [

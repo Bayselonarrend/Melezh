@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<testsuites tests="33" name="xUnitFor1C" time="0.0340217" failures="0" skipped="0">
+    <testsuite name="">
+        <properties />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ЭтоИстина" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ЭтоИстина" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ЭтоЛожь" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ЭтоЛожь" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Равно" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Равно" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Больше" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Больше" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_БольшеИлиРавно_И_Минимум" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_БольшеИлиРавно_И_Минимум" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_МеньшеИлиРавно_И_Максимум" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_МеньшеИлиРавно_И_Максимум" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Меньше" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Меньше" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Заполнено" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Заполнено" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Существует" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Существует" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ЭтоНеопределено" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ЭтоНеопределено" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ЭтоNull" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ЭтоNull" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ИмеетТип" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ИмеетТип" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Между" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Между" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Содержит" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_Содержит" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ИмеетДлину" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_Отрицание_ИмеетДлину" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_КомпозитныеУтверждения" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_КомпозитныеУтверждения_ВПеремешкуС_Отрицаниями" status="passed" />
+        <testcase classname="bdd-assertions-tests" name="ТестДолжен_Проверить_ЧтоВыбрасываетсяИсключение" status="passed" />
+    </testsuite>
+</testsuites>

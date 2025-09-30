@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<opm-metadata xmlns="http://oscript.io/schemas/opm-metadata/1.0">
+    <name>tempfiles</name>
+    <version>1.1.1</version>
+    <depends-on name="logos" dev="false"/>
+</opm-metadata>

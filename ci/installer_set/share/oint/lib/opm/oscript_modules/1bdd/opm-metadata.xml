@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<opm-metadata xmlns="http://oscript.io/schemas/opm-metadata/1.0">
+    <name>1bdd</name>
+    <version>1.15.1</version>
+    <engine-version>1.9.0</engine-version>
+    <depends-on name="logos" dev="false" version="1.7.0"/>
+    <depends-on name="cmdline" dev="false" version="1.0.0"/>
+    <depends-on name="tempfiles" dev="false" version="1.1.1"/>
+    <depends-on name="asserts" dev="false" version="1.4.0"/>
+    <depends-on name="1commands" dev="false" version="1.5.0"/>
+    <depends-on name="fs" dev="false" version="1.2.0"/>
+    <depends-on name="strings" dev="false" version="0.4.1"/>
+    <depends-on name="packageinfo" dev="false" version="1.0"/>
+    <depends-on name="1testrunner" dev="true" version="1.8.0"/>
+    <depends-on name="coverage" dev="true" version="0.6.1"/>
+    <executable name="1bdd">src/bdd.os</executable>
+</opm-metadata>

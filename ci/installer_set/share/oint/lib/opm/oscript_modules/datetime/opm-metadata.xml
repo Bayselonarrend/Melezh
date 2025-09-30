@@ -1,0 +1,10 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<opm-metadata xmlns="http://oscript.io/schemas/opm-metadata/1.0">
+    <name>datetime</name>
+    <version>0.1.0</version>
+    <author>Khorev Aleksey</author>
+    <author-email>Khorevaa@gmail.com</author-email>
+    <description>Библиотека для работы со временем и датой в различных форматах</description>
+    <engine-version>1.0.18</engine-version>
+    <depends-on name="logos" />
+</opm-metadata>

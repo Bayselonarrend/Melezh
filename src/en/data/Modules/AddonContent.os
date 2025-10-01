@@ -39,6 +39,14 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
+    NewLine.Method = "RunProject";
+    NewLine.SearchMethod = "RUNPROJECT";
+    NewLine.Parameter = "--dport";
+    NewLine.Description = "Debug port, if necessary (optional, default - Empty value)";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
     NewLine.Method = "GetProjectSettings";
     NewLine.SearchMethod = "GETPROJECTSETTINGS";
     NewLine.Parameter = "--proj";

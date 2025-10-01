@@ -65,9 +65,11 @@ EndFunction
 // Parameters:
 // Port - Number - Server startup port - port
 // Project - String - Project filepath - proj
+// DebugPort - Number - Debug port, if necessary - dport
+//
 // Returns:
 // Structure Of KeyAndValue - Server shutdown result
-Function RunProject(Val Port, Val Project) Export
+Function RunProject(Val Port, Val Project, Val DebugPort = "") Export
 
     If Not OPI_Tools.IsOneScript() Then
         IntegrationProxy = Undefined;
@@ -80,6 +82,27 @@ Function RunProject(Val Port, Val Project) Export
 
     If Not Check["result"] Then
         Return Check;
+    EndIf;
+
+    If ValueIsFilled(DebugPort) Then
+
+        DebugPort = Number(DebugPort);
+
+        ScriptFile = EntryScript().Source;
+
+        OSFile = StrReplace(ProgramDirectory(), "\", "/");
+        OSFile = ?(StrEndsWith(OSFile, "/"), OSFile, OSFile + "/");
+        OSFile = OSFile + "oscript" + ?(OPI_Tools.IsWindows, ".exe", "");
+
+        LaunchString = StrTemplate("%1 -debug=%2 %3 RunProject --port %4 --proj %5"
+            , OSFile
+            , DebugPort
+            , ScriptFile
+            , Port
+            , Project);
+            
+        CreateProcess(LaunchString, , True, True);
+
     EndIf;
 
     TypeServer = Type("WebServer");

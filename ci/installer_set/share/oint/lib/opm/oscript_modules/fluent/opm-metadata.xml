@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<opm-metadata xmlns="http://oscript.io/schemas/opm-metadata/1.0">
+    <name>fluent</name>
+    <version>0.6.1</version>
+    <description>Библиотека для работы с коллекциями в "текучем" стиле</description>
+    <author>Nikita Gryzlov</author>
+    <author-email>nixel2007@gmail.com</author-email>
+    <engine-version>1.0.18</engine-version>
+    <depends-on name="logos" dev="false"/>
+    <depends-on name="notify" dev="false" version="0.2.0"/>
+    <depends-on name="lambdas" dev="false" version="0.1.2"/>
+    <depends-on name="strings" dev="false"/>
+    <depends-on name="tempfiles" dev="false"/>
+    <depends-on name="1commands" dev="true"/>
+    <depends-on name="1testrunner" dev="true"/>
+    <depends-on name="coverage" dev="true"/>
+</opm-metadata>

@@ -87,4 +87,11 @@ Function GetBoolean(Val Value) Export
 	
 EndFunction
 
+Function StringStartsWithLetter(Val Value) Export
+
+    FirstSymbol = Left(Value, 1);
+    Return Lower(FirstSymbol) <> Upper(FirstSymbol);
+
+EndFunction
+
 #EndRegion

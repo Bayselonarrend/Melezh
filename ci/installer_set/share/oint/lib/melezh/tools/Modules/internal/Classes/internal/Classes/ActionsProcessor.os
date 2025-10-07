@@ -18,7 +18,7 @@ Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, Sett
     Logger = Logger_;
     SettingsVault = SettingsVault_;
 
-    ActiveExtensionsList = New ValueList;
+    ActiveExtensionsList = New Map();
     
 EndProcedure
 
@@ -66,21 +66,25 @@ EndFunction
 Procedure ConnectExtensionScript(Val Path, Val Name) Export
 
     Try
-        AttachScript(Path, Name);
-        ActiveExtensionsList.Add(Name);
+        ActiveExtensionsList.Insert(Name, LoadScript(Path));
     Except
-        Message("Failed to connect extension script. It may already be connected.");
+
+        Error = StrTemplate("Failed to connect the extension script. It may already be connected (error description: %1)", ErrorDescription());
+        Message(Error);
+
     EndTry;
 
 EndProcedure
 
 Procedure ClearActiveExtensionsList() Export
-    ActiveExtensionsList = New ValueList();
+    ActiveExtensionsList = New Map();
 EndProcedure
 
 #EndRegion
 
 #Region Private
+
+#Region Main
 
 Function PerformHandling(Context, Handler, RequestBody)
     
@@ -227,7 +231,10 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
         
     EndDo;
     
-    ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
+    If ParametersBoiler.Get("--melezhcontext") = Undefined Then
+        ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
+    EndIf;
+
     ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method, False);
     
     Response = Undefined;
@@ -239,8 +246,8 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
         ExecutionText = ExecutionStructure["Result"];
         ExecutionText = StrReplace(ExecutionText, "_melezhcontext = ""{MELEZHCONTEXT}""", "_melezhcontext = Context");
 
-        If ActiveExtensionsList.FindByValue(Command) <> Undefined Then
-            ExecutionText = StrTemplate("%1 = New %1;", Command) 
+        If ActiveExtensionsList.Get(Command) <> Undefined Then
+            ExecutionText = StrTemplate("%1 = ActiveExtensionsList.Get(""%1"");", Command) 
                 + Chars.LF 
                 + ExecutionText;
         EndIf;
@@ -321,7 +328,7 @@ Function GetRequestsHandler(Path)
     
 EndFunction
 
-Function SplitFormData(Val Form) Export
+Function SplitFormData(Val Form)
     
     DataMap = New Map;
     Files = Form.Files;
@@ -361,5 +368,32 @@ Function SizeExceeded(Val Context, Val RequestBody)
     EndIf;
 
 EndFunction
+
+#EndRegion
+
+#Region ExtensionContext
+
+Function CallHandler(Val Path, Val Parameters)
+
+    HandlerDescription = GetRequestsHandler(Path);
+    
+    If HandlerDescription["result"] Then
+        
+        Handler = HandlerDescription["data"];
+        Handler = ?(TypeOf(Handler) = Type("Array"), Handler[0], Handler);
+
+        Try
+            Return PerformUniversalProcessing(Undefined, Handler, Parameters);
+        Except
+            Return New Structure("result,error", False, DetailErrorDescription(ErrorInfo()));
+        EndTry;
+
+    Else
+        Return HandlerDescription;
+    EndIf;
+
+EndFunction
+
+#EndRegion
 
 #EndRegion

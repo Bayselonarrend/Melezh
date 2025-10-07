@@ -220,7 +220,7 @@ export const codeEditorView = () => ({
                     range: range
                 }));
 
-                // Filterацandя to ininеdёнbutму textу (регandstronotзаinandwithandмo)
+                // Filterацandя to ininеdёнbutму textу (регandstrheезаinandwithandмo)
                 const wordLower = word.word.toLowerCase();
                 const filtered = suggestions.filter(s =>
                     s.label.toLowerCase().startsWith(wordLower)

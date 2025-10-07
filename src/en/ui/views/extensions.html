@@ -119,14 +119,14 @@
           <div>
             <label class="block font-semibold mb-2">Name</label>
             <input type="text" x-model="createName"
-              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500"
+              class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-green-500"
               placeholder="Ininеdandте name">
           </div>
           <div>
             <label class="block font-semibold mb-2">Directory</label>
             <template x-if="catalogs.length > 0">
               <select x-model="createCatalog"
-                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-green-500">
+                class="w-full px-3 py-2 border rounded-md focus:outline-none focus:ring-1 focus:ring-green-500">
                 <template x-for="cat in catalogs" :key="cat">
                   <option x-text="cat" :value="cat"></option>
                 </template>

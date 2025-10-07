@@ -149,7 +149,18 @@ Function GetProjectSettings(Val Project) Export
             EndIf;
 
             If DataType = "bool" Then
+
+                CurrentValue = SettingsPart["value"];
+
+                If TypeOf(CurrentValue) = Type("String") Then
+                
+                    SettingsPart["value"] = ?(CurrentValue = "0", 0, CurrentValue);
+                    SettingsPart["value"] = ?(CurrentValue = "1", 1, CurrentValue);
+
+                EndIf;
+
                 SettingsPart["value"] = TDB.AdjustValue(SettingsPart["value"]);
+
             ElsIf DataType = "number" Then
                 SettingsPart["value"] = TDN.AdjustValue(SettingsPart["value"]);
             Else
@@ -181,7 +192,8 @@ Function FillProjectSettings(Val Project, Val Settings) Export
     OPI_TypeConversion.GetKeyValueCollection(Settings);
 
     Result = CheckProjectExistence(Project);
-    CurrentSettings = GetProjectSettings(Project);
+    Table = ConstantValue("SettingsTable");
+    CurrentSettings = OPI_SQLite.GetRecords(Table, , , , , Project);
 
     If Not CurrentSettings["result"] Then
         Return CurrentSettings;
@@ -1143,6 +1155,7 @@ Function GetDefaultSettings()
     SettingsFields = "name,description,value,type";
 
     SettingsList.Insert("ui_password" , New Structure(SettingsFields, "ui_password" , "Web console login Password", "admin", "string"));
+    
     SettingsList.Insert("res_wrapper" , New Structure(SettingsFields, "res_wrapper" , "The flag for using the Melezh {'result':true, 'data': <primary response>} wrapper over the original function responses (does not affect non-JSON responses))", "true", "bool"));
     SettingsList.Insert("req_max_size" , New Structure(SettingsFields, "req_max_size" , "The maximum allowed request body size (in bytes). Requests exceeding this limit will be rejected. 0 - no limitation", "209715200", "number"));
     SettingsList.Insert("logs_path" , New Structure(SettingsFields, "logs_path" , "Logs save path. To disable logging, set the value to empty", LogDirectory(), "string"));
@@ -1153,6 +1166,9 @@ Function GetDefaultSettings()
     SettingsList.Insert("logs_res_max_size", New Structure(SettingsFields, "logs_res_max_size", "Disable logging logs_res_body for requests over this size (in bytes). 0 - no limitation", "104857600", "number"));
     SettingsList.Insert("base_path" , New Structure(SettingsFields, "base_path" , "Base path of the API. All routes will be available with the specified prefix. For example: /melezh", "", "string"));
     SettingsList.Insert("ext_path" , New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart or cache update to apply)", "", "string"));
+    SettingsList.Insert("ui_show" , New Structure(SettingsFields, "ui_show" , "Enables and disables the availability of the Web Console", "true", "bool"));
+    SettingsList.Insert("index_redirect" , New Structure(SettingsFields, "index_redirect" , "Replaces the output of the title (root) page of Melezh with a redirect to the specified path", "", "string"));
+    
     
     Return SettingsList;
     

@@ -1,3 +1,5 @@
+#Use "./internal"
+
 Var OPIObject;
 Var SettingsVault;
 Var ExtensionsCatalog;
@@ -26,19 +28,26 @@ Procedure CompleteCompositionWithExtensions() Export
         
         ExtensionFiles = FindFiles(CurrentExtensionsCatalog, "*.os");
 
-        For Each FileExtension In ExtensionFiles Do
+        For Each ExtensionFile In ExtensionFiles Do
 
             Try
 
-                ParametersTable = ParseModule(FileExtension);
-                OPIObject.CompleteCompositionCache(FileExtension.BaseName, ParametersTable); 
-                ActionsProcessor.ConnectExtensionScript(FileExtension.FullName, FileExtension.BaseName);
+                ExtensionName = ExtensionFile.BaseName;
+
+                If Not Toolbox.StringStartsWithLetter(ExtensionName) Then
+                    Message("Error applying the extension: the module name must start with a letter");
+                    Continue;
+                EndIf;
+
+                ParametersTable = ParseModule(ExtensionFile);
+                OPIObject.CompleteCompositionCache(ExtensionFile.BaseName, ParametersTable); 
+                ActionsProcessor.ConnectExtensionScript(ExtensionFile.FullName, ExtensionFile.BaseName);
 
             Except
 
-                TroubleDescription = StrTemplate("Error applying the extension %1", DetailErrorDescription(ErrorInfo()));
+                TroubleDescription = StrTemplate("Error applying the extension: %1", DetailErrorDescription(ErrorInfo()));
 
-                AddExtensionToCache(FileExtension.BaseName, FileExtension.FullName, TroubleDescription);
+                AddExtensionToCache(ExtensionFile.BaseName, ExtensionFile.FullName, TroubleDescription);
                 Message(TroubleDescription);
 
             EndTry;
@@ -121,6 +130,10 @@ EndFunction
 
 Function CreateExtensionFile(ModuleName, CreationDirectory) Export
 
+    If Not Toolbox.StringStartsWithLetter(ModuleName) Then
+        Return New Structure("result,error,code", False, "The module name must start with a letter!", 400);
+    EndIf;
+
     ExtensionsDirectories = GetExtensionDirectories();
     IsAccessible = False;
     
@@ -133,11 +146,11 @@ Function CreateExtensionFile(ModuleName, CreationDirectory) Export
     EndDo;
 
     If Not IsAccessible Then
-        Return New Structure("result,error", False, "The specified extension directory is incorrect");
+        Return New Structure("result,error,code", False, "The specified extension directory is incorrect", 404);
     EndIf;
 
     If ExtensionsCache.Get(ModuleName) <> Undefined Then
-        Return New Structure("result,error", False, "An extension with this name already exists");
+        Return New Structure("result,error,code", False, "An extension with this name already exists", 400);
     EndIf;
 
     SavePath = StrReplace(CreationDirectory, "\", "/");

@@ -132,6 +132,18 @@ Function ProcessRequest(Context, NextHandler)
     BasePath = SettingsVault.ReturnBasePath();
     Path = GetRequestPath(Context, BasePath);
 
+    If Not ValueIsFilled(Path) Then
+
+        Redirect = SettingsVault.ReturnSetting("index_redirect");
+
+		If ValueIsFilled(Redirect) Then
+            Context.Response.StatusCode = 307;
+            Context.Response.Headers["Location"] = Redirect;
+            Return Undefined;
+		EndIf;
+
+	EndIf;
+
     If StrStartsWith(Path, "api") Then
         Result = APIProcessor.MainHandle(Context, Path);
     Else

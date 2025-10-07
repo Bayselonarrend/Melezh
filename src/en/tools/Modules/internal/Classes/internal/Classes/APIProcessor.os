@@ -7,6 +7,7 @@ Var SessionsHandler;
 Var ExtensionsProcessor;
 Var OPIObject;
 Var LibraryTable;
+Var LibraryMap;
 Var SettingsVault;
 Var Logger;
 Var StartDate;
@@ -119,6 +120,18 @@ Function ReturnHandlerList(Context)
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
 		Result = ProxyModule.GetRequestsHandlersList(ConnectionRO);
+
+		If Result["result"] Then
+
+			For Each Handler In Result["data"] Do
+
+				CurrentCommand = Handler["library"];
+				CurrentTitle = LibraryMap.Get(CurrentCommand);
+				Handler.Insert("library_title", ?(ValueIsFilled(CurrentTitle), CurrentTitle, CurrentCommand));
+				
+			EndDo;
+
+		EndIf;
 		
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
@@ -718,7 +731,8 @@ Function CreateExtension(Context)
 		Result = ExtensionsProcessor.CreateExtensionFile(ModuleName, ExtensionsCatalog);
 
 		If Not Result["result"] Then
-			Context.Response.StatusCode = 403;	
+			Context.Response.StatusCode = Result["code"];	
+			Result.Delete("code");
 		EndIf;
 
 	Except
@@ -808,6 +822,7 @@ Procedure FillLibraryContent()
 	
 	CommandMap = OPIObject.GetCommandModuleMapping();
 	LibraryTable = New ValueTable();
+	LibraryMap = New Map();
 	
 	LibraryTable.Columns.Add("Name");
 	LibraryTable.Columns.Add("Title");
@@ -826,6 +841,8 @@ Procedure FillLibraryContent()
 		NewLine = LibraryTable.Add();
 		NewLine.Name = CommandName;
 		NewLine.Title = Synonym;
+
+		LibraryMap.Insert(CommandName, Synonym);
 		
 	EndDo;
 	

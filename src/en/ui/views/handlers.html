@@ -39,37 +39,118 @@
   </div>
 
   <div x-show="!isLoading" class="bg-white p-4 rounded-lg shadow overflow-hidden">
-    <div x-show="handlers.length > 0">
-      <table class="min-w-full divide-y divide-gray-200">
+    <div x-show="sortedHandlers.length > 0" class="overflow-x-auto">
+      <table class="min-w-full divide-y divide-gray-200 table-fixed">
         <thead class="bg-gray-50">
           <tr>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Key</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Method</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Library</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Function</th>
-            <th class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Activity</th>
-            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+            <th @click="setSort('key')"
+              class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 w-3/12">
+              <div class="flex items-center">
+                Key
+                <span class="ml-1" x-show="sortField === 'key'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'asc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'desc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+            <th @click="setSort('method')"
+              class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 w-1/12">
+              <div class="flex items-center">
+                Method
+                <span class="ml-1" x-show="sortField === 'method'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'asc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'desc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+            <th @click="setSort('library')"
+              class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 w-2/12">
+              <div class="flex items-center">
+                Library
+                <span class="ml-1" x-show="sortField === 'library'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'asc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'desc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+            <th @click="setSort('function')"
+              class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 w-3/12">
+              <div class="flex items-center">
+                Function
+                <span class="ml-1" x-show="sortField === 'function'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'asc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'desc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+            <th @click="setSort('active')"
+              class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider cursor-pointer hover:text-gray-700 w-1/12">
+              <div class="flex items-center">
+                Activity
+                <span class="ml-1" x-show="sortField === 'active'">
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'asc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" />
+                  </svg>
+                  <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor" x-show="sortDirection === 'desc'">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                  </svg>
+                </span>
+              </div>
+            </th>
+            <th class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">Actions</th>
           </tr>
         </thead>
         <tbody class="divide-y divide-gray-200">
-          <template x-for="handler in handlers" :key="handler.key">
+          <template x-for="handler in sortedHandlers" :key="handler.key">
             <tr class="hover:bg-gray-50">
-              <td class="px-4 py-2 whitespace-nowrap text-sm">
+              <td class="px-4 py-2 text-sm break-words max-w-xs">
                 <a :href="handler.key" target="_blank" rel="noopener noreferrer"
-                  class="group inline-flex items-center gap-1 text-green-600 hover:text-green-800 transition-all">
-                  <span x-text="handler.key"></span>
+                  class="group inline-flex items-center gap-1 text-green-600 hover:text-green-800 transition-all break-all">
+                  <span x-text="handler.key" class="break-words"></span>
                   <svg xmlns="http://www.w3.org/2000/svg"
-                    class="w-3 h-3 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-0.5 transition-all"
+                    class="w-3 h-3 opacity-0 group-hover:opacity-100 transform translate-x-0 group-hover:translate-x-0.5 transition-all flex-shrink-0"
                     fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                       d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6l-7 7" />
                   </svg>
                 </a>
               </td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="handler.method"></td>
-              <td class="px-4 py-2 whitespace-nowrap text-sm" x-text="handler.library"></td>
-              <td class="px-4 py-2 whitespace-nowrap">
-                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono" x-text="handler.function"></code>
+              <td class="px-4 py-2 text-sm break-words" x-text="handler.method"></td>
+              <td class="px-4 py-2 break-words">
+                <span class="flex items-center">
+                  <img :src="`img/libs/${handler.library.replace(/\s+/g, '')}.png`" class="h-4 w-4 flex-shrink-0"
+                    @error="handleImageError">
+                  <span class="block truncate ml-2 text-sm break-words" x-text="handler.library_title"></span>
+                </span>
+              </td>
+              <td class="px-4 py-2 break-words max-w-xs">
+                <code class="bg-gray-100 px-2 py-1 rounded text-sm font-mono break-words" x-text="handler.function"></code>
               </td>
               <td class="px-4 py-2 whitespace-nowrap">
                 <label class="relative inline-flex items-center cursor-pointer">
@@ -115,7 +196,7 @@
       </table>
     </div>
 
-    <div x-show="handlers.length === 0 && !isLoading" class="text-center py-8 text-gray-500">
+    <div x-show="sortedHandlers.length === 0 && !isLoading" class="text-center py-8 text-gray-500">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"
         class="w-12 h-12 mx-auto mb-2">
         <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />

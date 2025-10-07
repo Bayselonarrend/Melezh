@@ -22,6 +22,10 @@ EndProcedure
 
 Function MainHandle(Val Context, Val Path) Export
 
+	If Not SettingsVault.ReturnSetting("ui_show") Then
+		Return Toolbox.HandlingError(Context, 403, "Access to the web console is restricted by Melezh settings. If you have already enabled ui_show in console mode, updating the settings on an already running server may take up to a minute");
+	EndIf;
+
 	Result = Undefined;
 	Path = ?(ValueIsFilled(Path), Path, "index.html");
 

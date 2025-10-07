@@ -85,7 +85,7 @@ export const extensionsView = () => ({
     this.isCreating = true;
     this.createError = '';
     try {
-      const response = await fetch('/api/createExtension', {
+      const response = await fetch('api/createExtension', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -110,7 +110,7 @@ export const extensionsView = () => ({
 
     if (!confirm(`Вы уверены, что хотите удалить расширение "${extension.name}"?`)) return;
 
-    fetch('/api/deleteExtension', {
+    fetch('api/deleteExtension', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'

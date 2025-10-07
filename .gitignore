@@ -3,4 +3,4 @@
 *.deb
 *.rpm
 melezh-docker*
-/ci/installer_set/share/oint/lib/opm
+/ci/installer_set/share/oint/lib/*

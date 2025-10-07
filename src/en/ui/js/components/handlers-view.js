@@ -10,7 +10,6 @@ export const handlersView = () => ({
     this.loadHandlers();
   },
 
-  // Inыhandwithляемoе propertieso: oтwithртandрoinанные Data
   get sortedHandlers() {
     if (!this.sortField) return this.handlers;
 
@@ -18,13 +17,11 @@ export const handlersView = () => ({
       let aValue = a[this.sortField];
       let bValue = b[this.sortField];
 
-      // Processor booleanгo/numberinoгo fields 'active'
       if (this.sortField === 'active') {
         aValue = aValue == 1 ? 1 : 0;
         bValue = bValue == 1 ? 1 : 0;
       }
 
-      // Прandinеdенandе to stringsе for withраinnotнandя
       if (typeof aValue === 'string') aValue = aValue.toLowerCase();
       if (typeof bValue === 'string') bValue = bValue.toLowerCase();
 
@@ -36,10 +33,8 @@ export const handlersView = () => ({
 
   setSort(field) {
     if (this.sortField === field) {
-      // Переof keyем toпраinленandе
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      // Noinoе toле — withртandруем to inoзраwithтанandю
       this.sortField = field;
       this.sortDirection = 'asc';
     }
@@ -93,7 +88,6 @@ export const handlersView = () => ({
       window.dispatchEvent(new CustomEvent('show-error', {
         detail: { message: `Status change error "${handler.key}": ${error.message}` }
       }));
-      // Rollback
       handler.active = handler.active == 1 ? 0 : 1;
     }
   },

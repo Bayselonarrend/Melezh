@@ -1,7 +1,7 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 let editorInstance = null; 
-let originalCode = ''; // daboutаinandм переменную for andwithхodbutгo toodа
+let originalCode = '';
 
 export const codeEditorView = () => ({
     code: '',
@@ -143,8 +143,8 @@ export const codeEditorView = () => ({
                 ],
 
                 stringDouble: [
-                    [/""/, 'string.escape'], // ""
-                    [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }], // "
+                    [/""/, 'string.escape'],
+                    [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }], 
                     [/[^"]+/, 'string']
                 ]
             }
@@ -174,13 +174,12 @@ export const codeEditorView = () => ({
         if (this._completionRegistered) return;
         this._completionRegistered = true;
 
-        // All withпandwithtoand inыше — inwithтаinьте andх зdеwithь or andмtoртandруйте
         const allSuggestions = [
             ...BSL_KEYWORDS.map(label => ({
                 label,
                 kind: monaco.languages.CompletionItemKind.Keyword,
                 insertText: label,
-                range: null // will уwithтаbutinлен dandtoмandhеwithtoand
+                range: null 
             })),
             ...BSL_FUNCTIONS.map(label => ({
                 label,
@@ -214,13 +213,11 @@ export const codeEditorView = () => ({
                     endColumn: word.endColumn
                 };
 
-                // Обbutinляем range for all todwithtoазoto
                 const suggestions = allSuggestions.map(s => ({
                     ...s,
                     range: range
                 }));
 
-                // Filterацandя to ininеdёнbutму textу (регandstrheезаinandwithandмo)
                 const wordLower = word.word.toLowerCase();
                 const filtered = suggestions.filter(s =>
                     s.label.toLowerCase().startsWith(wordLower)
@@ -232,13 +229,12 @@ export const codeEditorView = () => ({
     },
 
     isDirty() {
-        // withраinнandinаем oрandгandtoльный and теtoущandй text
         return editorInstance && editorInstance.getValue() !== originalCode;
     },
 
     tryExit() {
         if (this.isDirty()) {
-            if (!confirm('У inаwith еwithть notwithхранённые change. Inыйтand without saving?')) {
+            if (!confirm('У inаwith еwithть notwithхранённые change. Exit without saving?')) {
                 return;
             }
         }
@@ -249,7 +245,6 @@ export const codeEditorView = () => ({
 
 
 const BSL_KEYWORDS = [
-    // Упраinляющandе tohestrуtoцandand
     'Procedure', 'Procedure', 'Function', 'Function',
     'EndProcedure', 'EndProcedure', 'EndFunction', 'EndFunction',
     'If', 'If', 'Then', 'Then', 'Else', 'Else', 'ElsIf', 'ElsIf', 'EndIf', 'EndIf',
@@ -263,7 +258,6 @@ const BSL_KEYWORDS = [
 ];
 
 const BSL_FUNCTIONS = [
-    // Work with stringмand
     'StrLen', 'StrLen', 'TrimL', 'TrimL', 'СotoрП', 'TrimR', 'TrimAll', 'TrimAll',
     'Left', 'Left', 'Right', 'Right', 'Mid', 'Mid', 'StrFind', 'StrFind',
     'Upper', 'Upper', 'NРег', 'Lower', 'Title', 'Title',
@@ -274,10 +268,8 @@ const BSL_FUNCTIONS = [
     'StrStartsWith', 'StrStartWith', 'StrEndsWith', 'StrEndsWith',
     'StrSplit', 'StrSplit', 'StrConcat', 'StrConcat',
 
-    // Чandwithла
     'Int', 'Int', 'Round', 'Round', 'ACos', 'ASin', 'ATan', 'Cos', 'Exp', 'Log', 'Log10', 'Pow', 'Sin', 'Sqrt', 'Tan',
 
-    // Date
     'Гod', 'Year', 'Меwithяц', 'Month', 'День', 'Day', 'Hour', 'Hour', 'Minута', 'Minute', 'Сеtoунdа', 'Second',
     'StartГodа', 'BegOfYear', 'BegOfDay', 'BegOfDay', 'StartKinартала', 'BegOfQuarter',
     'StartМеwithяца', 'BegOfMonth', 'StartMinуты', 'BegOfMinute', 'StartNotdелand', 'BegOfWeek', 'StartHourа', 'BegOfHour',
@@ -286,26 +278,20 @@ const BSL_FUNCTIONS = [
     'WeekГodа', 'WeekOfYear', 'ДеньГodа', 'DayOfYear', 'WeekDay', 'WeekDay',
     'CurrentDate', 'CurrentDate', 'AddMonth', 'AddMonth',
 
-    // Types and преaboutразoinанandя
     'Type', 'Type', 'TypeOf', 'TypeOf',
     'Boolean', 'Boolean', 'Number', 'Number', 'String', 'String', 'Date', 'Date', 'Array', 'Structure', 'Map', 'Array', 'Map', 'Structure',
 
-    // Andнтераtoтandin
     'Message', 'Message', 'Преdупрежdенandе', 'DoMessageBox', 'For nowзатьПреdупрежdенandе', 'ShowMessageBox',
     'Question', 'DoQueryBox', 'For nowзатьQuestion', 'ShowQueryBox',
     'ClearMessages', 'ClearMessages', 'State', 'Status', 'Сandгtoл', 'Beep',
 
-    // Formatandрoinанandе
     'Format', 'Format', 'NumberПрoпandwithью', 'NumberInWords', 'NStr', 'NStr', 'StrTemplate', 'StrTemplate',
 
-    // Files
     'GetTempFileName', 'GetTempFileName', 'FileCopy', 'FileCopy',
 
-    // JSON / XML
     'ReadJSON', 'ReadJSON', 'WriteJSON', 'WriteJSON',
     'ReadXML', 'ReadXML', 'WriteXML', 'WriteXML',
 
-    // Miscellaneous
     'Min', 'Min', 'Max', 'Max', 'ErrorDescription', 'ErrorDescription',
     'Base64String', 'Base64String', 'Base64Value', 'Base64Value',
     'New', 'New'

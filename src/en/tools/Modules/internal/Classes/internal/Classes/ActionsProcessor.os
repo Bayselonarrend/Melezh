@@ -66,7 +66,7 @@ EndFunction
 Procedure ConnectExtensionScript(Val Path, Val Name) Export
 
     Try
-        ActiveExtensionsList.Insert(Name, LoadScript(Path));
+        ActiveExtensionsList.Insert(Name, LoadScript(Path, New Structure("Melezh", ЭтотОбъект)));
     Except
 
         Error = StrTemplate("Failed to connect the extension script. It may already be connected (error description: %1)", ErrorDescription());
@@ -254,8 +254,12 @@ Function PerformUniversalProcessing(Context, Handler, Parameters)
         
         Execute(ExecutionText);
         
-        If Not TypeOf(Response) = Type("BinaryData") And SettingsVault.ReturnSetting("res_wrapper") Then
+        If Not TypeOf(Response) = Type("BinaryData") 
+            And SettingsVault.ReturnSetting("res_wrapper")
+            And Not Context = Undefined Then
+
             Response = New Structure("result,data", True, Response);
+
         EndIf;
         
     EndIf;
@@ -305,6 +309,7 @@ Function FormParameterBoiler(Arguments, Parameters)
         If TypeOf(Value) = Type("String") Then
             Value = ?(StrStartsWith(Value , """"), Right(Value, StrLen(Value) - 1), Value);
             Value = ?(StrEndsWith(Value, """"), Left(Value , StrLen(Value) - 1), Value);
+            Value = NormalizeString(Value);
         EndIf;
         
         ParametersBoiler.Insert("--" + Parameter.Key, Value);
@@ -312,7 +317,15 @@ Function FormParameterBoiler(Arguments, Parameters)
     EndDo;
     
     For Each Argument In StrictArgs Do
-        ParametersBoiler.Insert(Argument.Key, Argument.Value);
+
+        CurrentValue = Argument.Value;
+
+        If TypeOf(CurrentValue) = Type("String") Then
+            CurrentValue = NormalizeString(CurrentValue);
+        EndIf;
+
+        ParametersBoiler.Insert(Argument.Key, CurrentValue);
+
     EndDo;
     
     Return ParametersBoiler;
@@ -369,11 +382,18 @@ Function SizeExceeded(Val Context, Val RequestBody)
 
 EndFunction
 
+Function NormalizeString(Val Value)
+
+    Value = StrReplace(Value, Chars.LF, Chars.LF + "|");
+
+    Return Value;
+
+EndFunction
 #EndRegion
 
 #Region ExtensionContext
 
-Function CallHandler(Val Path, Val Parameters)
+Function CallHandler(Val Path, Val Parameters) Export
 
     HandlerDescription = GetRequestsHandler(Path);
     

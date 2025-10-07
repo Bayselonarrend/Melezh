@@ -10,7 +10,6 @@ export const handlersView = () => ({
     this.loadHandlers();
   },
 
-  // Вычисляемое свойство: отсортированные данные
   get sortedHandlers() {
     if (!this.sortField) return this.handlers;
 
@@ -18,13 +17,11 @@ export const handlersView = () => ({
       let aValue = a[this.sortField];
       let bValue = b[this.sortField];
 
-      // Обработка булевого/числового поля 'active'
       if (this.sortField === 'active') {
         aValue = aValue == 1 ? 1 : 0;
         bValue = bValue == 1 ? 1 : 0;
       }
 
-      // Приведение к строке для сравнения
       if (typeof aValue === 'string') aValue = aValue.toLowerCase();
       if (typeof bValue === 'string') bValue = bValue.toLowerCase();
 
@@ -36,10 +33,8 @@ export const handlersView = () => ({
 
   setSort(field) {
     if (this.sortField === field) {
-      // Переключаем направление
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      // Новое поле — сортируем по возрастанию
       this.sortField = field;
       this.sortDirection = 'asc';
     }
@@ -93,7 +88,6 @@ export const handlersView = () => ({
       window.dispatchEvent(new CustomEvent('show-error', {
         detail: { message: `Ошибка изменения статуса "${handler.key}": ${error.message}` }
       }));
-      // Откат
       handler.active = handler.active == 1 ? 0 : 1;
     }
   },

@@ -123,7 +123,6 @@ export const extensionsView = () => ({
         const result = await handleFetchResponse(response);
         if (!result.success) throw new Error(result.message);
 
-        // Удаляем из списка
         this.extensions = this.extensions.filter(e => e.name !== extension.name);
 
         window.dispatchEvent(new CustomEvent('show-success', {

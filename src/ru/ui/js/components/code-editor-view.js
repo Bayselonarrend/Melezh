@@ -1,7 +1,7 @@
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 let editorInstance = null; 
-let originalCode = ''; // добавим переменную для исходного кода
+let originalCode = '';
 
 export const codeEditorView = () => ({
     code: '',
@@ -143,8 +143,8 @@ export const codeEditorView = () => ({
                 ],
 
                 stringDouble: [
-                    [/""/, 'string.escape'], // ""
-                    [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }], // "
+                    [/""/, 'string.escape'],
+                    [/"/, { token: 'string.quote', bracket: '@close', next: '@pop' }], 
                     [/[^"]+/, 'string']
                 ]
             }
@@ -174,13 +174,12 @@ export const codeEditorView = () => ({
         if (this._completionRegistered) return;
         this._completionRegistered = true;
 
-        // Все списки выше — вставьте их здесь или импортируйте
         const allSuggestions = [
             ...BSL_KEYWORDS.map(label => ({
                 label,
                 kind: monaco.languages.CompletionItemKind.Keyword,
                 insertText: label,
-                range: null // будет установлен динамически
+                range: null 
             })),
             ...BSL_FUNCTIONS.map(label => ({
                 label,
@@ -214,13 +213,11 @@ export const codeEditorView = () => ({
                     endColumn: word.endColumn
                 };
 
-                // Обновляем range для всех подсказок
                 const suggestions = allSuggestions.map(s => ({
                     ...s,
                     range: range
                 }));
 
-                // Фильтрация по введённому тексту (регистронезависимо)
                 const wordLower = word.word.toLowerCase();
                 const filtered = suggestions.filter(s =>
                     s.label.toLowerCase().startsWith(wordLower)
@@ -232,7 +229,6 @@ export const codeEditorView = () => ({
     },
 
     isDirty() {
-        // сравниваем оригинальный и текущий текст
         return editorInstance && editorInstance.getValue() !== originalCode;
     },
 
@@ -249,7 +245,6 @@ export const codeEditorView = () => ({
 
 
 const BSL_KEYWORDS = [
-    // Управляющие конструкции
     'Процедура', 'Procedure', 'Функция', 'Function',
     'КонецПроцедуры', 'EndProcedure', 'КонецФункции', 'EndFunction',
     'Если', 'If', 'Тогда', 'Then', 'Иначе', 'Else', 'ИначеЕсли', 'ElsIf', 'КонецЕсли', 'EndIf',
@@ -263,7 +258,6 @@ const BSL_KEYWORDS = [
 ];
 
 const BSL_FUNCTIONS = [
-    // Работа со строками
     'СтрДлина', 'StrLen', 'СокрЛ', 'TrimL', 'СокрП', 'TrimR', 'СокрЛП', 'TrimAll',
     'Лев', 'Left', 'Прав', 'Right', 'Сред', 'Mid', 'СтрНайти', 'StrFind',
     'ВРег', 'Upper', 'НРег', 'Lower', 'ТРег', 'Title',
@@ -274,10 +268,8 @@ const BSL_FUNCTIONS = [
     'СтрНачинаетсяС', 'StrStartWith', 'СтрЗаканчиваетсяНа', 'StrEndsWith',
     'СтрРазделить', 'StrSplit', 'СтрСоединить', 'StrConcat',
 
-    // Числа
     'Цел', 'Int', 'Окр', 'Round', 'ACos', 'ASin', 'ATan', 'Cos', 'Exp', 'Log', 'Log10', 'Pow', 'Sin', 'Sqrt', 'Tan',
 
-    // Дата
     'Год', 'Year', 'Месяц', 'Month', 'День', 'Day', 'Час', 'Hour', 'Минута', 'Minute', 'Секунда', 'Second',
     'НачалоГода', 'BegOfYear', 'НачалоДня', 'BegOfDay', 'НачалоКвартала', 'BegOfQuarter',
     'НачалоМесяца', 'BegOfMonth', 'НачалоМинуты', 'BegOfMinute', 'НачалоНедели', 'BegOfWeek', 'НачалоЧаса', 'BegOfHour',
@@ -286,26 +278,20 @@ const BSL_FUNCTIONS = [
     'НеделяГода', 'WeekOfYear', 'ДеньГода', 'DayOfYear', 'ДеньНедели', 'WeekDay',
     'ТекущаяДата', 'CurrentDate', 'ДобавитьМесяц', 'AddMonth',
 
-    // Типы и преобразования
     'Тип', 'Type', 'ТипЗнч', 'TypeOf',
     'Булево', 'Boolean', 'Число', 'Number', 'Строка', 'String', 'Дата', 'Date', 'Массив', 'Структура', 'Соответствие', 'Array', 'Map', 'Structure',
 
-    // Интерактив
     'Сообщить', 'Message', 'Предупреждение', 'DoMessageBox', 'ПоказатьПредупреждение', 'ShowMessageBox',
     'Вопрос', 'DoQueryBox', 'ПоказатьВопрос', 'ShowQueryBox',
     'ОчиститьСообщения', 'ClearMessages', 'Состояние', 'Status', 'Сигнал', 'Beep',
 
-    // Форматирование
     'Формат', 'Format', 'ЧислоПрописью', 'NumberInWords', 'НСтр', 'NStr', 'СтрШаблон', 'StrTemplate',
 
-    // Файлы
     'ПолучитьИмяВременногоФайла', 'GetTempFileName', 'КопироватьФайл', 'FileCopy',
 
-    // JSON / XML
     'ПрочитатьJSON', 'ReadJSON', 'ЗаписатьJSON', 'WriteJSON',
     'ПрочитатьXML', 'ReadXML', 'ЗаписатьXML', 'WriteXML',
 
-    // Прочее
     'Мин', 'Min', 'Макс', 'Max', 'ОписаниеОшибки', 'ErrorDescription',
     'Base64Строка', 'Base64String', 'Base64Значение', 'Base64Value',
     'Новый', 'New'

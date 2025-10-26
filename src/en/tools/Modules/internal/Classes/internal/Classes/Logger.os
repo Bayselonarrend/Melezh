@@ -214,7 +214,7 @@ Function ReturnActions(Handler, Date) Export
 	LogPath = StrTemplate("%1/%2/%3", LogPath, HandlerEscaped, Date);
 	PathFile = New File(LogPath);
 	
-	If Not PathFile.Exist() Then
+	If Not PathFile.Exists() Then
 		Return Result;
 	EndIf;
 	
@@ -273,7 +273,7 @@ Function CheckCreateFolder(Val Path)
 	
 	CatalogFile = New File(Path);
 	
-	If Not CatalogFile.Exist() Then
+	If Not CatalogFile.Exists() Then
 		CreateDirectory(Path);
 	EndIf;
 	

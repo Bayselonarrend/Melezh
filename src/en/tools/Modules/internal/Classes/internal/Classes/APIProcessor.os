@@ -350,9 +350,9 @@ Function ReturnEventInfo(Context)
 		PrimaryFile = StrTemplate("%1/%2", LogCatalog, "req.info");
 		PrimaryProject = New File(PrimaryFile);
 		
-		If Not PrimaryProject.Exist() Then
+		If Not PrimaryProject.Exists() Then
 			
-			If ErrorObject.Exist() Then
+			If ErrorObject.Exists() Then
 				
 				OPI_TypeConversion.GetCollection(ErrorFile);
 				OPI_TypeConversion.GetLine(ErrorFile);
@@ -369,7 +369,7 @@ Function ReturnEventInfo(Context)
 		CorruptError = "The request information file has an incorrect format or is corrupted!";
 		OPI_TypeConversion.GetKeyValueCollection(PrimaryFile, CorruptError);
 		
-		If ErrorObject.Exist() Then
+		If ErrorObject.Exists() Then
 			
 			Try
 				OPI_TypeConversion.GetCollection(ErrorFile);
@@ -387,7 +387,7 @@ Function ReturnEventInfo(Context)
 		HeadersFile = StrTemplate("%1/%2", LogCatalog, "req.headers");
 		HeadersObject = New File(HeadersFile);
 		
-		If HeadersObject.Exist() Then
+		If HeadersObject.Exists() Then
 			OPI_TypeConversion.GetCollection(HeadersFile);
 			PrimaryFile.Insert("headers", HeadersFile);
 		Else
@@ -397,7 +397,7 @@ Function ReturnEventInfo(Context)
 		ResponseFile = StrTemplate("%1/%2", LogCatalog, "res.body");
 		ResponseObject = New File(ResponseFile);
 
-		If ResponseObject.Exist() Then
+		If ResponseObject.Exists() Then
 
 			ResponseFile_ = ResponseFile;
 			OPI_TypeConversion.GetCollection(ResponseFile);
@@ -413,7 +413,7 @@ Function ReturnEventInfo(Context)
 		BodyFile = StrTemplate("%1/%2", LogCatalog, "req.body");
 		BodyObject = New File(BodyFile);
 		
-		If BodyObject.Exist() Then
+		If BodyObject.Exists() Then
 			
 			OPI_TypeConversion.GetCollection(BodyFile);
 			

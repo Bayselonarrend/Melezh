@@ -143,7 +143,7 @@ Function ExecutePostProcessing(Context, Handler, RequestBody)
     RequestBody = DataReader.Read().GetBinaryData();
     
     JSONReader = New JSONReader();
-    JSONReader.SetString(ПолучитьСтрокуИзДвоичныхДанных(RequestBody));
+    JSONReader.SetString(GetStringFromBinaryData(RequestBody));
     
     Parameters = ReadJSON(JSONReader, True);
     JSONReader.Close();

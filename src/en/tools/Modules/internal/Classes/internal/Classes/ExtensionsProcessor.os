@@ -96,7 +96,7 @@ Function GetExtensionText(ModuleName) Export
         Result = New Structure("result,error", False, "Extension with the specified name not found!");
     Else
 
-        Text = ПолучитьСтрокуИзДвоичныхДанных(New BinaryData(Extension["filepath"]));
+        Text = GetStringFromBinaryData(New BinaryData(Extension["filepath"]));
         Result = New Structure("result,text", True, Text);
 
     EndIf;
@@ -113,7 +113,7 @@ Function SaveExtensionsText(ModuleName, ModuleText) Export
         Result = New Structure("result,error", False, "Extension with the specified name not found!");
     Else
 
-        TextBD = ПолучитьДвоичныеДанныеИзСтроки(ModuleText);
+        TextBD = GetBinaryDataFromString(ModuleText);
         TextBD.Write(Extension["filepath"]);
 
         Result = UpdateExtensionsList();
@@ -157,7 +157,7 @@ Function CreateExtensionFile(ModuleName, CreationDirectory) Export
     SavePath = ?(StrEndsWith(SavePath, "/"), SavePath, SavePath + "/");
     SavePath = StrTemplate("%1%2.os", SavePath, ModuleName);
 
-    ПолучитьДвоичныеДанныеИзСтроки("").Write(SavePath);
+    GetBinaryDataFromString("").Write(SavePath);
 
     Result = UpdateExtensionsList();
 

@@ -36,7 +36,7 @@ Function WriteFileInResponse(Path, Context) Export
     FileFullPath = StrTemplate("%1/%2", ServerPath, Path);
 	FileObject = New File(FileFullPath);
 
-	If Not FileObject.Exist() Then
+	If Not FileObject.Exists() Then
 		Return False;
 	EndIf;
 
@@ -47,7 +47,7 @@ Function WriteFileInResponse(Path, Context) Export
 
 	If Extension = ".html" Or Extension = ".js" Then
 
-		Page = ПолучитьСтрокуИзДвоичныхДанных(Page);
+		Page = GetStringFromBinaryData(Page);
 		MBP = "#melezh_base_path#";
 
 		If StrFind(Page, MBP) > 0 Then
@@ -57,7 +57,7 @@ Function WriteFileInResponse(Path, Context) Export
     		
 		EndIf;
 
-		Page = ПолучитьДвоичныеДанныеИзСтроки(Page);
+		Page = GetBinaryDataFromString(Page);
 
 	EndIf;
 

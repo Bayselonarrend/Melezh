@@ -34,7 +34,7 @@ Function GetJSON(Context) Export
     Data = ReadingResult.GetBinaryData(); 
 
     JSON = New JSONReader();
-    JSON.SetString(ПолучитьСтрокуИзДвоичныхДанных(Data));
+    JSON.SetString(GetStringFromBinaryData(Data));
     Result = ReadJSON(JSON, True);
 
     Return Result;

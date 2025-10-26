@@ -6,10 +6,10 @@
 Procedure DisplayStartPage(Val Version) Export
 	
 
-	Консоль.TextColor = ConsoleColor.Green;
-	Консоль.WriteLine("");
+	Console.TextColor = ConsoleColor.Green;
+	Console.WriteLine("");
 
-	Консоль.TextColor = ConsoleColor.Cyan;
+	Console.TextColor = ConsoleColor.Cyan;
 	ColorOutput.Write("
 		| ______  _____________________________________  __
 		| ___   |/  /__  ____/__  /___  ____/__  /__  / / /
@@ -18,7 +18,7 @@ Procedure DisplayStartPage(Val Version) Export
 		| /_/  /_/  /_____/  /_____/_____/  /____/_/ /_/   
 		|");
 		
-	Консоль.TextColor = ConsoleColor.Yellow;
+	Console.TextColor = ConsoleColor.Yellow;
 
 	ColorOutput.Write("
 		|                          
@@ -45,7 +45,7 @@ Procedure DisplayStartPage(Val Version) Export
 		| (meleth|#color=White) (--help|#color=Gray) - get a list of available methods"); 
 		
 
-	Консоль.TextColor = ConsoleColor.White;
+	Console.TextColor = ConsoleColor.White;
 	ColorOutput.WriteLine("
 		|
 		| (Standard options:|#color=Yellow)
@@ -55,11 +55,11 @@ Procedure DisplayStartPage(Val Version) Export
 		|  (--out|#color=Cyan)   - the path to the result saving file (particularly binary data
 		|");
 	
-	Консоль.TextColor = ConsoleColor.Yellow;
+	Console.TextColor = ConsoleColor.Yellow;
 	ColorOutput.WriteLine(" Full documentation can be found at: (https://openintegrations.dev|#color=Green)" + Chars.LF);
 
-	Консоль.WriteLine("");
-	Консоль.TextColor = ConsoleColor.White;
+	Console.WriteLine("");
+	Console.TextColor = ConsoleColor.White;
 
 	Exit(0);
 	
@@ -67,12 +67,12 @@ EndProcedure
 
 Procedure DisplayMethodHelp(Val ParametersTable) Export
 
-	Консоль.TextColor = ConsoleColor.White;
+	Console.TextColor = ConsoleColor.White;
 
 	ParametersTable.GroupBy("Method,Region");
 
 	ColorOutput.WriteLine(" (##|#color=Green) Available methods: " + Chars.LF);
-	Консоль.TextColor = ConsoleColor.White;
+	Console.TextColor = ConsoleColor.White;
 
 	CurrentRegion       = "";
 	Counter              = 0;
@@ -112,7 +112,7 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 	EndDo;
 
 	Message(Chars.LF);
-	Консоль.TextColor = ConsoleColor.White;
+	Console.TextColor = ConsoleColor.White;
 
 	Exit(0);
 
@@ -174,7 +174,7 @@ Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
 
 	If ValueIsFilled(OutputFile) Then
 
-		TextBD = ПолучитьДвоичныеДанныеИзСтроки(Text);
+		TextBD = GetBinaryDataFromString(Text);
 
 		Try
 			TextBD.Write(OutputFile);

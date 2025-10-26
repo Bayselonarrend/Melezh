@@ -206,7 +206,7 @@ Function FillProjectSettings(Val Project, Val Settings) Export
         CurrentValue = Setting["value"];
         CurrentType = Setting["type"];
 
-        If OPI_Tools.CollectionFieldExist(Settings, Setting["name"], CurrentValue) Then
+        If OPI_Tools.CollectionFieldExists(Settings, Setting["name"], CurrentValue) Then
 
             If CurrentType = "bool" Then
 
@@ -873,7 +873,7 @@ Function CheckProjectExistence(Path)
     Text = "Project file already exists!";
     Result = True;
 
-    If Not ProjectFile.Exist() Then
+    If Not ProjectFile.Exists() Then
         Text = "Project file not found at the specified path!";
         Result = False;
     EndIf;
@@ -896,11 +896,11 @@ Function NormalizeProject(Path)
 
     BaseFile = New File(Path);
 
-    If BaseFile.Exist() And BaseFile.IsDirectory() Then
+    If BaseFile.Exists() And BaseFile.IsDirectory() Then
 
         Counter = 0;
 
-        While BaseFile.Exist() Do
+        While BaseFile.Exists() Do
 
             NewPath = Path + "/new_project_" + String(Counter) + ".oint";
             BaseFile = New File(NewPath);
@@ -913,7 +913,7 @@ Function NormalizeProject(Path)
 
     FullPath = BaseFile.FullName;
 
-    If Not BaseFile.Exist() Then
+    If Not BaseFile.Exists() Then
 
         Result = CreateNewProject(FullPath);
 
@@ -943,7 +943,7 @@ Function CheckRestoreProject(Val Path)
     BaseFile = New File(Path);
     FullPath = BaseFile.FullName;
 
-    If Not BaseFile.Exist() Then
+    If Not BaseFile.Exists() Then
         Text = "The project file does not exist at the specified location!";
         Response = FormResponse(False, Text, FullPath);
     Else
@@ -1004,8 +1004,8 @@ Function CreateNewProject(Path)
 
     FileObject = New File(Path);
 
-    If Not FileObject.Exist() Then
-        EmptyFile = ПолучитьДвоичныеДанныеИзСтроки("");
+    If Not FileObject.Exists() Then
+        EmptyFile = GetBinaryDataFromString("");
         EmptyFile.Write(Path);
     EndIf;
 
@@ -1230,20 +1230,20 @@ Function LogDirectory()
         MelezhCatalog = StrTemplate("%1%2", StrReplace(TempFilesDir(), "\", "/"), "Melezh");
         MelezhFile = New File(MelezhCatalog);
 
-        If Not MelezhFile.Exist() Then
+        If Not MelezhFile.Exists() Then
             CreateDirectory(MelezhCatalog);
         EndIf;
 
         ProjectCatalog = StrTemplate("%1/%2", MelezhCatalog, String(New UUID()));
         ProjectFile = New File(ProjectCatalog);
 
-        If Not ProjectFile.Exist() Then
+        If Not ProjectFile.Exists() Then
         
             CreateDirectory(ProjectCatalog);
 
         Else
 
-            While ProjectFile.Exist() Do
+            While ProjectFile.Exists() Do
 
                 ProjectCatalog = StrTemplate("%1/%2", MelezhCatalog, String(New UUID()));
                 ProjectFile = New File(ProjectCatalog);

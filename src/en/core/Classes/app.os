@@ -288,10 +288,10 @@ Function WriteValueToFile(Val Value, Val Path)
 
 		PossibleFile = New File(Value);
 
-		If PossibleFile.Exist() Then
+		If PossibleFile.Exists() Then
 			Path = Value;
 		Else
-			Value = ПолучитьДвоичныеДанныеИзСтроки(Value);
+			Value = GetBinaryDataFromString(Value);
 	    EndIf;
 
 	EndIf;
@@ -302,7 +302,7 @@ Function WriteValueToFile(Val Value, Val Path)
 
 	RecordedFile = New File(Path);
 
-	If RecordedFile.Exist() Then
+	If RecordedFile.Exists() Then
 		Return "File with size " 
 		    + String(Round(RecordedFile.Size() / DataUnit, 3)) 
 			+ " MB was recorded in " 
@@ -330,7 +330,7 @@ Function RequiresProcessingOfEscapeSequences(Val ParameterName, Val ParameterVal
 
 	Return Not StrStartsWith(ParamValueTrim, "{")
 				And Not StrStartsWith(ParamValueTrim, "[") 
-				And Not ParamFile.Exist() 
+				And Not ParamFile.Exists() 
 				And Not ParameterName = "Parameter_out";
 
 EndFunction

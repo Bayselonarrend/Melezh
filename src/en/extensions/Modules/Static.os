@@ -16,7 +16,7 @@ Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) E
 	FullPath = Directory + FileName;
 	PathFile = New File(FullPath);
 
-	If Not PathFile.Exist() Then
+	If Not PathFile.Exists() Then
 
 		Context.Response.StatusCode = 404;
 		Context.Response.ContentType = "application/json";

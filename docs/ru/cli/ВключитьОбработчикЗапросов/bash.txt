@@ -1,3 +1,3 @@
 melezh  ВключитьОбработчикЗапросов \
   --proj "/proj.melezh" \
-  --handler "361b61a20"
+  --handler "a38cbb9da"

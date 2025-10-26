@@ -1,4 +1,4 @@
 melezh  UpdateHandlersKey \
   --proj "/proj.melezh" \
-  --handler "d692ed2ec" \
+  --handler "d38783df5" \
   --key "***"

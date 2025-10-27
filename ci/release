@@ -43,7 +43,10 @@ pipeline {
                     def targetRepo = params.PUSH_TO_STABLE ? "melezh" : "melezh-dev"
                     def pushLatest = params.PUSH_TO_STABLE
                     
-                    bat "mkdir -p /tmp/melezh-build/{en,ru}"
+                    bat """
+                        if not exist "C:\\tmp\\melezh-build\\en" mkdir "C:\\tmp\\melezh-build\\en"
+                        if not exist "C:\\tmp\\melezh-build\\ru" mkdir "C:\\tmp\\melezh-build\\ru"
+                    """
                     
                     copyLocalMelezhArtifacts(params.MELEZH_VERSION)
                     

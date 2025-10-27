@@ -32,8 +32,8 @@ pipeline {
 
         stage('Main UI Tests (RPM, RU)') {
             steps {
-                bat 'npm install -g @seleniumhq/side-runner'
-                bat 'selenium-side-runner ./tests/selenium/tests.side --base-url http://localhost:1921'
+                bat 'npm install @seleniumhq/side-runner jest'
+                bat 'npx selenium-side-runner ./tests/selenium/tests.side --base-url http://localhost:1921'
             }
         }
     }

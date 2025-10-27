@@ -20,7 +20,7 @@
 	ОСкрипт           = "C:\Program Files\OneScript\";
 	ПутьДвижка        = "/mnt/c/engine/linux/";
 
-	ПутьКРепозиторию  = "C:\ProgramData\Jenkins\.jenkins\workspace\MelezhRelease";
+	ПутьКРепозиторию  = "C:\ProgramData\Jenkins\.jenkins\workspace\Melezh\MelezhRelease";
 	
 	DockerSh  = ПутьКРепозиторию + "\service\docker\install.sh";
 	DockerBat = ПутьКРепозиторию + "\service\docker\install.bat";

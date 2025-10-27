@@ -14,10 +14,10 @@
 КонецПроцедуры
 
 &ПараметризованныйТест
-&ИсточникЗначение("1921", "R:\DockerVolumes\Melezh-RPM-RU")
-&ИсточникЗначение("1922", "R:\DockerVolumes\Melezh-RPM-EN")
-&ИсточникЗначение("1923", "R:\DockerVolumes\Melezh-DEB-RU")
-&ИсточникЗначение("1924", "R:\DockerVolumes\Melezh-DEB-EN")
+&ИсточникЗначение("1921", ".\tests\test_volumes\Melezh-RPM-RU")
+&ИсточникЗначение("1922", ".\tests\test_volumes\Melezh-RPM-EN")
+&ИсточникЗначение("1923", ".\tests\test_volumes\Melezh-DEB-RU")
+&ИсточникЗначение("1924", ".\tests\test_volumes\Melezh-DEB-EN")
 Процедура Get(Порт, КаталогПроекта) Экспорт
 	
 	Результат = OPI_ЗапросыHTTP
@@ -61,10 +61,10 @@
 КонецПроцедуры
 
 &ПараметризованныйТест
-&ИсточникЗначение("1921", "R:\DockerVolumes\Melezh-RPM-RU")
-&ИсточникЗначение("1922", "R:\DockerVolumes\Melezh-RPM-EN")
-&ИсточникЗначение("1923", "R:\DockerVolumes\Melezh-DEB-RU")
-&ИсточникЗначение("1924", "R:\DockerVolumes\Melezh-DEB-EN")
+&ИсточникЗначение("1921", ".\tests\test_volumes\Melezh-RPM-RU")
+&ИсточникЗначение("1922", ".\tests\test_volumes\Melezh-RPM-EN")
+&ИсточникЗначение("1923", ".\tests\test_volumes\Melezh-DEB-RU")
+&ИсточникЗначение("1924", ".\tests\test_volumes\Melezh-DEB-EN")
 Процедура Json(Порт, КаталогПроекта) Экспорт
 	
 	Результат = OPI_ЗапросыHTTP
@@ -110,10 +110,10 @@
 КонецПроцедуры
 
 &ПараметризованныйТест
-&ИсточникЗначение("1921", "R:\DockerVolumes\Melezh-RPM-RU")
-&ИсточникЗначение("1922", "R:\DockerVolumes\Melezh-RPM-EN")
-&ИсточникЗначение("1923", "R:\DockerVolumes\Melezh-DEB-RU")
-&ИсточникЗначение("1924", "R:\DockerVolumes\Melezh-DEB-EN")
+&ИсточникЗначение("1921", ".\tests\test_volumes\Melezh-RPM-RU")
+&ИсточникЗначение("1922", ".\tests\test_volumes\Melezh-RPM-EN")
+&ИсточникЗначение("1923", ".\tests\test_volumes\Melezh-DEB-RU")
+&ИсточникЗначение("1924", ".\tests\test_volumes\Melezh-DEB-EN")
 Процедура FormUE(Порт, КаталогПроекта) Экспорт
 	
 	Результат = OPI_ЗапросыHTTP
@@ -159,10 +159,10 @@
 КонецПроцедуры
 
 &ПараметризованныйТест
-&ИсточникЗначение("1921", "R:\DockerVolumes\Melezh-RPM-RU")
-&ИсточникЗначение("1922", "R:\DockerVolumes\Melezh-RPM-EN")
-&ИсточникЗначение("1923", "R:\DockerVolumes\Melezh-DEB-RU")
-&ИсточникЗначение("1924", "R:\DockerVolumes\Melezh-DEB-EN")
+&ИсточникЗначение("1921", ".\tests\test_volumes\Melezh-RPM-RU")
+&ИсточникЗначение("1922", ".\tests\test_volumes\Melezh-RPM-EN")
+&ИсточникЗначение("1923", ".\tests\test_volumes\Melezh-DEB-RU")
+&ИсточникЗначение("1924", ".\tests\test_volumes\Melezh-DEB-EN")
 Процедура FormMFD(Порт, КаталогПроекта) Экспорт
 	
 	Результат = OPI_ЗапросыHTTP

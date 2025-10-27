@@ -4,6 +4,14 @@ pipeline {
 	}
     stages {
 
+        stage('Restart Docker Containers') {
+            steps {
+                script {
+                    restartDockerContainers()
+                }
+            }
+        }
+
         stage('CLI Test (RU)') {
             steps {
                     bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_ru.os'
@@ -29,4 +37,13 @@ pipeline {
             }
         }
     }
+}
+
+def restartDockerContainers() {
+    bat """
+        cd service\\docker
+        docker-compose down --remove-orphans
+        docker system prune -f
+        docker-compose up -d --force-recreate
+    """
 }

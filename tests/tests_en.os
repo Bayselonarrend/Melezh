@@ -23,6 +23,33 @@
 	
 КонецПроцедуры
 
+&Порядок(0)
+&Тест
+Процедура ПроверитьХешСборки() Экспорт
+
+	URL_Oint   = "https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/refs/heads/main/service/last_build_hash.txt";
+	URL_Melezh = "https://raw.githubusercontent.com/Bayselonarrend/Melezh/refs/heads/master/service/last_build_hash.txt";
+
+    СуммаOint = OPI_ЗапросыHTTP
+        .НовыйЗапрос()
+        .Инициализировать(URL_Oint)
+        .ОбработатьЗапрос("GET")
+        .ВернутьОтветКакСтроку(Ложь, Истина);
+
+	СуммаMelezh = OPI_ЗапросыHTTP
+        .НовыйЗапрос()
+        .Инициализировать(URL_Melezh)
+        .ОбработатьЗапрос("GET")
+        .ВернутьОтветКакСтроку(Ложь, Истина);
+
+	РезультатOint   = TestTools.ВыполнитьТестCLI("libsum", Новый Структура);
+	РезультатMelezh = TestTools.ВыполнитьТестCLI("hashsum", Новый Структура);
+
+	Ожидаем.Что(РезультатOint).Равно(СуммаOint);
+	Ожидаем.Что(РезультатMelezh).Равно(СуммаMelezh);
+
+КонецПроцедуры
+
 &Порядок(1)
 &Тест
 Процедура CreateProject() Экспорт

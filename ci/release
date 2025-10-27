@@ -94,27 +94,27 @@ def copyLocalMelezhArtifacts(melezhVersion) {
 def downloadOintPackages(ointBuildId, ointVersion) {
     // English packages (deb)
     bat """
-        wget -O "melezh-build\\en\\oint.deb" ^
+        curl -L -o "melezh-build\\en\\oint.deb" ^
              "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint_${ointVersion}_all_en.deb"
     """
     
     // Russian packages (deb)
     bat """
-        wget --header="Authorization: Bearer %GITHUB_TOKEN%" ^
-             -O "melezh-build\\ru\\oint.deb" ^
+        curl -L -H "Authorization: Bearer %GITHUB_TOKEN%" ^
+             -o "melezh-build\\ru\\oint.deb" ^
              "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint_${ointVersion}_all_ru.deb"
     """
     
     // English packages (rpm)
     bat """
-        wget -O "melezh-build\\en\\oint.rpm" ^
+        curl -L -o "melezh-build\\en\\oint.rpm" ^
              "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint-${ointVersion}-1.noarch_en.rpm"
     """
     
     // Russian packages (rpm)
     bat """
-        wget --header="Authorization: Bearer %GITHUB_TOKEN%" ^
-             -O "melezh-build\\ru\\oint.rpm" ^
+        curl -L -H "Authorization: Bearer %GITHUB_TOKEN%" ^
+             -o "melezh-build\\ru\\oint.rpm" ^
              "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint-${ointVersion}-1.noarch_ru.rpm"
     """
 }

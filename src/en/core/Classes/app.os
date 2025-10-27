@@ -108,13 +108,11 @@ Function GetProcessingResult(Val Parameters)
 
 	ElsIf Method = "hashsum" Then
 
-		Message(BuildHash.GetHashSum());
-		Exit(0);
+		Return BuildHash.GetHashSum();
 
 	ElsIf Method = "libsum" Then
 
-		Message(OPI_Tools.GetLastBuildHashSum());
-		Exit(0);
+		Return OPI_Tools.GetLastBuildHashSum();
 
 	Else
 

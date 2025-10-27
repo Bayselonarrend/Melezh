@@ -55,6 +55,9 @@ pipeline {
                     withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
                         downloadOintPackages(params.OINT_BUILD_ID, params.OINT_VERSION)
                         
+                        // Копируем файлы во все директории Docker заранее
+                        copyFilesToDockerDirs()
+                        
                         // Логин в GHCR
                         bat "echo %GITHUB_TOKEN% | docker login ghcr.io -u %USERNAME% --password-stdin"
                         
@@ -119,14 +122,37 @@ def downloadOintPackages(ointBuildId, ointVersion) {
     """
 }
 
-// Функция для сборки и пушинга образов
+def copyFilesToDockerDirs() {
+    // English DEB
+    bat """
+        copy "melezh-build\\en\\oint.deb" "service\\docker\\ghcr\\en-deb\\oint.deb"
+        copy "melezh-build\\en\\melezh.deb" "service\\docker\\ghcr\\en-deb\\melezh.deb"
+    """
+    
+    // Russian DEB
+    bat """
+        copy "melezh-build\\ru\\oint.deb" "service\\docker\\ghcr\\ru-deb\\oint.deb"
+        copy "melezh-build\\ru\\melezh.deb" "service\\docker\\ghcr\\ru-deb\\melezh.deb"
+    """
+    
+    // English RPM
+    bat """
+        copy "melezh-build\\en\\oint.rpm" "service\\docker\\ghcr\\en-rpm\\oint.rpm"
+        copy "melezh-build\\en\\melezh.rpm" "service\\docker\\ghcr\\en-rpm\\melezh.rpm"
+    """
+    
+    // Russian RPM
+    bat """
+        copy "melezh-build\\ru\\oint.rpm" "service\\docker\\ghcr\\ru-rpm\\oint.rpm"
+        copy "melezh-build\\ru\\melezh.rpm" "service\\docker\\ghcr\\ru-rpm\\melezh.rpm"
+    """
+}
+
+// Упрощенная функция сборки (теперь файлы уже на месте)
 def buildAndPushImages(targetRepo, version, pushLatest) {
     // English DEB image
     bat """
         cd service\\docker\\ghcr\\en-deb
-        copy "..\\..\\..\\melezh-build\\en\\oint.deb" .
-        copy "..\\..\\..\\melezh-build\\en\\melezh.deb" .
-        
         docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-en .
         docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-en
     """
@@ -142,9 +168,6 @@ def buildAndPushImages(targetRepo, version, pushLatest) {
     // Russian DEB image
     bat """
         cd service\\docker\\ghcr\\ru-deb
-        copy "..\\..\\..\\melezh-build\\ru\\oint.deb" .
-        copy "..\\..\\..\\melezh-build\\ru\\melezh.deb" .
-        
         docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-ru .
         docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-ru
     """
@@ -160,9 +183,6 @@ def buildAndPushImages(targetRepo, version, pushLatest) {
     // English RPM image
     bat """
         cd service\\docker\\ghcr\\en-rpm
-        copy "..\\..\\..\\melezh-build\\en\\oint.rpm" .
-        copy "..\\..\\..\\melezh-build\\en\\melezh.rpm" .
-        
         docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-en .
         docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-en
     """
@@ -178,9 +198,6 @@ def buildAndPushImages(targetRepo, version, pushLatest) {
     // Russian RPM image
     bat """
         cd service\\docker\\ghcr\\ru-rpm
-        copy "..\\..\\..\\melezh-build\\ru\\oint.rpm" .
-        copy "..\\..\\..\\melezh-build\\ru\\melezh.rpm" .
-        
         docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-ru .
         docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-ru
     """

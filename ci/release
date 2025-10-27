@@ -1,21 +1,48 @@
 pipeline {
-	agent {
-		label 'windows'
-	}
+    agent {
+        label 'windows'
+    }
+    parameters {
+        string(name: 'VERSION', description: 'Image version', defaultValue: '1.0.0')
+        string(name: 'MELEZH_VERSION', description: 'Melezh version', defaultValue: '0.5.0')
+        string(name: 'OINT_VERSION', description: 'OInt version', defaultValue: '1.0.0')
+        string(name: 'OINT_BUILD_ID', description: 'Jenkins OInt build ID', defaultValue: 'lastSuccessfulBuild')
+        booleanParam(name: 'PUSH_TO_STABLE', description: 'Push to stable repo (melezh) instead of dev (melezh-dev)', defaultValue: false)
+    }
     stages {
-
         stage('Release') {
             steps {
-                    bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/main.os'
-                    bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/releasemaker.os'
-                    archiveArtifacts artifacts: '0.5.0/*'
+                bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/main.os'
+                bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/releasemaker.os'
+                archiveArtifacts artifacts: '${MELEZH_VERSION}/*'
+            }
+        }
+        
+        stage('Build and Push Docker Images') {
+            steps {
+                script {
+
+                    def targetRepo = params.PUSH_TO_STABLE ? "melezh" : "melezh-dev"
+                    def pushLatest = params.PUSH_TO_STABLE
+                    
+                    bat "mkdir -p /tmp/melezh-build/{en,ru}"
+                    
+                    copyLocalMelezhArtifacts(params.MELEZH_VERSION)
+                    
+                    withCredentials([string(credentialsId: 'github-token', variable: 'GITHUB_TOKEN')]) {
+                        downloadOintPackages(params.OINT_BUILD_ID, params.OINT_VERSION)
+                        
+                        bat "echo %GITHUB_TOKEN% | docker login ghcr.io -u %USERNAME% --password-stdin"
+                        
+                        buildAndPushImages(targetRepo, params.VERSION, pushLatest)
+                    }
+                }
             }
         }
 
         stage('Update GIT') {
             steps {
                 script {
-                    
                     withCredentials([gitUsernamePassword(credentialsId: 'gitmain', gitToolName: 'Default')]) {
                         bat "git config user.email vitaly.the.alpaca@gmail.com"
                         bat 'git config user.name "Vitaly the Alpaca (bot)"'
@@ -24,10 +51,117 @@ pipeline {
                         bat 'git commit -m "Main build (Jenkins)"'
                         bat "git push origin HEAD:master"
                     }
-                        
-                    
                 }
             }
         }
+    }
+}
+
+def copyLocalMelezhArtifacts(melezhVersion) {
+    bat """
+        copy "${melezhVersion}\\\\melezh_${melezhVersion}_all_en.deb" /tmp/melezh-build/en/melezh.deb
+        copy "${melezhVersion}\\\\melezh-${melezhVersion}-1.noarch_en.rpm" /tmp/melezh-build/en/melezh.rpm
+    """
+    
+    bat """
+        copy "${melezhVersion}\\\\melezh_${melezhVersion}_all_ru.deb" /tmp/melezh-build/ru/melezh.deb
+        copy "${melezhVersion}\\\\melezh-${melezhVersion}-1.noarch_ru.rpm" /tmp/melezh-build/ru/melezh.rpm
+    """
+}
+
+def downloadOintPackages(ointBuildId, ointVersion) {
+
+    bat """
+        wget -O /tmp/melezh-build/en/oint.deb \
+             "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint_${ointVersion}_all_en.deb"
+    """
+    
+    bat """
+        wget --header="Authorization: Bearer %GITHUB_TOKEN%" \
+             -O /tmp/melezh-build/ru/oint.deb \
+             "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint_${ointVersion}_all_ru.deb"
+    """
+    
+    bat """
+        wget -O /tmp/melezh-build/en/oint.rpm \
+             "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint-${ointVersion}-1.noarch_en.rpm"
+    """
+    
+    bat """
+        wget --header="Authorization: Bearer %GITHUB_TOKEN%" \
+             -O /tmp/melezh-build/ru/oint.rpm \
+             "https://jenkins.openintegrations.dev/job/OpiBuild/job/OpiRelease/${ointBuildId}/artifact/${ointVersion}/oint-${ointVersion}-1.noarch_ru.rpm"
+    """
+}
+
+def buildAndPushImages(targetRepo, version, pushLatest) {
+
+    bat """
+        cd ./service/docker/ghcr/en-deb
+        copy /tmp/melezh-build/en/oint.deb .
+        copy /tmp/melezh-build/en/melezh.deb .
+        
+        docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-en .
+        docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-en
+    """
+    
+    if (pushLatest) {
+        bat """
+            docker tag ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-en \
+                      ghcr.io/bayselonarrend/${targetRepo}:latest-deb-en
+            docker push ghcr.io/bayselonarrend/${targetRepo}:latest-deb-en
+        """
+    }
+    
+
+    bat """
+        cd ./service/docker/ghcr/ru-deb
+        copy /tmp/melezh-build/ru/oint.deb .
+        copy /tmp/melezh-build/ru/melezh.deb .
+        
+        docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-ru .
+        docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-ru
+    """
+    
+    if (pushLatest) {
+        bat """
+            docker tag ghcr.io/bayselonarrend/${targetRepo}:${version}-deb-ru \
+                      ghcr.io/bayselonarrend/${targetRepo}:latest-deb-ru
+            docker push ghcr.io/bayselonarrend/${targetRepo}:latest-deb-ru
+        """
+    }
+    
+    bat """
+        cd ./service/docker/ghcr/en-rpm
+        copy /tmp/melezh-build/en/oint.rpm .
+        copy /tmp/melezh-build/en/melezh.rpm .
+        
+        docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-en .
+        docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-en
+    """
+    
+    if (pushLatest) {
+        bat """
+            docker tag ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-en \
+                      ghcr.io/bayselonarrend/${targetRepo}:latest-rpm-en
+            docker push ghcr.io/bayselonarrend/${targetRepo}:latest-rpm-en
+        """
+    }
+    
+    bat """
+        cd ./service/docker/ghcr/ru-rpm
+        copy /tmp/melezh-build/ru/oint.rpm .
+        copy /tmp/melezh-build/ru/melezh.rpm .
+        
+        docker build -t ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-ru .
+        docker push ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-ru
+    """
+    
+    if (pushLatest) {
+        bat """
+            docker tag ghcr.io/bayselonarrend/${targetRepo}:${version}-rpm-ru \
+                      ghcr.io/bayselonarrend/${targetRepo}:latest-rpm-ru
+            docker push ghcr.io/bayselonarrend/${targetRepo}:latest-rpm-ru
+        """
     }
 }

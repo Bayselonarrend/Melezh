@@ -1,0 +1,25 @@
+pipeline {
+	agent {
+		label 'windows'
+	}
+    stages {
+
+        stage('CLI Test (RU)') {
+            steps {
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests_ru.os'
+            }
+        }
+
+        stage('CLI Test (EN)') {
+            steps {
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests_en.os'
+            }
+        }
+
+        stage('Requests Test (RU)') {
+            steps {
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests_handlers_ru.os'
+            }
+        }
+    }
+}

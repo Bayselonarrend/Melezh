@@ -1,5 +1,7 @@
 version: '3.8'
 
+name: melezh-test
+
 services:
   melezh-rpm-ru:
     image: ghcr.io/bayselonarrend/melezh-dev:draft-rpm-ru
@@ -7,7 +9,7 @@ services:
     ports:
       - "1921:1921"
     volumes:
-      - R:/DockerVolumes/Melezh-RPM-RU:/app
+      - ../../tests/test_volumes/Melezh-RPM-RU:/app
     restart: unless-stopped
 
   melezh-rpm-en:
@@ -16,7 +18,7 @@ services:
     ports:
       - "1922:1921"
     volumes:
-      - R:/DockerVolumes/Melezh-RPM-EN:/app
+      - ../../tests/test_volumes/Melezh-RPM-EN:/app
     restart: unless-stopped
 
   melezh-deb-ru:
@@ -25,7 +27,7 @@ services:
     ports:
       - "1923:1921"
     volumes:
-      - R:/DockerVolumes/Melezh-DEB-RU:/app
+      - ../../tests/test_volumes/Melezh-DEB-RU:/app
     restart: unless-stopped
 
   melezh-deb-en:
@@ -34,5 +36,5 @@ services:
     ports:
       - "1924:1921"
     volumes:
-      - R:/DockerVolumes/Melezh-DEB-EN:/app
+      - ../../tests/test_volumes/Melezh-DEB-EN:/app
     restart: unless-stopped

@@ -24,7 +24,7 @@ pipeline {
             }
         }
 
-        stage('Requests Test (RU)') {
+        stage('Requests Test') {
             steps {
                     bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_handlers_ru.os'
             }
@@ -33,7 +33,7 @@ pipeline {
         stage('Main UI Tests (RPM, RU)') {
             steps {
                 bat 'npm install -g @seleniumhq/side-runner'
-                bat 'selenium-side-runner ./tests/selenium/tests.side --base-url http://localhost:1921 --browser chrome'
+                bat 'selenium-side-runner ./tests/selenium/tests.side --base-url http://localhost:1921'
             }
         }
     }

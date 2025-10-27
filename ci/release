@@ -17,6 +17,21 @@ pipeline {
                 archiveArtifacts artifacts: '${MELEZH_VERSION}/*'
             }
         }
+
+        stage('Update GIT') {
+            steps {
+                script {
+                    withCredentials([gitUsernamePassword(credentialsId: 'gitmain', gitToolName: 'Default')]) {
+                        bat "git config user.email vitaly.the.alpaca@gmail.com"
+                        bat 'git config user.name "Vitaly the Alpaca (bot)"'
+                        bat "git config --global core.ignorecase true"
+                        bat "git add ."
+                        bat 'git commit -m "Main build (Jenkins)"'
+                        bat "git push origin HEAD:master"
+                    }
+                }
+            }
+        }
         
         stage('Build and Push Docker Images') {
             steps {
@@ -40,20 +55,14 @@ pipeline {
             }
         }
 
-        stage('Update GIT') {
+        stage('Restart Docker Containers') {
             steps {
                 script {
-                    withCredentials([gitUsernamePassword(credentialsId: 'gitmain', gitToolName: 'Default')]) {
-                        bat "git config user.email vitaly.the.alpaca@gmail.com"
-                        bat 'git config user.name "Vitaly the Alpaca (bot)"'
-                        bat "git config --global core.ignorecase true"
-                        bat "git add ."
-                        bat 'git commit -m "Main build (Jenkins)"'
-                        bat "git push origin HEAD:master"
-                    }
+                    restartDockerContainers()
                 }
             }
         }
+
     }
 }
 
@@ -164,4 +173,13 @@ def buildAndPushImages(targetRepo, version, pushLatest) {
             docker push ghcr.io/bayselonarrend/${targetRepo}:latest-rpm-ru
         """
     }
+}
+
+def restartDockerContainers() {
+    bat """
+        cd ./service/docker
+        docker-compose down --remove-orphans
+        docker system prune -f
+        docker-compose up -d --force-recreate
+    """
 }

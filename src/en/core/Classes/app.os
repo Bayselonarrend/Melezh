@@ -106,6 +106,16 @@ Function GetProcessingResult(Val Parameters)
 			Help.DisplayStartPage(Version);
 		EndIf;
 
+	ElsIf Method = "hashsum" Then
+
+		Message(BuildHash.GetHashSum());
+		Exit(0);
+
+	ElsIf Method = "libsum" Then
+
+		Message(OPI_Tools.GetLastBuildHashSum());
+		Exit(0);
+
 	Else
 
 		CommandSelection = New Structure("SearchMethod", Upper(Method));

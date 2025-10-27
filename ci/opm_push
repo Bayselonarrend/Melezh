@@ -5,8 +5,8 @@ pipeline {
             steps {
 
                 withCredentials([string(credentialsId: 'opm-token', variable: 'TOKEN')]) {
-                    powershell encoding: 'UTF-8', script:'cd ./src/ru; opm build; opm install -f melezh-0.5.0.ospx'
-                    powershell encoding: 'UTF-8', script:'cd ./src/ru; opm push --token $ENV:TOKEN --channel stable --file melezh-0.5.0.ospx; del melezh-0.5.0.ospx'
+                    powershell encoding: 'UTF-8', script:'cd ./src/ru; opm build; opm install -f melezh-0.6.0.ospx'
+                    powershell encoding: 'UTF-8', script:'cd ./src/ru; opm push --token $ENV:TOKEN --channel stable --file melezh-0.6.0.ospx; del melezh-0.6.0.ospx'
                 }
                     
             }

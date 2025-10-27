@@ -4,7 +4,7 @@ pipeline {
     }
     parameters {
         string(name: 'VERSION', description: 'Image version', defaultValue: '1.0.0')
-        string(name: 'MELEZH_VERSION', description: 'Melezh version', defaultValue: '0.5.0')
+        string(name: 'MELEZH_VERSION', description: 'Melezh version', defaultValue: '0.6.0')
         string(name: 'OINT_VERSION', description: 'OInt version', defaultValue: '1.0.0')
         string(name: 'OINT_BUILD_ID', description: 'Jenkins OInt build ID', defaultValue: 'lastSuccessfulBuild')
         booleanParam(name: 'PUSH_TO_STABLE', description: 'Push to stable repo (melezh) instead of dev (melezh-dev)', defaultValue: false)

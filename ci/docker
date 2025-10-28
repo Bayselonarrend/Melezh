@@ -44,13 +44,13 @@ pipeline {
 def copyLocalMelezhArtifacts(melezhVersion) {
 
     bat """
-        copy "${melezhVersion}\\melezh_${melezhVersion}_all_en.deb" "melezh-build\\en\\melezh.deb"
-        copy "${melezhVersion}\\melezh-${melezhVersion}-1.noarch_en.rpm" "melezh-build\\en\\melezh.rpm"
+        copy "..\\MelezhRelease\\${melezhVersion}\\melezh_${melezhVersion}_all_en.deb" "melezh-build\\en\\melezh.deb"
+        copy "..\\MelezhRelease\\${melezhVersion}\\melezh-${melezhVersion}-1.noarch_en.rpm" "melezh-build\\en\\melezh.rpm"
     """
     
     bat """
-        copy "${melezhVersion}\\melezh_${melezhVersion}_all_ru.deb" "melezh-build\\ru\\melezh.deb"
-        copy "${melezhVersion}\\melezh-${melezhVersion}-1.noarch_ru.rpm" "melezh-build\\ru\\melezh.rpm"
+        copy "..\\MelezhRelease\\${melezhVersion}\\melezh_${melezhVersion}_all_ru.deb" "melezh-build\\ru\\melezh.deb"
+        copy "..\\MelezhRelease\\${melezhVersion}\\melezh-${melezhVersion}-1.noarch_ru.rpm" "melezh-build\\ru\\melezh.rpm"
     """
 }
 

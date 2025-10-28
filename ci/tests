@@ -43,7 +43,8 @@ def restartDockerContainers() {
     bat """
         cd service\\docker
         docker-compose down --remove-orphans
-        docker system prune -f
+        docker-compose down --rmi all
+        docker-compose pull
         docker-compose up -d --force-recreate
     """
 }

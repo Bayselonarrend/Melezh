@@ -1,0 +1,213 @@
+<div x-data="schedulerView">
+    <!-- Шапка -->
+    <div class="flex space-x-4 items-center mb-6">
+        <div class="text-gray-400">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-12 h-12">
+
+                    <path stroke-linecap="round" stroke-linejoin="round"
+                        d="M6.75 3v2.25M17.25 3v2.25M3 18.75V7.5a2.25 2.25 0 0 1 2.25-2.25h13.5A2.25 2.25 0 0 1 21 7.5v11.25m-18 0A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75m-18 0v-7.5A2.25 2.25 0 0 1 5.25 9h13.5A2.25 2.25 0 0 1 21 11.25v7.5m-9-6h.008v.008H12v-.008ZM12 15h.008v.008H12V15Zm0 2.25h.008v.008H12v-.008ZM9.75 15h.008v.008H9.75V15Zm0 2.25h.008v.008H9.75v-.008ZM7.5 15h.008v.008H7.5V15Zm0 2.25h.008v.008H7.5v-.008Zm6.75-4.5h.008v.008h-.008v-.008Zm0 2.25h.008v.008h-.008V15Zm0 2.25h.008v.008h-.008v-.008Zm2.25-4.5h.008v.008H16.5v-.008Zm0 2.25h.008v.008H16.5V15Z" />
+            </svg>
+        </div>
+        <div class="space-y-1 w-full">
+            <h2 class="text-2xl font-bold">Планировщик заданий</h2>
+            <p>Список заданий, выполняемых по расписанию</p>
+        </div>
+        <div class="flex space-x-2">
+            <button @click="openCreateModal" x-tooltip="'Создать задачу'"
+                class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                    stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                </svg>
+            </button>
+            <button @click="loadTasks" x-tooltip="'Обновить список'" :disabled="isLoading"
+                class="p-2 border border-gray-300 rounded-md text-gray-600 hover:bg-gray-100 transition">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" :class="{'animate-spin': isLoading}" fill="none"
+                    viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <hr class="mb-6">
+
+    <!-- Загрузка -->
+    <div x-show="isLoading" class="flex justify-center py-4">
+        <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
+    </div>
+
+    <!-- Таблица -->
+    <div x-show="!isLoading" class="bg-white p-4 rounded-lg shadow overflow-hidden">
+        <div x-show="tasks.length > 0" class="overflow-x-auto">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                            ID</th>
+                        <th
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+                            Обработчик</th>
+                        <th
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+                            Расписание</th>
+                        <th
+                            class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
+                            Действия</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+                    <template x-for="task in tasks" :key="task.id">
+                        <tr class="hover:bg-gray-50">
+                            <td class="px-4 py-2 text-sm font-mono" x-text="task.id"></td>
+                            <td class="px-4 py-2 text-sm break-words" x-text="task.handler"></td>
+                            <td class="px-4 py-2 text-sm font-mono break-words" x-text="task.cron"></td>
+                            <td class="px-4 py-2 whitespace-nowrap text-right text-sm">
+                                <div class="flex items-center justify-end gap-1">
+                                    <button @click="deleteTask(task)" x-tooltip="'Удалить'"
+                                        class="text-red-400 hover:text-red-600 transition p-1 rounded hover:bg-gray-100">
+                                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                            stroke-width="1.5" stroke="currentColor" class="w-5 h-5">
+                                            <path stroke-linecap="round" stroke-linejoin="round"
+                                                d="M6 18L18 6M6 6l12 12" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+
+        <div x-show="tasks.length === 0 && !isLoading" class="text-center py-8 text-gray-500">
+            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="w-12 h-12 mx-auto mb-2">
+                <path stroke-linecap="round" stroke-linejoin="round" d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+            </svg>
+            <p class="text-sm"><b>Нет регламентных заданий</b></p>
+        </div>
+    </div>
+
+    <!-- Модальное окно -->
+    <template x-if="showCreateModal">
+        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-0 relative">
+                <div class="border-b px-6 py-4 flex items-center justify-between">
+                    <h3 class="text-lg font-bold">Создать задачу</h3>
+                    <button @click="closeCreateModal" type="button"
+                        class="text-gray-400 hover:text-gray-600 transition rounded p-1">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
+                            stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <form @submit.prevent="createTask" class="px-6 py-6 space-y-5">
+                    <!-- Обработчик с поиском -->
+                    <div>
+                        <label class="block font-semibold mb-2">Обработчик</label>
+                        <div class="relative mt-1" @keydown.escape="closeHandlerDropdown"
+                            @click.outside="closeHandlerDropdown">
+                            <button type="button" @click="openHandlerDropdown" :disabled="isHandlersLoading"
+                                class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
+                                :class="{
+                      'bg-gray-100 text-gray-400 cursor-not-allowed': isHandlersLoading,
+                      'text-gray-500': !selectedHandlerKey && !isHandlersLoading
+                    }">
+                                <span class="flex items-center">
+                                    <template x-if="selectedHandlerKey && !isHandlersLoading">
+                                        <img :src="`img/libs/${handlers.find(h => h.key === selectedHandlerKey)?.library.replace(/\s+/g, '')}.png`"
+                                            class="h-5 w-5 flex-shrink-0" @error="handleImageError">
+                                    </template>
+                                    <span class="block truncate"
+                                        :class="{ 'ml-3': selectedHandlerKey && !isHandlersLoading }" x-text="isHandlersLoading ? 'Загрузка...' : (
+                    selectedHandlerKey
+                      ? handlers.find(h => h.key === selectedHandlerKey)?.key + ' (' + (handlers.find(h => h.key === selectedHandlerKey)?.library_title || '') + ')'
+                      : 'Выберите обработчик'
+                  )">
+                                    </span>
+                                </span>
+                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
+                                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd"
+                                            d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
+                                            clip-rule="evenodd" />
+                                    </svg>
+                                </span>
+                            </button>
+
+                            <div x-show="handlerDropdownOpen && !isHandlersLoading" x-transition
+                                class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-0 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
+                                <div class="sticky top-0 bg-white z-10 p-1 border-b">
+                                    <input type="text" x-model.debounce.200ms="handlerSearch" @click.stop
+                                        x-ref="handlerSearchInput" placeholder="Поиск по ключу или названию..."
+                                        class="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-green-500" />
+                                </div>
+                                <template x-for="handler in filteredHandlers" :key="handler.key">
+                                    <button type="button" @click="selectHandler(handler.key)"
+                                        class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100 text-left flex items-center"
+                                        :class="{ 'bg-green-50': selectedHandlerKey === handler.key }">
+                                        <img :src="`img/libs/${handler.library.replace(/\s+/g, '')}.png`"
+                                            class="h-5 w-5 flex-shrink-0" @error="handleImageError">
+                                        <span class="ml-3 block truncate">
+                                            <span class="font-mono" x-text="handler.key"></span>
+                                            <span x-text="' (' + handler.library_title + ')'"></span>
+                                        </span>
+                                        <span x-show="selectedHandlerKey === handler.key"
+                                            class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
+                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </span>
+                                    </button>
+                                </template>
+                                <div x-show="filteredHandlers.length === 0" class="px-3 py-2 text-gray-500 text-sm">
+                                    Ничего не найдено
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Расписание -->
+                    <div>
+                        <label class="block font-semibold mb-2">Расписание запуска</label>
+                        <input type="text" x-model="scheduleInput" class="w-full px-3 py-2 border rounded-md font-mono"
+                            placeholder="сек мин час день месяц день_недели год">
+                        <div class="mt-2 text-sm text-gray-600">
+                            Укажите 7 значений через пробел:<br>
+                            <code
+                                class="text-xs">секунды (0–59), минуты (0–59), часы (0–23), день месяца (1–31), месяц (1–12), день недели (1–7, Пн=1), год (* или 2025)</code><br>
+                            Пример: <code class="text-xs">0 30 9,12,15 1,15 5-8 1,3,5 *</code> → в 9:30, 12:30 и 15:30,
+                            по понедельникам, средам и пятницам, 1-го и 15-го числа, с мая по август, каждый год
+                        </div>
+                    </div>
+
+                    <!-- Ошибка -->
+                    <div class="text-red-600 text-sm" x-show="createError" x-text="createError"></div>
+
+                    <!-- Кнопки -->
+                    <div class="flex justify-end space-x-2 pt-2">
+                        <button @click="closeCreateModal" type="button"
+                            class="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">
+                            Отмена
+                        </button>
+                        <button type="submit" :disabled="isCreating"
+                            class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition disabled:opacity-50">
+                            <span x-show="!isCreating">Создать</span>
+                            <span x-show="isCreating">Создание...</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </template>
+</div>

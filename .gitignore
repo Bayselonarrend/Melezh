@@ -5,3 +5,6 @@
 melezh-docker*
 /ci/installer_set/share/oint/lib/*
 logs
+
+target/
+.idea/

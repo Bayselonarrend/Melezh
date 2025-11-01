@@ -19,7 +19,8 @@ document.addEventListener('alpine:init', () => {
     'log-details': '#log',
     'settings': '#settings',
     'extensions': '#extensions',
-    'code-editor': '#code-editor'
+    'code-editor': '#code-editor',
+    'scheduler': '#scheduler'
   };
 
   const viewCache = new Map();

@@ -6,6 +6,7 @@ import { logsView } from '#melezh_base_path#js/components/logs-view.js';
 import { logDetailsView } from '#melezh_base_path#js/components/log-details-view.js';
 import { extensionsView } from '#melezh_base_path#js/components/extensions-view.js';
 import { codeEditorView } from '#melezh_base_path#js/components/code-editor-view.js';
+import { schedulerView } from '#melezh_base_path#js/components/scheduler-view.js';
 
 document.addEventListener('alpine:init', () => {
   Alpine.data('dashboardView', dashboardView);
@@ -16,5 +17,6 @@ document.addEventListener('alpine:init', () => {
   Alpine.data('logDetailsView', logDetailsView);
   Alpine.data('extensionsView', extensionsView);
   Alpine.data('codeEditorView', codeEditorView);
+  Alpine.data('schedulerView', schedulerView);
 
 });

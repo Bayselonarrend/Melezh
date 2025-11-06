@@ -40,6 +40,8 @@
 #Use oint-cli
 #Use "./internal"
 #Use "../../env"
+#Use "../../env/cronos/core"
+
 
 #Region Public
 
@@ -71,7 +73,7 @@ EndFunction
 Function RunProject(Val Port, Val Project) Export
 
     If Not OPI_Tools.IsOneScript() Then
-        IntegrationProxy = Undefined;
+        BackgroundTasksManager = Undefined;
         Raise "This function is only available for calling in OneScript!";
     EndIf;
 
@@ -83,21 +85,63 @@ Function RunProject(Val Port, Val Project) Export
         Return Check;
     EndIf;
 
-    TypeServer = Type("WebServer");
+    InitializationStructure = GetMechanismInitializationStructure(Project);
 
-    ServersSettings = New Array(1);
-    ServersSettings[0] = Port;
+    BackgroundTasksManager = New("BackgroundTasksManager");
+    BackgroundTaskArray = New Array;
+    TaskDescriptionArray = New Array;
 
-    WebServer = New(TypeServer, ServersSettings);
-    Handler = New("RequestsHandler");
-    OintContent = New("LibraryComposition");
+    // Web-server
 
-    ServerCatalogs = GetServerCatalogs();
+    ParameterArray = New Array;
+    ParameterArray.Add(Project);
+    ParameterArray.Add(Port);
+    ParameterArray.Add(InitializationStructure);
 
-    Handler.Initialize(Project, IntegrationProxy, OintContent, ServerCatalogs);
+    MethodName = "StartWebServer";
 
-    WebServer.AddRequestsHandler(Handler, "MainHandle");
-    WebServer.Run();
+    TaskDescriptionArray.Add(New Structure("Method,Parameters", MethodName, ParameterArray));
+
+    // Scheduler
+
+    ParameterArray = New Array;
+    ParameterArray.Add(Project);
+    ParameterArray.Add(InitializationStructure);
+
+    MethodName = "StartScheduledTasksManager";
+
+    TaskDescriptionArray.Add(New Structure("Method,Parameters", MethodName, ParameterArray));
+
+    // Launch
+
+    For Each TaskDescription In TaskDescriptionArray Do
+
+        NewTask = BackgroundTasksManager.Execute(ЭтотОбъект, TaskDescription["Method"], TaskDescription["Parameters"], True);
+        BackgroundTaskArray.Add(NewTask);
+
+    EndDo;
+
+    While True Do
+
+        FailedTask = BackgroundTasksManager.WaitAny(BackgroundTaskArray);
+        TaskObject = BackgroundTaskArray[FailedTask];
+
+        Try
+            Error = DetailErrorDescription((TaskObject.ErrorInfo));
+        Except
+            Error = "";
+        EndTry;
+
+        Message(StrTemplate("Critical error in task %1: %2 Restarting...", FailedTask, Error));
+
+        Sleep(2000);
+
+        TaskDescription = TaskDescriptionArray[FailedTask];
+
+        NewTask = BackgroundTasksManager.Execute(ЭтотОбъект, TaskDescription["Method"], TaskDescription["Parameters"], True);
+        BackgroundTaskArray.Set(FailedTask, NewTask);
+
+    EndDo;
 
     Return FormResponse(True, "Stopped");
 
@@ -457,8 +501,6 @@ Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
         Project = Result["path"];
     EndIf;
 
-    Table = ConstantValue("HandlersTable");
-
     FilterStructure = New Structure;
 
     FilterStructure.Insert("field", "key");
@@ -815,6 +857,242 @@ EndFunction
 
 #EndRegion
 
+#Region ScheduledTasks
+
+// Add scheduled task
+// Adds a new handler to the project
+//
+// Note
+// Schedule format:^
+// sec min hour day of month month day of week year^
+// 0 30 9,12,15 1,15 May-Aug Mon,Wed,Fri 2018/2
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// HandlersKey - String - Handlers key - handler
+// Schedule - String - Schedule in extended cron format - cron
+//
+// Returns:
+// Structure Of KeyAndValue - Task addition result
+Function AddScheduledTask(Val Project, Val HandlersKey, Val Schedule) Export
+
+    OPI_TypeConversion.GetLine(Schedule);
+    OPI_TypeConversion.GetLine(HandlersKey);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Result = GetRequestsHandler(Project, HandlersKey);
+
+    If Not Result["result"] Then
+        Return Result;
+    EndIf;
+
+    RecordStructure = New Structure;
+    RecordStructure.Insert("handler" , HandlersKey);
+    RecordStructure.Insert("cron" , Schedule);
+    RecordStructure.Insert("active" , True);
+
+    HandlersTableName = ConstantValue("TaskTable");
+    Connection = OPI_SQLite.CreateConnection(Project);
+    Result = OPI_SQLite.AddRecords(HandlersTableName, RecordStructure, False, Connection);
+
+    If Result["result"] Then
+
+        TaskID = OPI_SQLite.ExecuteSQLQuery("SELECT LAST_INSERT_ROWID();", , , Connection);
+
+        If TaskID["result"] Then
+            Result.Insert("id", String(TaskID["data"][0]["LAST_INSERT_ROWID()"]));
+        Else
+            Result.Insert("id", "Object created, but failed to get its ID: " + TaskID["error"]);
+        EndIf;
+
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+// Delete scheduled task
+// Deletes scheduled task from project
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// TaskID - Number - Task ID - task
+//
+// Returns:
+// Structure Of KeyAndValue - Deleting result
+Function DeleteScheduledTask(Val Project, Val TaskID) Export
+
+    OPI_TypeConversion.GetLine(TaskID);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("TaskTable");
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "id");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", TaskID);
+    FilterStructure.Insert("raw" , False);
+
+    Result = OPI_SQLite.DeleteRecords(Table, FilterStructure, Project);
+
+    Return Result;
+
+EndFunction
+
+// Get scheduled task list
+// Gets the list of scheduled tasks in the project
+//
+// Parameters:
+// Project - String - Project filepath - proj
+//
+// Returns:
+// Structure Of KeyAndValue - Task list
+Function GetScheduledTaskList(Val Project) Export
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("TaskTable");
+    Result = OPI_SQLite.GetRecords(Table, , , , , Project);
+
+    Return Result;
+
+EndFunction
+
+// Get scheduled task
+// Gets task information by ID
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// TaskID - String - Task ID - task
+//
+// Returns:
+// Structure Of KeyAndValue - Handlers information
+Function GetScheduledTask(Val Project, Val TaskID) Export
+
+    OPI_TypeConversion.GetLine(TaskID);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    Table = ConstantValue("TaskTable");
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "id");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", TaskID);
+    FilterStructure.Insert("raw" , False);
+
+    Result = OPI_SQLite.GetRecords(Table, , FilterStructure, , , Project);
+
+    If Result["result"] Then
+
+        If Result["data"].Count() = 0 Then
+            Result = FormResponse(False, "Task not found!");
+        Else
+            Result["data"] = Result["data"][0];
+        EndIf;
+        
+    EndIf;
+
+    Return Result;
+
+EndFunction
+
+// Update scheduled task
+// Changes the schedule of the selected scheduled task
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// TaskID - String - Task ID - task
+// Schedule - String - Schedule in extended cron format - cron
+//
+// Returns:
+// Structure Of KeyAndValue - Task update result
+Function UpdateScheduledTask(Val Project, Val TaskID, Val Schedule = "", Val HandlersKey = "") Export
+
+    OPI_TypeConversion.GetLine(TaskID);
+    OPI_TypeConversion.GetLine(Schedule);
+    OPI_TypeConversion.GetLine(HandlersKey);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = OPI_SQLite.CreateConnection(Result["path"]);;
+    EndIf;
+
+    Task = GetScheduledTask(Project, TaskID);
+
+    If Not Task["result"] Then
+        Return Task;
+    EndIf;
+
+    RecordStructure = New Structure;
+
+    If ValueIsFilled(Schedule) Then
+        RecordStructure.Insert("cron", Schedule);
+    EndIf;
+
+    If ValueIsFilled(HandlersKey) Then
+
+        RequestsHandler = GetRequestsHandler(Project, HandlersKey);
+
+        If Not RequestsHandler["result"] Then
+            Return RequestsHandler;
+        EndIf;
+
+        RecordStructure.Insert("handler", HandlersKey);
+
+    EndIf;
+
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "id");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", TaskID);
+    FilterStructure.Insert("raw" , False);
+
+    TaskTableName = ConstantValue("TaskTable");
+
+    Result = OPI_SQLite.UpdateRecords(TaskTableName
+        , RecordStructure
+        , FilterStructure
+        , Project);
+
+    Return Result;
+
+EndFunction
+
+#EndRegion
+
 #EndRegion
 
 #Region Internal
@@ -853,6 +1131,31 @@ Function ReceiveUniqueHandlerKey(Path) Export
     Return SecretKey;
 
 EndFunction
+
+Procedure StartWebServer(Project, Port, InitializationStructure) Export
+
+    TypeServer = Type("WebServer");
+
+    ServersSettings = New Array(1);
+    ServersSettings[0] = Port;
+
+    WebServer = New(TypeServer, ServersSettings);
+
+    Handler = New("RequestsHandler");
+    Handler.Initialize(InitializationStructure);
+
+    WebServer.AddRequestsHandler(Handler, "MainHandle");
+    WebServer.Run();
+
+EndProcedure
+
+Procedure StartScheduledTasksManager(Project, InitializationStructure) Export
+
+    STaskManager = New("ScheduledTasksManager");
+    STaskManager.Initialize(InitializationStructure);
+    STaskManager.Start();
+        
+EndProcedure
 
 #EndRegion
 
@@ -963,9 +1266,53 @@ Function CheckRestoreProject(Val Path)
 
 EndFunction
 
+Function GetMechanismInitializationStructure(Val Project)
+
+    If False Then
+        IntegrationProxy = Undefined;
+    EndIf;
+
+    RequestsHandler = New("RequestsHandler");
+    OPIObject = New("LibraryComposition");
+    TaskScheduler = New("Scheduler");
+    
+    ServerCatalogs = GetServerCatalogs();
+    ProxyModule = IntegrationProxy;
+
+    SQLiteConnectionManager = New("SQLiteConnectionManager");
+    SQLiteConnectionManager.Initialize(Project);
+
+    SettingsVault = New("SettingsVault");
+    SettingsVault.Initialize(SQLiteConnectionManager, ProxyModule);
+    
+    Logger = New("Logger");
+    Logger.Initialize(SettingsVault);
+
+    ActionsProcessor = New("ActionsProcessor");
+    ActionsProcessor.Initialize(OPIObject, ProxyModule, SQLiteConnectionManager, Logger, SettingsVault);
+
+    InitializationStructure = New Structure;
+    InitializationStructure.Insert("ProjectPath" , Project);
+    InitializationStructure.Insert("ServerCatalogs" , ServerCatalogs);
+    InitializationStructure.Insert("RequestsHandler" , RequestsHandler);
+    InitializationStructure.Insert("OPIObject" , OPIObject);
+    InitializationStructure.Insert("ProxyModule" , ProxyModule);
+    InitializationStructure.Insert("SQLiteConnectionManager", SQLiteConnectionManager);
+    InitializationStructure.Insert("SettingsVault" , SettingsVault);
+    InitializationStructure.Insert("Logger" , Logger);
+    InitializationStructure.Insert("ActionsProcessor" , ActionsProcessor);
+    InitializationStructure.Insert("TaskScheduler" , TaskScheduler);
+
+    Return InitializationStructure;
+    
+EndFunction
+
 Function FormResponse(Val Result, Val Text, Val Path = "")
 
-    Response = New Structure("result,message", Result, Text);
+    
+    Response = New Structure();
+    Response.Insert("result", Result);
+    Response.Insert(?(Result, "message", "error"), Text);
 
     If ValueIsFilled(Path) Then
         Response.Insert("path", Path);
@@ -981,6 +1328,7 @@ Function ConstantValue(Val Key)
     ElsIf Key = "ArgsTable" Then Return "arguments"
     ElsIf Key = "SettingsTable" Then Return "settings"
     ElsIf Key = "HandlersOptionTable" Then Return "options"
+    ElsIf Key = "TaskTable" Then Return "scheduler_tasks"
 
     Else Return "" EndIf;
 
@@ -994,6 +1342,7 @@ Function TableConstantNames(Val HandlersOnly = True)
 
     If Not HandlersOnly Then
         ArrayOfNames.Add("SettingsTable");
+        ArrayOfNames.Add("TaskTable");
     EndIf;
 
     Return ArrayOfNames;
@@ -1038,6 +1387,13 @@ Function CreateNewProject(Path)
     EndIf;
 
     Result = SetDefaultSettings(Path);
+
+    If Not Result["result"] Then
+        DeleteFiles(Path);
+        Return Result;
+    EndIf;
+
+    Result = CreateSchedulerTaskTable(Path);
 
     If Not Result["result"] Then
         DeleteFiles(Path);
@@ -1104,6 +1460,21 @@ Function CreateSettingsTable(Path)
     TableStructure.Insert("type" , "TEXT");
 
     SettingTableName = ConstantValue("SettingsTable");
+    Result = OPI_SQLite.EnsureTable(SettingTableName, TableStructure, Path);
+
+    Return Result;
+
+EndFunction
+
+Function CreateSchedulerTaskTable(Path)
+
+    TableStructure = New Map();
+    TableStructure.Insert("id" , "INTEGER PRIMARY KEY AUTOINCREMENT");
+    TableStructure.Insert("handler" , "TEXT");
+    TableStructure.Insert("cron" , "TEXT");
+    TableStructure.Insert("active" , "BOOLEAN");
+
+    SettingTableName = ConstantValue("TaskTable");
     Result = OPI_SQLite.EnsureTable(SettingTableName, TableStructure, Path);
 
     Return Result;

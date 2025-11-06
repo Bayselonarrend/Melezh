@@ -53,39 +53,41 @@ Var SettingsVault;
 Var SessionsHandler;
 Var SQLiteConnectionManager;
 Var ServerPath;
+Var TaskScheduler;
 
 #EndRegion
 
 #Region Internal
 
-Procedure Initialize(ProjectPath_, ProxyModule_, OPIObject_, ServerCatalogs_) Export
+Procedure Initialize(InitializationStructure) Export
     
-    ServerPath = ServerCatalogs_["Root"];
-    ExtensionsPath = ServerCatalogs_["Extensions"];
+    ServerCatalogs = InitializationStructure["ServerCatalogs"];
+    ProjectPath = InitializationStructure["ProjectPath"];
+    ProxyModule = InitializationStructure["ProxyModule"];
+    OPIObject = InitializationStructure["OPIObject"];
+    TaskScheduler = InitializationStructure["TaskScheduler"];
+    SQLiteConnectionManager = InitializationStructure["SQLiteConnectionManager"];
+    SettingsVault = InitializationStructure["SettingsVault"];
+    Logger = InitializationStructure["Logger"];
+    ActionsProcessor = InitializationStructure["ActionsProcessor"];
 
-    SQLiteConnectionManager = New("SQLiteConnectionManager");
-    SQLiteConnectionManager.Initialize(ProjectPath_);
-    
-    SettingsVault = New("SettingsVault");
-    SettingsVault.Initialize(SQLiteConnectionManager, ProxyModule_);
-    
-    Logger = New("Logger");
-    Logger.Initialize(SettingsVault);
-    
+    ServerPath = ServerCatalogs["Root"];
+    ExtensionsPath = ServerCatalogs["Extensions"];
+        
     SessionsHandler = New("SessionsHandler");
     SessionsHandler.Initialize(SQLiteConnectionManager, SettingsVault);
-    
-    ActionsProcessor = New("ActionsProcessor");
-    ActionsProcessor.Initialize(OPIObject_, ProxyModule_, SQLiteConnectionManager, Logger, SettingsVault);
         
     UIProcessor = New("UIProcessor");
     UIProcessor.Initialize(ServerPath, SessionsHandler, SettingsVault);
 
     ExtensionsProcessor = New("ExtensionsProcessor");
-    ExtensionsProcessor.Initialize(OPIObject_, SettingsVault, ExtensionsPath, ActionsProcessor);
+    ExtensionsProcessor.Initialize(OPIObject, SettingsVault, ExtensionsPath, ActionsProcessor);
+
+    InitializationStructure.Insert("ExtensionsProcessor", ExtensionsProcessor);
+    InitializationStructure.Insert("SessionsHandler", SessionsHandler);
 
     APIProcessor = New("APIProcessor");
-    APIProcessor.Initialize(ProxyModule_, SQLiteConnectionManager, SessionsHandler, OPIObject_, SettingsVault, Logger, ExtensionsProcessor);
+    APIProcessor.Initialize(InitializationStructure);
     
 EndProcedure
 

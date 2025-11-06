@@ -12,19 +12,22 @@ Var SettingsVault;
 Var Logger;
 Var StartDate;
 Var AdviceArray;
+Var TaskScheduler;
 
 #Region Internal
 
-Procedure Initialize(ProxyModule_, ConnectionManager_, SessionsHandler_, OPIObject_, SettingsVault_, Logger_, ExtensionsProcessor_) Export
-	
-	ProxyModule = ProxyModule_;
-	ConnectionManager = ConnectionManager_;
-	SessionsHandler = SessionsHandler_;
-	OPIObject = OPIObject_;
-	SettingsVault = SettingsVault_;
-	Logger = Logger_;
+Procedure Initialize(InitializationStructure) Export
+
+	ProxyModule = InitializationStructure["ProxyModule"];
+	ConnectionManager = InitializationStructure["SQLiteConnectionManager"];
+	SessionsHandler = InitializationStructure["SessionsHandler"];
+	OPIObject = InitializationStructure["OPIObject"];
+	SettingsVault = InitializationStructure["SettingsVault"];
+	Logger = InitializationStructure["Logger"];
+	ExtensionsProcessor = InitializationStructure["ExtensionsProcessor"];
+	TaskScheduler = InitializationStructure["TaskScheduler"];
+
 	StartDate = CurrentDate();
-	ExtensionsProcessor = ExtensionsProcessor_;
 	
 	FillLibraryContent();
 	FillAdvices();
@@ -94,6 +97,14 @@ Function MainHandle(Val Context, Val Path) Export
 			Result = CreateExtension(Context);
 		ElsIf Command = "deleteextension" Then
 			Result = DeleteExtension(Context);
+		ElsIf Command = "getschedulertasks" Then
+			Result = ReturnScheduledTaskList(Context);
+		ElsIf Command = "deleteschedulertask" Then
+			Result = DeleteScheduledTask(Context);
+		ElsIf Command = "createschedulertask" Then
+			Result = CreateScheduledTask(Context);
+		ElsIf Command = "updateschedulertask" Then
+			Result = UpdateScheduledTask(Context);
 		Else
 			NotFound = True;
 		EndIf;
@@ -817,6 +828,103 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 	EndIf;
 	
 EndProcedure
+
+Function ReturnScheduledTaskList(Context)
+	
+	Try
+		
+		ConnectionRO = ConnectionManager.GetROConnection();
+		Result = ProxyModule.GetScheduledTaskList(ConnectionRO);
+		
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+	
+EndFunction
+
+Function DeleteScheduledTask(Context)
+	
+	Try
+
+		Task = Context.Request.Form["id"][0];
+		ConnectionRW = ConnectionManager.GetRWConnection();
+		Result = ProxyModule.DeleteScheduledTask(ConnectionRW, Task);
+
+		If Result["result"] Then
+			Result = TaskScheduler.DeleteTask(Task);
+		EndIf;
+
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+	
+EndFunction
+
+Function CreateScheduledTask(Context)
+
+	Try
+
+		SavingStructure = Toolbox.GetJSON(Context);
+		Handler = SavingStructure["handler"];
+		Schedule = SavingStructure["schedule"];
+
+		ConnectionRW = ConnectionManager.GetRWConnection();
+		Result = ProxyModule.AddScheduledTask(ConnectionRW, Handler, Schedule);
+
+		If Not Result["result"] Then
+			Return Toolbox.HandlingError(Context, 500, Result["error"]);
+		EndIf;
+
+		TaskID = Result["id"];
+		Result = TaskScheduler.AddTask(TaskID, Schedule);
+
+		If Not Result["result"] Then
+			ProxyModule.DeleteScheduledTask(ConnectionRW, TaskID);
+			Result = Toolbox.HandlingError(Context, 400, Result["error"]);
+		EndIf;
+
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
+
+Function UpdateScheduledTask(Context)
+
+		Try
+
+		SavingStructure = Toolbox.GetJSON(Context);
+		Task = SavingStructure["id"];
+		Handler = SavingStructure["handler"];
+		Schedule = SavingStructure["schedule"];
+
+		ConnectionRW = ConnectionManager.GetRWConnection();
+		Result = ProxyModule.UpdateScheduledTask(ConnectionRW, Task, Schedule, Handler);
+
+		If Not Result["result"] Then
+			Return Toolbox.HandlingError(Context, 400, Result["error"]);
+		EndIf;
+
+		TaskID = Result["id"];
+		Result = TaskScheduler.UpdateTaskSchedule(TaskID, Schedule);
+
+		If Not Result["result"] Then
+			Result = Toolbox.HandlingError(Context, 400, Result["error"]);
+		EndIf;
+
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+
+EndFunction
 
 Procedure FillLibraryContent()
 	

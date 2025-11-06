@@ -63,6 +63,114 @@ Function MainHandle(Val Context, Val Path) Export
     
 EndFunction
 
+Function PerformUniversalProcessing(Context, Handler, Parameters) Export
+    
+    #If Client Then
+    Raise "The method is not available on the client!";
+    #Else
+    
+    Arguments = Handler["args"];
+    Command = Handler["library"];
+    Method = Handler["function"];
+    
+    TFArray = New Array;
+    ParametersBoiler = FormParameterBoiler(Arguments, Parameters);
+    
+    For Each Parameter In ParametersBoiler Do
+        
+        CurrentValue = Parameter.Value;
+        CurrentKey = Parameter.Key;
+        
+        If TypeOf(CurrentValue) = Type("BinaryData") Then
+            
+            //@skip-check missing-temporary-file-deletion
+            TFN = GetTempFileName();
+            CurrentValue.Write(TFN);
+            
+            TFArray.Add(TFN);
+            
+            ParametersBoiler.Insert(CurrentKey, TFN);
+            
+        ElsIf TypeOf(CurrentValue) = Type("FormFile") Then
+            
+            //@skip-check missing-temporary-file-deletion
+            TFN = GetTempFileName();
+            
+            StreamOfFile = CurrentValue.OpenReadStream();
+            WriteStream = New FileStream(TFN, FileOpenMode.OpenOrCreate);
+            
+            StreamOfFile.CopyTo(WriteStream);
+            
+            StreamOfFile.Close();
+            WriteStream.Close();
+            
+            TFArray.Add(TFN);
+            
+            ParametersBoiler.Insert(CurrentKey, TFN);
+
+        ElsIf OPI_Tools.ThisIsCollection(CurrentValue) Then
+
+            CurrentValue = OPI_Tools.JSONString(CurrentValue, , False);
+            OPI_TypeConversion.GetLine(CurrentValue);
+
+            ParametersBoiler.Insert(CurrentKey, CurrentValue);
+            
+        Else
+            OPI_TypeConversion.GetLine(CurrentValue);
+            ParametersBoiler.Insert(CurrentKey, CurrentValue);
+        EndIf;
+        
+    EndDo;
+    
+    If ParametersBoiler.Get("--melezhcontext") = Undefined Then
+        ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
+    EndIf;
+
+    ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method, False);
+    
+    Response = Undefined;
+    
+    If ExecutionStructure["Error"] Then
+        Response = New Structure("result,error", False, "Error in the name of a command or handler function!");
+    Else
+        
+        ExecutionText = ExecutionStructure["Result"];
+        ExecutionText = StrReplace(ExecutionText, "_melezhcontext = ""{MELEZHCONTEXT}""", "_melezhcontext = Context");
+
+        If ActiveExtensionsList.Get(Command) <> Undefined Then
+            ExecutionText = StrTemplate("%1 = ActiveExtensionsList.Get(""%1"");", Command) 
+                + Chars.LF 
+                + ExecutionText;
+        EndIf;
+        
+        Execute(ExecutionText);
+        
+        If Not TypeOf(Response) = Type("BinaryData") 
+            And SettingsVault.ReturnSetting("res_wrapper")
+            And Not Context = Undefined Then
+
+            Response = New Structure("result,data", True, Response);
+
+        EndIf;
+        
+    EndIf;
+    
+    Try
+        
+        For Each TempFile In TFArray Do
+            DeleteFiles(TempFile);
+        EndDo;
+        
+    Except
+        Message("Failed to delete temporary files!");
+    EndTry;
+    
+    Return Response;
+    
+    #EndIf
+    
+EndFunction
+
 Procedure ConnectExtensionScript(Val Path, Val Name) Export
 
     Try
@@ -167,114 +275,6 @@ Function ExecuteFormDataProcessing(Context, Handler)
     Parameters = SplitFormData(Request.Form);
     
     Return PerformUniversalProcessing(Context, Handler, Parameters);
-    
-    #EndIf
-    
-EndFunction
-
-Function PerformUniversalProcessing(Context, Handler, Parameters)
-    
-    #If Client Then
-    Raise "The method is not available on the client!";
-    #Else
-    
-    Arguments = Handler["args"];
-    Command = Handler["library"];
-    Method = Handler["function"];
-    
-    TFArray = New Array;
-    ParametersBoiler = FormParameterBoiler(Arguments, Parameters);
-    
-    For Each Parameter In ParametersBoiler Do
-        
-        CurrentValue = Parameter.Value;
-        CurrentKey = Parameter.Key;
-        
-        If TypeOf(CurrentValue) = Type("BinaryData") Then
-            
-            //@skip-check missing-temporary-file-deletion
-            TFN = GetTempFileName();
-            CurrentValue.Write(TFN);
-            
-            TFArray.Add(TFN);
-            
-            ParametersBoiler.Insert(CurrentKey, TFN);
-            
-        ElsIf TypeOf(CurrentValue) = Type("FormFile") Then
-            
-            //@skip-check missing-temporary-file-deletion
-            TFN = GetTempFileName();
-            
-            StreamOfFile = CurrentValue.OpenReadStream();
-            WriteStream = New FileStream(TFN, FileOpenMode.OpenOrCreate);
-            
-            StreamOfFile.CopyTo(WriteStream);
-            
-            StreamOfFile.Close();
-            WriteStream.Close();
-            
-            TFArray.Add(TFN);
-            
-            ParametersBoiler.Insert(CurrentKey, TFN);
-
-        ElsIf OPI_Tools.ThisIsCollection(CurrentValue) Then
-
-            CurrentValue = OPI_Tools.JSONString(CurrentValue, , False);
-            OPI_TypeConversion.GetLine(CurrentValue);
-
-            ParametersBoiler.Insert(CurrentKey, CurrentValue);
-            
-        Else
-            OPI_TypeConversion.GetLine(CurrentValue);
-            ParametersBoiler.Insert(CurrentKey, CurrentValue);
-        EndIf;
-        
-    EndDo;
-    
-    If ParametersBoiler.Get("--melezhcontext") = Undefined Then
-        ParametersBoiler.Insert("--melezhcontext", "{MELEZHCONTEXT}");
-    EndIf;
-
-    ExecutionStructure = OPIObject.FormMethodCallString(ParametersBoiler, Command, Method, False);
-    
-    Response = Undefined;
-    
-    If ExecutionStructure["Error"] Then
-        Response = New Structure("result,error", False, "Error in the name of a command or handler function!");
-    Else
-        
-        ExecutionText = ExecutionStructure["Result"];
-        ExecutionText = StrReplace(ExecutionText, "_melezhcontext = ""{MELEZHCONTEXT}""", "_melezhcontext = Context");
-
-        If ActiveExtensionsList.Get(Command) <> Undefined Then
-            ExecutionText = StrTemplate("%1 = ActiveExtensionsList.Get(""%1"");", Command) 
-                + Chars.LF 
-                + ExecutionText;
-        EndIf;
-        
-        Execute(ExecutionText);
-        
-        If Not TypeOf(Response) = Type("BinaryData") 
-            And SettingsVault.ReturnSetting("res_wrapper")
-            And Not Context = Undefined Then
-
-            Response = New Structure("result,data", True, Response);
-
-        EndIf;
-        
-    EndIf;
-    
-    Try
-        
-        For Each TempFile In TFArray Do
-            DeleteFiles(TempFile);
-        EndDo;
-        
-    Except
-        Message("Failed to delete temporary files!");
-    EndTry;
-    
-    Return Response;
     
     #EndIf
     

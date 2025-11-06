@@ -356,6 +356,99 @@ Function GetComposition() Export
     NewLine.Description = "Handlers key";
     NewLine.Region = "Argument setting";
 
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "AddScheduledTask";
+    NewLine.SearchMethod = "ADDSCHEDULEDTASK";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Adds a new handler to the project";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "AddScheduledTask";
+    NewLine.SearchMethod = "ADDSCHEDULEDTASK";
+    NewLine.Parameter = "--handler";
+    NewLine.Description = "Handlers key";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "AddScheduledTask";
+    NewLine.SearchMethod = "ADDSCHEDULEDTASK";
+    NewLine.Parameter = "--cron";
+    NewLine.Description = "Schedule in extended cron format";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeleteScheduledTask";
+    NewLine.SearchMethod = "DELETESCHEDULEDTASK";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Deletes scheduled task from project";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DeleteScheduledTask";
+    NewLine.SearchMethod = "DELETESCHEDULEDTASK";
+    NewLine.Parameter = "--task";
+    NewLine.Description = "Task ID";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "GetScheduledTaskList";
+    NewLine.SearchMethod = "GETSCHEDULEDTASKLIST";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Gets the list of scheduled tasks in the project";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "GetScheduledTask";
+    NewLine.SearchMethod = "GETSCHEDULEDTASK";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Gets task information by ID";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "GetScheduledTask";
+    NewLine.SearchMethod = "GETSCHEDULEDTASK";
+    NewLine.Parameter = "--task";
+    NewLine.Description = "Task ID";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "UpdateScheduledTask";
+    NewLine.SearchMethod = "UPDATESCHEDULEDTASK";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Changes the schedule of the selected scheduled task";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "UpdateScheduledTask";
+    NewLine.SearchMethod = "UPDATESCHEDULEDTASK";
+    NewLine.Parameter = "--task";
+    NewLine.Description = "Task ID";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "UpdateScheduledTask";
+    NewLine.SearchMethod = "UPDATESCHEDULEDTASK";
+    NewLine.Parameter = "--cron";
+    NewLine.Description = "Schedule in extended cron format (optional, default - Empty value)";
+    NewLine.Region = "Scheduled tasks";
+
     Return CompositionTable;
 EndFunction
 

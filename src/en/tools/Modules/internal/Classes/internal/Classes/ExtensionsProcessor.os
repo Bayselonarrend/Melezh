@@ -35,7 +35,7 @@ Procedure CompleteCompositionWithExtensions() Export
                 ExtensionName = ExtensionFile.BaseName;
 
                 If Not Toolbox.StringStartsWithLetter(ExtensionName) Then
-                    Message("Error applying the extension: the module name must start with a letter");
+                    Message(StrTemplate("Error applying extension %1: module name must start with a letter", ExtensionName));
                     Continue;
                 EndIf;
 

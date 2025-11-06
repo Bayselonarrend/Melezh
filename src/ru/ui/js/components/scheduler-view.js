@@ -7,6 +7,7 @@ export const schedulerView = () => ({
 
     // Modal
     showCreateModal: false,
+    showEditModal: false,
     handlers: [],
     isHandlersLoading: true,
     selectedHandlerKey: '',
@@ -15,7 +16,10 @@ export const schedulerView = () => ({
 
     scheduleInput: '0 0 9 * * * *',
     createError: '',
+    editError: '',
     isCreating: false,
+    isEditing: false,
+    editingTask: null,
 
     init() {
         this.loadTasks();
@@ -59,9 +63,36 @@ export const schedulerView = () => ({
         }
     },
 
+    async openEditModal(task) {
+        this.showEditModal = true;
+        this.editError = '';
+        this.isEditing = false;
+        this.editingTask = task;
+        this.selectedHandlerKey = task.handler;
+        this.scheduleInput = task.cron;
+        this.handlerSearch = '';
+
+        try {
+            const response = await fetch('api/getHandlersList');
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+            this.handlers = result.data || [];
+        } catch (error) {
+            this.editError = `Ошибка загрузки обработчиков: ${error.message}`;
+        } finally {
+            this.isHandlersLoading = false;
+        }
+    },
+
     closeCreateModal() {
         this.showCreateModal = false;
         this.handlerDropdownOpen = false;
+    },
+
+    closeEditModal() {
+        this.showEditModal = false;
+        this.handlerDropdownOpen = false;
+        this.editingTask = null;
     },
 
     get filteredHandlers() {
@@ -97,16 +128,23 @@ export const schedulerView = () => ({
         this.closeHandlerDropdown();
     },
 
+    validateSchedule(schedule) {
+        const parts = schedule.trim().split(/\s+/);
+        if (parts.length !== 7) {
+            return 'Расписание должно содержать 7 полей: сек мин час день месяц день_недели год';
+        }
+        return null;
+    },
+
     async createTask() {
         if (!this.selectedHandlerKey) {
             this.createError = 'Выберите обработчик';
             return;
         }
 
-        const schedule = this.scheduleInput.trim();
-        const parts = schedule.split(/\s+/);
-        if (parts.length !== 7) {
-            this.createError = 'Расписание должно содержать 7 полей: сек мин час день месяц день_недели год';
+        const scheduleValidation = this.validateSchedule(this.scheduleInput);
+        if (scheduleValidation) {
+            this.createError = scheduleValidation;
             return;
         }
 
@@ -116,7 +154,7 @@ export const schedulerView = () => ({
         try {
             const payload = {
                 handler: this.selectedHandlerKey,
-                schedule: schedule
+                schedule: this.scheduleInput.trim()
             };
 
             const response = await fetch('api/createSchedulerTask', {
@@ -130,10 +168,58 @@ export const schedulerView = () => ({
 
             this.closeCreateModal();
             await this.loadTasks();
+            
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { message: 'Задача успешно создана' }
+            }));
         } catch (error) {
             this.createError = `Ошибка создания: ${error.message}`;
         } finally {
             this.isCreating = false;
+        }
+    },
+
+    async updateTask() {
+        if (!this.selectedHandlerKey) {
+            this.editError = 'Выберите обработчик';
+            return;
+        }
+
+        const scheduleValidation = this.validateSchedule(this.scheduleInput);
+        if (scheduleValidation) {
+            this.editError = scheduleValidation;
+            return;
+        }
+
+        this.isEditing = true;
+        this.editError = '';
+
+        try {
+            const payload = {
+                id: this.editingTask.id,
+                handler: this.selectedHandlerKey,
+                schedule: this.scheduleInput.trim()
+            };
+
+            const response = await fetch('api/updateSchedulerTask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+
+            this.closeEditModal();
+            await this.loadTasks();
+            
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { message: 'Задача успешно обновлена' }
+            }));
+        } catch (error) {
+            this.editError = `Ошибка обновления: ${error.message}`;
+        } finally {
+            this.isEditing = false;
         }
     },
 

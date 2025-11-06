@@ -321,7 +321,7 @@ Function AddRequestsHandler(Val Project, Val OintLibrary, Val OintFunction, Val 
     SecretKey = ReceiveUniqueHandlerKey(Project);
 
     If TypeOf(SecretKey) = Type("Map") Then
-        SecretKey.Insert("message", "Failed to generate the UID of the handler. Try again!");
+        SecretKey.Insert("error", "Failed to generate the UID of the handler. Try again!");
         Return SecretKey;
     EndIf;
 

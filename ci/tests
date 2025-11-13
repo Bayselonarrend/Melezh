@@ -26,7 +26,7 @@ pipeline {
 
         stage('Requests Test') {
             steps {
-                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_handlers_ru.os'
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_handlers.os'
             }
         }
 

@@ -1,0 +1,3 @@
+melezh  ВключитьРегламентноеЗадание \
+  --proj "/proj.melezh" \
+  --task 1

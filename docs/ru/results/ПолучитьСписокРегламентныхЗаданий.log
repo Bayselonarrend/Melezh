@@ -1,0 +1,11 @@
+﻿    {
+ "data": [
+  {
+   "active": 1,
+   "cron": "0 7 10 * * * *",
+   "handler": "my-key",
+   "id": 1
+  }
+ ],
+ "result": true
+}

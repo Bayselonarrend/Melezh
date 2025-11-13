@@ -194,6 +194,7 @@ Function ParseModule(Module)
     CompositionTable.Columns.Add("Method");
     CompositionTable.Columns.Add("SearchMethod");
     CompositionTable.Columns.Add("Parameter");
+    CompositionTable.Columns.Add("ParameterTrim");
     CompositionTable.Columns.Add("Description");
     CompositionTable.Columns.Add("MethodDescription");
     CompositionTable.Columns.Add("Region");

@@ -2,7 +2,7 @@
  "data": {
   "active": 1,
   "function": "ОтправитьТекстовоеСообщение",
-  "key": "6b88734ba",
+  "key": "57e0f4bec",
   "library": "telegram",
   "method": "GET",
   "args": []

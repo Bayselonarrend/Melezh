@@ -14,19 +14,19 @@ pipeline {
 
         stage('CLI Test (RU)') {
             steps {
-                    bat encoding: 'cp866', script:'oneunit e -f ./tests/tests_ru.os'
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_ru.os'
             }
         }
 
         stage('CLI Test (EN)') {
             steps {
-                    bat encoding: 'cp866', script:'oneunit e -f ./tests/tests_en.os'
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_en.os'
             }
         }
 
         stage('Requests Test') {
             steps {
-                    bat encoding: 'cp866', script:'oneunit e -f ./tests/tests_handlers.os'
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oneunit e -f ./tests/tests_handlers.os'
             }
         }
 

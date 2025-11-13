@@ -3,8 +3,10 @@ set "oint_folder=%~dp0"
 set "debug_args="
 
 if defined MELEZH_DEBUG (
-    for /f "tokens=2 delims==" %%i in ("%MELEZH_DEBUG%") do (
-        set "debug_args=-debug -port=%%i -noWait"
+    echo %MELEZH_DEBUG% | findstr /r "^[0-9][0-9]*$" >nul
+    if not errorlevel 1 (
+        set "debug_args=-debug -port=%MELEZH_DEBUG% -noWait"
+        echo "Debug port found: %MELEZH_DEBUG%"
     )
 )
 

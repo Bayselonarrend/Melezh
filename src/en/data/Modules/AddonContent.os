@@ -449,6 +449,40 @@ Function GetComposition() Export
     NewLine.Description = "Schedule in extended cron format (optional, default - Empty value)";
     NewLine.Region = "Scheduled tasks";
 
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "EnableRequestsHandler";
+    NewLine.SearchMethod = "ENABLEREQUESTSHANDLER";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Enables scheduled task by ID";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "EnableRequestsHandler";
+    NewLine.SearchMethod = "ENABLEREQUESTSHANDLER";
+    NewLine.Parameter = "--task";
+    NewLine.Description = "Task ID";
+    NewLine.Region = "Scheduled tasks";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DisableRequestsHandler";
+    NewLine.SearchMethod = "DISABLEREQUESTSHANDLER";
+    NewLine.Parameter = "--proj";
+    NewLine.Description = "Project filepath";
+    NewLine.Region = "Scheduled tasks";
+    NewLine.MethodDescription = "Disables scheduled task by ID";
+
+
+    NewLine = CompositionTable.Add();
+    NewLine.Method = "DisableRequestsHandler";
+    NewLine.SearchMethod = "DISABLEREQUESTSHANDLER";
+    NewLine.Parameter = "--task";
+    NewLine.Description = "Task ID";
+    NewLine.Region = "Scheduled tasks";
+
     Return CompositionTable;
 EndFunction
 

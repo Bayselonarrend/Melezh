@@ -1091,6 +1091,36 @@ Function UpdateScheduledTask(Val Project, Val TaskID, Val Schedule = "", Val Han
 
 EndFunction
 
+// Enable scheduled task
+// Enables scheduled task by ID
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// TaskID - String - Task ID - task
+//
+// Returns:
+// Structure Of KeyAndValue - Switching result
+Function EnableRequestsHandler(Val Project, Val HandlersKey) Export
+
+    Return SwitchScheduledTask(Project, HandlersKey, True);
+
+EndFunction
+
+// Disable scheduled task
+// Disables scheduled task by ID
+//
+// Parameters:
+// Project - String - Project filepath - proj
+// TaskID - String - Task ID - task
+//
+// Returns:
+// Structure Of KeyAndValue - Switching result
+Function DisableRequestsHandler(Val Project, Val HandlersKey) Export
+
+    Return SwitchScheduledTask(Project, HandlersKey, False);
+
+EndFunction
+
 #EndRegion
 
 #EndRegion
@@ -1590,6 +1620,38 @@ Function SwitchRequestsHandler(Val Project, Val HandlersKey, Val Activity)
 
     RecordStructure = New Structure("active", Activity);
     Result = ChangeHandlersFields(Project, HandlersKey, RecordStructure);
+
+    Return Result;
+
+EndFunction
+
+Function SwitchScheduledTask(Val Project, Val TaskID, Val Activity)
+
+    OPI_TypeConversion.GetLine(HandlersKey);
+    OPI_TypeConversion.GetBoolean(Activity);
+
+    Result = CheckProjectExistence(Project);
+
+    If Not Result["result"] Then
+        Return Result;
+    Else
+        Project = Result["path"];
+    EndIf;
+
+    RecordStructure = New Structure("active", Activity);
+    FilterStructure = New Structure;
+
+    FilterStructure.Insert("field", "id");
+    FilterStructure.Insert("type" , "=");
+    FilterStructure.Insert("value", TaskID);
+    FilterStructure.Insert("raw" , False);
+
+    HandlersTableName = ConstantValue("TaskTable");
+
+    Result = OPI_SQLite.UpdateRecords(HandlersTableName
+        , RecordStructure
+        , FilterStructure
+        , Project);
 
     Return Result;
 

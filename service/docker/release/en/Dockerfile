@@ -16,6 +16,8 @@ RUN wget -O packageA.deb "$OInt_URL" && \
         
 RUN sudo melezh CreateProject --path proj.melezh
 
-EXPOSE 1921
+ENV MELEZH_DEBUG="1931"
+
+EXPOSE 1921 1931
 
 CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "1921"]

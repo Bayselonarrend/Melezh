@@ -16,6 +16,8 @@ COPY melezh.rpm /tmp/melezh.rpm
 RUN dnf install -y /tmp/oint.rpm /tmp/melezh.rpm || (dnf check-update && exit 1)
 RUN sudo melezh CreateProject --path proj.melezh
 
-EXPOSE 1921
+ENV MELEZH_DEBUG="1931"
+
+EXPOSE 1921 1931
 
 CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "1921"]

@@ -5,6 +5,7 @@ setlocal enabledelayedexpansion
 set IMAGE_NAME=melezh-server
 set CONTAINER_NAME=melezh-app
 set PORT=1921
+set DEBUG_PORT=1931
 
 echo.
 echo ##############################################
@@ -50,10 +51,11 @@ if defined CONTAINER_EXISTS (
 
 :: Run container
 echo.
-echo V Starting container on port %PORT%...
+echo V Starting container on port %PORT% with debug port %DEBUG_PORT%...
 docker run -d ^
   --name %CONTAINER_NAME% ^
   -p %PORT%:%PORT% ^
+  -p %DEBUG_PORT%:%DEBUG_PORT% ^
   %IMAGE_NAME%
 
 if %ERRORLEVEL% neq 0 (
@@ -65,6 +67,7 @@ if %ERRORLEVEL% neq 0 (
 echo.
 echo V Server is now running!
 echo - Open in browser: http://localhost:%PORT%/ui
+echo - You can attach OneScript Debug Adapter form VSC at port %DEBUG_PORT%
 echo - View logs: docker logs %CONTAINER_NAME%
 echo.
 

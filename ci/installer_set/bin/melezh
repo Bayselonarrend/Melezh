@@ -1,2 +1,13 @@
 #!/bin/bash
-/usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+
+if [ -n "$MELEZH_DEBUG" ]; then
+    # Извлекаем номер порта из переменной MELEZH_DEBUG (формат: port=XXXX)
+    port=$(echo "$MELEZH_DEBUG" | grep -oE 'port=[0-9]+' | cut -d'=' -f2)
+    if [ -n "$port" ]; then
+        /usr/share/oint/bin/oscript -debug -port="$port" -noWait /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+    else
+        /usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+    fi
+else
+    /usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+fi

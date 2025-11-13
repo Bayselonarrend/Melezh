@@ -5,6 +5,7 @@ set -e
 IMAGE_NAME="melezh-server"
 CONTAINER_NAME="melezh-app"
 PORT=1921
+DEBUG_PORT=1931
 
 # Check if Docker is installed
 if ! command -v docker &> /dev/null
@@ -35,14 +36,16 @@ if [ "$(docker ps -a -f "name=$CONTAINER_NAME" --format "{{.Status}}")" ]; then
 fi
 
 # Run new container
-echo "V Running container on port $PORT..."
+echo "V Running container on port $PORT with debug port $DEBUG_PORT..."
 docker run -d \
   --name "$CONTAINER_NAME" \
   -p "$PORT:$PORT" \
+  -p "$DEBUG_PORT:$DEBUG_PORT" \
   "$IMAGE_NAME"
 
 # Done
 echo
 echo "V Server is running!"
 echo "- Open in browser: http://localhost:$PORT"
+echo "- You can attach OneScript Debug Adapter form VSC at port $DEBUG_PORT"
 echo "- Logs: docker logs $CONTAINER_NAME"

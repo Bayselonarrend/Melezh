@@ -1,4 +1,4 @@
 melezh  ОбновитьКлючОбработчика ^
   --proj "/proj.melezh" ^
-  --handler "f967605e6" ^
+  --handler "cd7429c38" ^
   --key "***"

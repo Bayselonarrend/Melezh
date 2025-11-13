@@ -1100,7 +1100,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function EnableRequestsHandler(Val Project, Val HandlersKey) Export
+Function EnableSheduledTask(Val Project, Val HandlersKey) Export
 
     Return SwitchScheduledTask(Project, HandlersKey, True);
 
@@ -1115,7 +1115,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function DisableRequestsHandler(Val Project, Val HandlersKey) Export
+Function DisableSheduledTask(Val Project, Val HandlersKey) Export
 
     Return SwitchScheduledTask(Project, HandlersKey, False);
 
@@ -1627,7 +1627,7 @@ EndFunction
 
 Function SwitchScheduledTask(Val Project, Val TaskID, Val Activity)
 
-    OPI_TypeConversion.GetLine(HandlersKey);
+    OPI_TypeConversion.GetLine(TaskID);
     OPI_TypeConversion.GetBoolean(Activity);
 
     Result = CheckProjectExistence(Project);

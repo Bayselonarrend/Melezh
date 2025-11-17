@@ -1100,7 +1100,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function EnableSheduledTask(Val Project, Val HandlersKey) Export
+Function EnableScheduledTask(Val Project, Val HandlersKey) Export
 
     Return SwitchScheduledTask(Project, HandlersKey, True);
 
@@ -1115,7 +1115,7 @@ EndFunction
 //
 // Returns:
 // Structure Of KeyAndValue - Switching result
-Function DisableSheduledTask(Val Project, Val HandlersKey) Export
+Function DisableScheduledTask(Val Project, Val HandlersKey) Export
 
     Return SwitchScheduledTask(Project, HandlersKey, False);
 

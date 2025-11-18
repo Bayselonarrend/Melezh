@@ -452,7 +452,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "EnableScheduledTask";
-    NewLine.SearchMethod = "ENABLEScheduleDTASK";
+    NewLine.SearchMethod = "ENABLESCHEDULEDTASK";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Scheduled tasks";
@@ -461,7 +461,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "EnableScheduledTask";
-    NewLine.SearchMethod = "ENABLEScheduleDTASK";
+    NewLine.SearchMethod = "ENABLESCHEDULEDTASK";
     NewLine.Parameter = "--task";
     NewLine.Description = "Task ID";
     NewLine.Region = "Scheduled tasks";
@@ -469,7 +469,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "DisableScheduledTask";
-    NewLine.SearchMethod = "DISABLEScheduleDTASK";
+    NewLine.SearchMethod = "DISABLESCHEDULEDTASK";
     NewLine.Parameter = "--proj";
     NewLine.Description = "Project filepath";
     NewLine.Region = "Scheduled tasks";
@@ -478,7 +478,7 @@ Function GetComposition() Export
 
     NewLine = CompositionTable.Add();
     NewLine.Method = "DisableScheduledTask";
-    NewLine.SearchMethod = "DISABLEScheduleDTASK";
+    NewLine.SearchMethod = "DISABLESCHEDULEDTASK";
     NewLine.Parameter = "--task";
     NewLine.Description = "Task ID";
     NewLine.Region = "Scheduled tasks";

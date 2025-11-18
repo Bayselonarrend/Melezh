@@ -1,3 +1,5 @@
+#Use oint
+#Use oint-cli
 #Use "../../tools"
 #Use "../../help"
 #Use "../../data"
@@ -110,7 +112,7 @@ Function GetProcessingResult(Val Parameters)
 
 	ElsIf Method = "libsum" Then
 
-		Return GetOintBuildHashSum();
+		Return OPI_Tools.GetLastBuildHashSum();
 
 	Else
 
@@ -153,7 +155,7 @@ Procedure ProcessJSONOutput(Output)
 		Or TypeOf(Output) = Type("Map")
 		Or TypeOf(Output) = Type("Array") Then
 	
-		Output = JSONString(Output, , , False);
+		Output = OPI_Tools.JSONString(Output, , , False);
 
 	EndIf;
 
@@ -338,72 +340,6 @@ Function RequiresProcessingOfEscapeSequences(Val ParameterName, Val ParameterVal
 				And Not StrStartsWith(ParamValueTrim, "[") 
 				And Not ParamFile.Exists() 
 				And Not ParameterName = "Parameter_out";
-
-EndFunction
-
-Function JSONString(Val Data
-    , Val Escaping = "None"
-    , Val LineBreaks = True
-    , Val DoubleQuotes = True) Export
-
-    LineBreak = ?(LineBreaks, JSONLineBreak.Windows, JSONLineBreak.None);
-
-    JSONParameters = New JSONWriterSettings(LineBreak
-        , " "
-        , DoubleQuotes
-        , JSONCharactersEscapeMode[Escaping]
-        , False
-        , False
-        , False
-        , False);
-
-    Try
-
-        JSONWriter = New JSONWriter;
-        JSONWriter.SetString(JSONParameters);
-
-        WriteJSON(JSONWriter, Data);
-        Return JSONWriter.Close();
-
-    Except
-        Return "NOT JSON: " + String(Data);
-    EndTry;
-
-EndFunction
-
-Procedure ReplaceEscapeSequences(Text) Export
-
-    Text = String(Text);
-
-    CharacterMapping = New Map;
-
-    CharacterMapping.Insert("\n" , Chars.LF);
-    CharacterMapping.Insert("\r" , Chars.CR);
-    CharacterMapping.Insert("\f" , Chars.FF);
-    CharacterMapping.Insert("\v" , Chars.VTab);
-
-    For Each Symbol In CharacterMapping Do
-
-        Text = StrReplace(Text, Symbol.Key , Symbol.Value);
-        Text = StrReplace(Text, "\" + Symbol.Value, Symbol.Key);
-
-    EndDo;
-
-EndProcedure
-
-Function GetOintBuildHashSum()
-
-	Try 
-		OPITools = LoadScript("../../../oint/tools/Modules/internal/Modules/OPI_Tools.os");
-	Except
-		OPITools = Undefined;
-	EndTry;
-
-	If OPITools <> Undefined Then
-		Return OPITools.GetLastBuildHashSum();
-	Else
-		Return "";
-	EndIf;
 
 EndFunction
 

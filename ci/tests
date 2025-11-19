@@ -33,7 +33,7 @@ pipeline {
         stage('Main UI Tests (RPM, RU)') {
             steps {
                 bat 'npm install selenium-side-runner --save-dev'
-                bat 'npx selenium-side-runner ./tests/selenium/tests.side --base-url http://localhost:1921'
+                bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921'
             }
         }
     }

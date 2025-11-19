@@ -1,6 +1,6 @@
 melezh  UpdateRequestsHandler \
   --proj "/proj.melezh" \
-  --handler "0ae50a380" \
+  --handler "44af20352" \
   --lib "vk" \
   --func "CreatePost" \
   --method "FORM"

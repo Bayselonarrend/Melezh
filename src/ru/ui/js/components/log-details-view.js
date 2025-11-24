@@ -36,12 +36,13 @@ export const logDetailsView = () => ({
     }
   },
   getStatusText(status) {
+    if (status === 0) return 'Локальный запуск';
     if (status >= 200 && status < 300) return 'Успех';
     if (status >= 400 && status < 500) return 'Клиентская ошибка';
     if (status >= 500) return 'Ошибка сервера';
     return 'Неизвестный статус';
   },
-  // Метод для отрисовки JSON
+
   renderJson(value) {
     return jsonViewer.renderValue(value, 0);
   },

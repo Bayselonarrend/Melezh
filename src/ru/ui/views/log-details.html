@@ -55,6 +55,7 @@
             <dt class="text-xs uppercase text-gray-500">Статус</dt>
             <dd class="mt-1 flex items-center">
               <span :class="{
+                'inline-block w-3 h-3 rounded-full bg-blue-500': eventData.status === 0,
                 'inline-block w-3 h-3 rounded-full bg-green-500': eventData.status >= 200 && eventData.status < 300,
                 'inline-block w-3 h-3 rounded-full bg-yellow-500': eventData.status >= 400 && eventData.status < 500,
                 'inline-block w-3 h-3 rounded-full bg-red-500': eventData.status >= 500

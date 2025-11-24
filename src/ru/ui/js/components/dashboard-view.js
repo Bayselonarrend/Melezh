@@ -124,6 +124,7 @@ export const dashboardView = () => ({
   },
 
   getStatusText(status) {
+    if (status === 0) return 'Локальный запуск';
     if (status >= 200 && status < 300) return 'Успех';
     if (status >= 400 && status < 500) return 'Клиентская ошибка';
     if (status >= 500) return 'Ошибка сервера';

@@ -111,13 +111,14 @@ export const handlerFormView = () => ({
     this.functionSearch = '';
 
     try {
-      const formData = new URLSearchParams();
-      formData.append('library', libraryName);
+      const payload = {
+        library: libraryName
+      };
 
       const response = await fetch('api/getFunctions', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const result = await handleFetchResponse(response);
@@ -202,14 +203,15 @@ export const handlerFormView = () => ({
     this.isArgsLoading = true;
 
     try {
-      const formData = new URLSearchParams();
-      formData.append('library', libraryName);
-      formData.append('function', functionName);
+      const payload = {
+        library: libraryName,
+        function: functionName
+      };
 
       const response = await fetch('api/getArgs', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       const result = await handleFetchResponse(response);

@@ -49,13 +49,23 @@
                             class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
                             ID</th>
                         <th
-                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-5/12">
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
                             Обработчик</th>
                         <th
-                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-4/12">
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
                             Расписание</th>
+                        <!-- Новые колонки для времени запуска -->
                         <th
-                            class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
+                            Последний запуск</th>
+                        <th
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
+                            Следующий запуск</th>
+                        <th
+                            class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
+                            Активность</th>
+                        <th
+                            class="px-4 py-2 text-right text-xs font-medium text-gray-500 uppercase tracking-wider w-1/12">
                             Действия</th>
                     </tr>
                 </thead>
@@ -65,6 +75,49 @@
                             <td class="px-4 py-2 text-sm font-mono" x-text="task.id"></td>
                             <td class="px-4 py-2 text-sm break-words" x-text="task.handler"></td>
                             <td class="px-4 py-2 text-sm font-mono break-words" x-text="task.cron"></td>
+                            
+                            <!-- Колонка последнего запуска -->
+                            <td class="px-4 py-2 text-sm">
+                                <div class="flex flex-col">
+                                    <span x-text="formatDateTime(task.last_launch)"></span>
+                                    <template x-if="task.last_launch && task.last_launch !== '0000-00-00 00:00:00'">
+                                        <span class="text-xs font-medium" 
+                                            :class="getLastLaunchAgo(task).class"
+                                            x-text="getLastLaunchAgo(task).text"></span>
+                                    </template>
+                                    <template x-if="!task.last_launch || task.last_launch === '0000-00-00 00:00:00'">
+                                        <span class="text-xs text-gray-500" 
+                                            x-text="getLastLaunchAgo(task).text"></span>
+                                    </template>
+                                </div>
+                            </td>
+                            
+                            <!-- Колонка следующего запуска -->
+                            <td class="px-4 py-2 text-sm">
+                                <div class="flex flex-col">
+                                    <span x-text="formatDateTime(task.next_launch)"></span>
+                                    <template x-if="task.next_launch && task.next_launch !== '0000-00-00 00:00:00'">
+                                        <span class="text-xs font-medium" 
+                                            :class="getNextLaunchStatus(task).class"
+                                            x-text="getNextLaunchStatus(task).text"></span>
+                                    </template>
+                                    <template x-if="!task.next_launch || task.next_launch === '0000-00-00 00:00:00'">
+                                        <span class="text-xs text-gray-500" 
+                                            x-text="getNextLaunchStatus(task).text"></span>
+                                    </template>
+                                </div>
+                            </td>
+                            
+                            <!-- Ячейка с переключателем активности -->
+                            <td class="px-4 py-2 whitespace-nowrap">
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" @change="toggleTaskStatus(task)" :checked="task.active == 1"
+                                        class="sr-only peer">
+                                    <div
+                                        class="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-green-600">
+                                    </div>
+                                </label>
+                            </td>
                             <td class="px-4 py-2 whitespace-nowrap text-right text-sm">
                                 <div class="flex items-center justify-end gap-1">
                                     <button @click="openEditModal(task)" x-tooltip="'Редактировать'"

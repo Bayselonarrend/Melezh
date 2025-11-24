@@ -6,7 +6,8 @@ use std::thread;
 use cron::Schedule;
 use crossbeam_channel::{unbounded, Receiver, Sender};
 use std::str::FromStr;
-use chrono::{DateTime, Utc};
+use chrono::{DateTime, Local};
+use serde_json::{json, Value};
 use tokio::sync::{Mutex, RwLock};
 use tokio::task::JoinHandle;
 use tokio::time::sleep;
@@ -17,15 +18,13 @@ pub struct CronEvent {
     pub schedule: Schedule,
 }
 
-// Состояние отдельной задачи
 struct JobState {
     event: CronEvent,
-    last_triggered: Option<DateTime<Utc>>,
+    last_triggered: Option<DateTime<Local>>,
     is_active: bool,
     task_handle: Option<JoinHandle<()>>,
 }
 
-// Основной планировщик с управлением задачами
 pub struct CronScheduler {
     control_sender: Sender<JobControlMessage>,
     event_sender: Sender<String>,
@@ -33,7 +32,6 @@ pub struct CronScheduler {
     jobs: Arc<RwLock<HashMap<String, JobState>>>,
 }
 
-// Сообщения для управления задачами
 enum JobControlMessage {
     AddJob(String, CronEvent),
     RemoveJob(String),
@@ -81,10 +79,9 @@ impl CronScheduler {
     }
 
     pub fn get_event_sender_clone(&self) -> Sender<String> {
-        self.event_sender.clone() // Возвращаем клон отправителя
+        self.event_sender.clone()
     }
 
-    // Добавить новую задачу
     pub fn add_job(&self, name: &str, schedule_str: &str) -> Result<(), Box<dyn std::error::Error>> {
         let schedule = Schedule::from_str(schedule_str)?;
         let event = CronEvent {
@@ -100,7 +97,6 @@ impl CronScheduler {
         Ok(())
     }
 
-    // Удалить задачу
     pub fn remove_job(&self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         self.control_sender.send(JobControlMessage::RemoveJob(
             name.to_string(),
@@ -108,7 +104,6 @@ impl CronScheduler {
         Ok(())
     }
 
-    // Обновить расписание задачи
     pub fn update_job_schedule(&self, name: &str, new_schedule_str: &str) -> Result<(), Box<dyn std::error::Error>> {
         let new_schedule = Schedule::from_str(new_schedule_str)?;
         self.control_sender.send(JobControlMessage::UpdateJob(
@@ -118,7 +113,6 @@ impl CronScheduler {
         Ok(())
     }
 
-    // Временно отключить задачу
     pub fn disable_job(&self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         self.control_sender.send(JobControlMessage::DisableJob(
             name.to_string(),
@@ -126,7 +120,6 @@ impl CronScheduler {
         Ok(())
     }
 
-    // Включить задачу
     pub fn enable_job(&self, name: &str) -> Result<(), Box<dyn std::error::Error>> {
         self.control_sender.send(JobControlMessage::EnableJob(
             name.to_string(),
@@ -134,15 +127,40 @@ impl CronScheduler {
         Ok(())
     }
 
-    // Получить список активных задач
-    pub fn get_job_list(&self) -> Result<Vec<String>, Box<dyn std::error::Error>> {
+    pub fn get_job_list(&self) -> Result<Vec<Value>, Box<dyn std::error::Error>> {
         let rt = tokio::runtime::Builder::new_current_thread()
             .enable_all()
             .build()?;
 
         rt.block_on(async {
             let jobs = self.jobs.read().await;
-            Ok(jobs.keys().cloned().collect())
+            let mut job_list = Vec::new();
+
+            for (name, job_state) in jobs.iter() {
+                let next_launch = if job_state.is_active {
+                    job_state.event.schedule
+                        .upcoming(Local)
+                        .next()
+                        .map(|dt| dt.to_rfc3339())
+                        .unwrap_or_else(|| "Never".to_string())
+                } else {
+                    "Disabled".to_string()
+                };
+
+                let job_info = json!({
+                    "name": name,
+                    "schedule": job_state.event.schedule.to_string(),
+                    "next_launch": next_launch,
+                    "last_triggered": job_state.last_triggered
+                        .map(|dt| dt.to_rfc3339())
+                        .unwrap_or_else(|| "Never".to_string()),
+                    "is_active": job_state.is_active
+                });
+
+                job_list.push(job_info);
+            }
+
+            Ok(job_list)
         })
     }
 
@@ -163,7 +181,6 @@ impl CronScheduler {
             Self::queue_processor(queue_processor_queue, queue_processor_event_sender).await;
         });
 
-        // Обрабатываем сообщения управления
         while let Ok(message) = control_receiver.recv() {
             match message {
                 JobControlMessage::AddJob(name, event) => {
@@ -178,13 +195,18 @@ impl CronScheduler {
                     Self::stop_job(name, Arc::clone(&jobs)).await;
                 }
                 JobControlMessage::UpdateJob(name, new_schedule) => {
-                    Self::update_job(name, new_schedule, Arc::clone(&jobs)).await;
+                    Self::update_job(
+                        name,
+                        new_schedule,
+                        Arc::clone(&jobs),
+                        Arc::clone(&event_queue)
+                    ).await;
                 }
                 JobControlMessage::DisableJob(name) => {
-                    Self::set_job_active_status(name, false, Arc::clone(&jobs)).await;
+                    Self::disable_job_internal(name, Arc::clone(&jobs)).await;
                 }
                 JobControlMessage::EnableJob(name) => {
-                    Self::set_job_active_status(name, true, Arc::clone(&jobs)).await;
+                    Self::enable_job_internal(name, Arc::clone(&jobs)).await;
                 }
                 JobControlMessage::Shutdown => {
                     break;
@@ -199,16 +221,16 @@ impl CronScheduler {
         jobs: Arc<RwLock<HashMap<String, JobState>>>,
         event_queue: Arc<Mutex<Vec<String>>>,
     ) {
-
         let event_for_task = event.clone();
         let event_sender_clone = event_queue.clone();
+        let jobs_clone = Arc::clone(&jobs);
 
         let task_handle = tokio::spawn(async move {
-            Self::schedule_watcher(event_for_task, event_sender_clone).await;
+            Self::schedule_watcher(event_for_task, event_sender_clone, jobs_clone).await;
         });
 
         let job_state = JobState {
-            event, // оригинальный event используется здесь
+            event,
             last_triggered: None,
             is_active: true,
             task_handle: Some(task_handle),
@@ -229,57 +251,120 @@ impl CronScheduler {
         name: String,
         new_schedule: Schedule,
         jobs: Arc<RwLock<HashMap<String, JobState>>>,
+        event_queue: Arc<Mutex<Vec<String>>>,
     ) {
         if let Some(job_state) = jobs.write().await.get_mut(&name) {
-            // Останавливаем старую задачу
             if let Some(handle) = job_state.task_handle.take() {
                 handle.abort();
             }
 
-            // Обновляем расписание
             job_state.event.schedule = new_schedule;
             job_state.last_triggered = None;
+
+            let event_for_task = job_state.event.clone();
+            let event_queue_clone = Arc::clone(&event_queue);
+            let jobs_clone = Arc::clone(&jobs);
+
+            let task_handle = tokio::spawn(async move {
+                Self::schedule_watcher(event_for_task, event_queue_clone, jobs_clone).await;
+            });
+
+            job_state.task_handle = Some(task_handle);
         }
     }
 
-    async fn set_job_active_status(
+    async fn disable_job_internal(
         name: String,
-        is_active: bool,
         jobs: Arc<RwLock<HashMap<String, JobState>>>,
     ) {
         if let Some(job_state) = jobs.write().await.get_mut(&name) {
-            job_state.is_active = is_active;
+            job_state.is_active = false;
+        }
+    }
+
+    async fn enable_job_internal(
+        name: String,
+        jobs: Arc<RwLock<HashMap<String, JobState>>>,
+    ) {
+        if let Some(job_state) = jobs.write().await.get_mut(&name) {
+            job_state.is_active = true;
         }
     }
 
     async fn schedule_watcher(
         event: CronEvent,
         event_queue: Arc<Mutex<Vec<String>>>,
+        jobs: Arc<RwLock<HashMap<String, JobState>>>,
     ) {
         let event_name = event.name.clone();
-        let mut last_triggered = None::<DateTime<Utc>>;
 
         loop {
-            let now: DateTime<Utc> = Utc::now();
+            {
+                let jobs_read = jobs.read().await;
+                match jobs_read.get(&event_name) {
+                    Some(job_state) if job_state.is_active => {}
+                    Some(_) => {
+                        return;
+                    }
+                    None => {
+                        return;
+                    }
+                }
+            }
 
-            if let Some(upcoming) = event.schedule.after(&now).next() {
+            let now: DateTime<Local> = Local::now();
+
+            if let Some(upcoming) = event.schedule.upcoming(Local).next() {
                 let duration_until = upcoming - now;
 
                 if duration_until.num_seconds() > 0 {
-                    sleep(Duration::from_secs(duration_until.num_seconds() as u64)).await;
+                    let wait_until = Local::now() + Duration::from_secs(duration_until.num_seconds() as u64);
 
-                    let should_trigger = match last_triggered {
-                        Some(last) => {
-                            let time_since_last = Utc::now() - last;
-                            time_since_last.num_seconds() >= duration_until.num_seconds()
+                    while Local::now() < wait_until {
+                        sleep(Duration::from_millis(100)).await;
+
+                        // Проверяем, не отключили ли задачу
+                        let jobs_read = jobs.read().await;
+                        match jobs_read.get(&event_name) {
+                            Some(job_state) if !job_state.is_active => return,
+                            None => return,
+                            _ => {}
                         }
-                        None => true,
+                    }
+
+                    sleep(Duration::from_millis(50)).await;
+
+                    let should_trigger = {
+                        let jobs_read = jobs.read().await;
+                        if let Some(job_state) = jobs_read.get(&event_name) {
+                            if !job_state.is_active {
+                                false // Задача отключена
+                            } else {
+                                match job_state.last_triggered {
+                                    Some(last) => {
+                                        let time_since_last = Local::now() - last;
+                                        time_since_last.num_seconds() >= duration_until.num_seconds()
+                                    }
+                                    None => true,
+                                }
+                            }
+                        } else {
+                            false
+                        }
                     };
 
                     if should_trigger {
                         event_queue.lock().await.push(event_name.clone());
-                        last_triggered = Some(Utc::now());
+
+                        {
+                            let mut jobs_write = jobs.write().await;
+                            if let Some(job_state) = jobs_write.get_mut(&event_name) {
+                                job_state.last_triggered = Some(Local::now());
+                            }
+                        }
                     }
+                } else {
+                    sleep(Duration::from_millis(100)).await;
                 }
             }
 

@@ -1,4 +1,3 @@
-// #melezh_base_path#js/components/scheduler-view.js
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const schedulerView = () => ({
@@ -223,31 +222,184 @@ export const schedulerView = () => ({
         }
     },
 
-    deleteTask(task) {
+    async deleteTask(task) {
         if (!confirm(`Вы уверены, что хотите удалить задачу с ID "${task.id}"?`)) return;
 
-        const formData = new URLSearchParams();
-        formData.append('id', task.id);
+        try {
+            const payload = {
+                id: task.id
+            };
 
-        fetch('api/deleteSchedulerTask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData
-        })
-            .then(async (response) => {
-                const result = await handleFetchResponse(response);
-                if (!result.success) throw new Error(result.message);
-
-                this.tasks = this.tasks.filter(t => t.id !== task.id);
-                window.dispatchEvent(new CustomEvent('show-success', {
-                    detail: { message: `Задача ID "${task.id}" удалена` }
-                }));
-            })
-            .catch((error) => {
-                window.dispatchEvent(new CustomEvent('show-error', {
-                    detail: { message: `Ошибка при удалении задачи ID "${task.id}": ${error.message}` }
-                }));
+            const response = await fetch('api/deleteSchedulerTask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
+
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+
+            this.tasks = this.tasks.filter(t => t.id !== task.id);
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { message: `Задача ID "${task.id}" удалена` }
+            }));
+        } catch (error) {
+            window.dispatchEvent(new CustomEvent('show-error', {
+                detail: { message: `Ошибка при удалении задачи ID "${task.id}": ${error.message}` }
+            }));
+        }
+    },
+
+    // Новый метод для переключения статуса задачи
+    async toggleTaskStatus(task) {
+        const newStatus = task.active == 1 ? 0 : 1;
+
+        try {
+            const payload = {
+                id: task.id,
+                active: newStatus
+            };
+
+            const response = await fetch('api/updateSchedulerTaskStatus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+
+            // Обновляем данные задачи после успешного изменения статуса
+            await this.refreshTaskData(task);
+
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { 
+                    message: `Статус задачи "${task.id}" изменён на ${newStatus === 1 ? '"Активная"' : '"Неактивная"'}`
+                }
+            }));
+        } catch (error) {
+            console.error('Ошибка изменения статуса:', error);
+            window.dispatchEvent(new CustomEvent('show-error', {
+                detail: { 
+                    message: `Ошибка изменения статуса задачи "${task.id}": ${error.message}`
+                }
+            }));
+            // Возвращаем предыдущее значение в случае ошибки
+            task.active = task.active == 1 ? 0 : 1;
+        }
+    },
+
+    // Новый метод для обновления данных конкретной задачи
+    async refreshTaskData(task) {
+        try {
+            const response = await fetch('api/getSchedulerTasks');
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+            
+            const updatedTasks = Array.isArray(result.data) ? result.data : [];
+            const updatedTask = updatedTasks.find(t => t.id === task.id);
+            
+            if (updatedTask) {
+                // Обновляем только необходимые поля
+                task.active = updatedTask.active;
+                task.last_launch = updatedTask.last_launch;
+                task.next_launch = updatedTask.next_launch;
+                task.cron = updatedTask.cron;
+                task.handler = updatedTask.handler;
+            }
+        } catch (error) {
+            console.error('Ошибка обновления данных задачи:', error);
+            // В случае ошибки просто перезагружаем весь список
+            await this.loadTasks();
+        }
+    },
+
+    // Метод для форматирования даты
+    formatDateTime(dateString) {
+        if (!dateString || dateString === '0000-00-00 00:00:00' || dateString === 'Never' || dateString === 'Disabled') {
+            return '-';
+        }
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return '-';
+            }
+            
+            return date.toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        } catch (error) {
+            console.error('Ошибка форматирования даты:', error);
+            return '-';
+        }
+    },
+
+    // Метод для расчета прошедшего времени с последнего запуска
+    getLastLaunchAgo(task) {
+        if (!task.last_launch || task.last_launch === '0000-00-00 00:00:00' || task.last_launch === 'Never' || task.last_launch === 'Disabled') {
+            return { text: 'Никогда', class: 'text-gray-500' };
+        }
+        
+        try {
+            const lastLaunch = new Date(task.last_launch);
+            const now = new Date();
+            
+            if (isNaN(lastLaunch.getTime())) {
+                return { text: 'Ошибка даты', class: 'text-red-500' };
+            }
+            
+            const diffMs = now - lastLaunch;
+            const diffSeconds = Math.floor(diffMs / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSeconds < 60) {
+                return { text: `${diffSeconds} сек назад`, class: 'text-green-600 font-semibold' };
+            } else if (diffMinutes < 60) {
+                return { text: `${diffMinutes} мин назад`, class: 'text-green-600' };
+            } else if (diffHours < 24) {
+                return { text: `${diffHours} ч назад`, class: 'text-blue-600' };
+            } else {
+                return { text: `${diffDays} д назад`, class: 'text-gray-600' };
+            }
+        } catch (error) {
+            console.error('Ошибка расчета времени:', error);
+            return { text: 'Ошибка', class: 'text-red-500' };
+        }
+    },
+
+    // Метод для определения статуса следующего запуска
+    getNextLaunchStatus(task) {
+        if (!task.next_launch || task.next_launch === '0000-00-00 00:00:00' || task.next_launch === 'Never' || task.next_launch === 'Disabled') {
+            return { text: 'Не запланирован', class: 'text-gray-500' };
+        }
+        
+        const nextLaunch = new Date(task.next_launch);
+        const now = new Date();
+        
+        if (nextLaunch < now) {
+            return { text: 'Просрочен', class: 'text-red-600 font-semibold' };
+        }
+        
+        const diffMs = nextLaunch - now;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        
+        if (diffHours < 1) {
+            const diffMinutes = Math.floor(diffMs / (1000 * 60));
+            return { text: `Через ${diffMinutes} мин`, class: 'text-green-600' };
+        } else if (diffHours < 24) {
+            return { text: `Через ${diffHours} ч`, class: 'text-green-600' };
+        } else {
+            const diffDays = Math.floor(diffHours / 24);
+            return { text: `Через ${diffDays} д`, class: 'text-blue-600' };
+        }
     },
 
     handleImageError(event) {

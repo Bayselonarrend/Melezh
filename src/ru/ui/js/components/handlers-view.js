@@ -63,14 +63,15 @@ export const handlersView = () => ({
     const newStatus = handler.active == 1 ? 0 : 1;
 
     try {
-      const formData = new URLSearchParams();
-      formData.append('key', handler.key);
-      formData.append('active', newStatus);
+      const payload = {
+        key: handler.key,
+        active: newStatus
+      };
 
       const response = await fetch('api/updateStatus', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
@@ -93,14 +94,15 @@ export const handlersView = () => ({
   },
 
   async editHandler(handler) {
-    const formData = new URLSearchParams();
-    formData.append('key', handler.key);
-
     try {
+      const payload = {
+        key: handler.key
+      };
+
       const response = await fetch('api/getHandler', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: formData
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
 
       if (!response.ok) throw new Error('Ошибка загрузки');
@@ -127,31 +129,32 @@ export const handlersView = () => ({
     return `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
   },
 
-  deleteHandler(handler) {
+  async deleteHandler(handler) {
     if (!confirm(`Вы уверены, что хотите удалить обработчик "${handler.key}"?`)) return;
 
-    const formData = new URLSearchParams();
-    formData.append('key', handler.key);
+    try {
+      const payload = {
+        key: handler.key
+      };
 
-    fetch('api/deleteHandler', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-      body: formData
-    })
-      .then(async (response) => {
-        const result = await handleFetchResponse(response);
-        if (!result.success) throw new Error(result.message);
-
-        this.handlers = this.handlers.filter(h => h.key !== handler.key);
-        window.dispatchEvent(new CustomEvent('show-success', {
-          detail: { message: `Обработчик "${handler.key}" удален` }
-        }));
-      })
-      .catch((error) => {
-        window.dispatchEvent(new CustomEvent('show-error', {
-          detail: { message: `Ошибка при удалении "${handler.key}": ${error.message}` }
-        }));
+      const response = await fetch('api/deleteHandler', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
       });
+
+      const result = await handleFetchResponse(response);
+      if (!result.success) throw new Error(result.message);
+
+      this.handlers = this.handlers.filter(h => h.key !== handler.key);
+      window.dispatchEvent(new CustomEvent('show-success', {
+        detail: { message: `Обработчик "${handler.key}" удален` }
+      }));
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent('show-error', {
+        detail: { message: `Ошибка при удалении "${handler.key}": ${error.message}` }
+      }));
+    }
   },
 
   handleImageError(event) {

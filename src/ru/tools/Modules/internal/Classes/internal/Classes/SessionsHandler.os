@@ -124,8 +124,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(ConnectionManager_, SettingsVault_) Export

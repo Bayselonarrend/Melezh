@@ -213,9 +213,6 @@ EndFunction
 
 #EndRegion
 
-
-
-
 #Region Alternate
 
 Procedure Инициализировать(СтруктураИнициализации) Export

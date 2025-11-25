@@ -494,8 +494,6 @@ EndProcedure
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(ОбъектОПИ_, ХранилищеНастроек_, КаталогРасширений_, ПроцессорДействий_) Export

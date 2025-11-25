@@ -88,8 +88,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(ПутьСервера_, ОбработчикСеансов_, ХранилищеНастроек_) Export

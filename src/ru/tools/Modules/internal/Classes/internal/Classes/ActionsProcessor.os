@@ -417,8 +417,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_) Export

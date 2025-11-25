@@ -96,8 +96,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Function CreateConnectionRO(Val Path) Export

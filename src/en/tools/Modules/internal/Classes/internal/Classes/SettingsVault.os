@@ -105,9 +105,6 @@ EndProcedure
 
 #EndRegion
 
-
-
-
 #Region Alternate
 
 Procedure Инициализировать(МенеджерСоединений_, МодульПрокси_) Export

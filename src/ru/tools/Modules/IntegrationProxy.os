@@ -1742,8 +1742,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Function CreateProject(Val Path) Export

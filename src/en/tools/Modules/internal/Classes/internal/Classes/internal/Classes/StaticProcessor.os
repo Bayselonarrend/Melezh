@@ -138,8 +138,6 @@ EndProcedure
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(ХранилищеНастроек_, ПутьСервера_) Export

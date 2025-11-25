@@ -105,9 +105,6 @@
 
 #КонецОбласти
 
-
-
-
 #Region Alternate
 
 Procedure Initialize(ConnectionManager_, ProxyModule_) Export

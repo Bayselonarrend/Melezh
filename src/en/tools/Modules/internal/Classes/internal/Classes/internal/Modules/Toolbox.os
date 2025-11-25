@@ -96,8 +96,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Function СоздатьСоединениеRO(Val Путь) Export

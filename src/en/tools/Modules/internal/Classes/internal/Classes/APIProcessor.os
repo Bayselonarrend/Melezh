@@ -1129,8 +1129,6 @@ EndProcedure
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(СтруктураИнициализации) Export

@@ -149,8 +149,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(InitializationStructure) Export

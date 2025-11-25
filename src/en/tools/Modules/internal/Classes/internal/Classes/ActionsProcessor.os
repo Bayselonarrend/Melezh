@@ -417,8 +417,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(ОбъектОПИ_, МодульПрокси_, МенеджерСоединений_, Логгер_, ХранилищеНастроек_) Export

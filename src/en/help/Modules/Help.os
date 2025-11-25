@@ -233,8 +233,6 @@ EndProcedure
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure ВывестиНачальнуюСтраницу(Val Версия) Export

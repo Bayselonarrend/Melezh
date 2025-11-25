@@ -29,8 +29,6 @@ Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) E
 
 EndFunction
 
-
-
 #Region Alternate
 
 Function ПолучитьФайлИзКаталога(Val Каталог, Val ИмяФайла, Val MIME, Val Контекст) Export

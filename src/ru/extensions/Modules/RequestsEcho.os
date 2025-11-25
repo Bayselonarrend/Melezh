@@ -41,8 +41,6 @@
 
 КонецФункции
 
-
-
 #Region Alternate
 
 Function FieldsEcho(Val Field1, Val Field2, Val Field3 = "") Export

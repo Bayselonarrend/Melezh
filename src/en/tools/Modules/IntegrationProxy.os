@@ -1742,8 +1742,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Function СоздатьПроект(Val Путь) Export

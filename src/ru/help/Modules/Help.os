@@ -233,8 +233,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure DisplayStartPage(Val Version) Export

@@ -28,8 +28,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(ПутьПроекта_) Export

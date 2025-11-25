@@ -28,8 +28,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(ProjectPath_) Export

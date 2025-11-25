@@ -124,8 +124,6 @@ EndFunction
 
 #EndRegion
 
-
-
 #Region Alternate
 
 Procedure Инициализировать(МенеджерСоединений_, ХранилищеНастроек_) Export

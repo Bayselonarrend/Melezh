@@ -29,8 +29,6 @@
 
 КонецФункции
 
-
-
 #Region Alternate
 
 Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) Export

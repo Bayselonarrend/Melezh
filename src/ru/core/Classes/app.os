@@ -361,8 +361,6 @@
 
 КонецПопытки;
 
-
-
 #Region Alternate
 
 

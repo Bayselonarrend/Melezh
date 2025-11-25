@@ -341,9 +341,6 @@
 
 #КонецОбласти
 
-
-
-
 #Region Alternate
 
 Procedure Initialize(SettingsVault_) Export

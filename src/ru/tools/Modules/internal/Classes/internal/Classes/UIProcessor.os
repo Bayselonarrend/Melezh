@@ -88,8 +88,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export

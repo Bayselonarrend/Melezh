@@ -494,8 +494,6 @@
 
 #КонецОбласти
 
-
-
 #Region Alternate
 
 Procedure Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_, ActionsProcessor_) Export

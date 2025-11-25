@@ -41,8 +41,6 @@ Function ReturnDataByURL(Val URL) Export
 
 EndFunction
 
-
-
 #Region Alternate
 
 Function ЭхоПолей(Val Поле1, Val Поле2, Val Поле3 = "") Export

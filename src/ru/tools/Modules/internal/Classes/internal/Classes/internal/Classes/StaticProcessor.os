@@ -137,3 +137,23 @@
 КонецПроцедуры
 
 #КонецОбласти
+
+#Region Alternate
+
+Procedure Initialize(SettingsVault_, ServerPath_) Export
+	Инициализировать(SettingsVault_, ServerPath_);
+EndProcedure
+
+Function ReturnStatic(Val Path, Val Context) Export
+	Return ВернутьСтатику(Path, Context);
+EndFunction
+
+Function Redirection(Val Path, Val Context) Export
+	Return Перенаправление(Path, Context);
+EndFunction
+
+Function WriteFileInResponse(Path, Context) Export
+	Return ЗаписатьФайлВОтвет(Path, Context);
+EndFunction
+
+#EndRegion

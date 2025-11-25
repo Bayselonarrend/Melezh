@@ -416,3 +416,32 @@ EndFunction
 #EndRegion
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ОбъектОПИ_, МодульПрокси_, МенеджерСоединений_, Логгер_, ХранилищеНастроек_) Export
+	Initialize(ОбъектОПИ_, МодульПрокси_, МенеджерСоединений_, Логгер_, ХранилищеНастроек_);
+EndProcedure
+
+Function ОсновнаяОбработка(Val Контекст, Val Путь) Export
+	Return MainHandle(Контекст, Путь);
+EndFunction
+
+Function ВыполнитьУниверсальнуюОбработку(Контекст, Обработчик, Параметры, ТелоЗапроса, Путь) Export
+	Return PerformUniversalProcessing(Контекст, Обработчик, Параметры, ТелоЗапроса, Путь);
+EndFunction
+
+Procedure ПодключитьСценарийРасширения(Val Путь, Val Имя) Export
+	ConnectExtensionScript(Путь, Имя);
+EndProcedure
+
+Procedure ОчиститьСписокАктивныхРасширений() Export
+	ClearActiveExtensionsList();
+EndProcedure
+
+Function ВызватьОбработчик(Val Путь, Val Параметры) Export
+	Return CallHandler(Путь, Параметры);
+EndFunction
+
+#EndRegion

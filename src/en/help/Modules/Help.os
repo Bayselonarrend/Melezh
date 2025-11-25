@@ -232,3 +232,24 @@ Procedure HandleHelpTabulation(ParametersTable)
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure ВывестиНачальнуюСтраницу(Val Версия) Export
+	DisplayStartPage(Версия);
+EndProcedure
+
+Procedure ВывестиСправкуПоМетодам(Val ТаблицаПараметров) Export
+	DisplayMethodHelp(ТаблицаПараметров);
+EndProcedure
+
+Procedure ВывестиСправкуПоПараметрам(Val ТаблицаПараметров) Export
+	DisplayParameterHelp(ТаблицаПараметров);
+EndProcedure
+
+Procedure ВывестиСообщениеИсключения(Val Причина, Val ФайлВывода = "") Export
+	DisplayExceptionMessage(Причина, ФайлВывода);
+EndProcedure
+
+#EndRegion

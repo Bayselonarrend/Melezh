@@ -56,7 +56,7 @@ export const schedulerView = () => ({
             if (!result.success) throw new Error(result.message);
             this.handlers = result.data || [];
         } catch (error) {
-            this.createError = `Failed to fetch aboutрабoтhandtooin: ${error.message}`;
+            this.createError = `Handler loading error: ${error.message}`;
         } finally {
             this.isHandlersLoading = false;
         }
@@ -77,7 +77,7 @@ export const schedulerView = () => ({
             if (!result.success) throw new Error(result.message);
             this.handlers = result.data || [];
         } catch (error) {
-            this.editError = `Failed to fetch aboutрабoтhandtooin: ${error.message}`;
+            this.editError = `Handler loading error: ${error.message}`;
         } finally {
             this.isHandlersLoading = false;
         }
@@ -137,7 +137,7 @@ export const schedulerView = () => ({
 
     async createTask() {
         if (!this.selectedHandlerKey) {
-            this.createError = 'Inыберandте aboutрабoтhandto';
+            this.createError = 'Choose handler';
             return;
         }
 
@@ -180,7 +180,7 @@ export const schedulerView = () => ({
 
     async updateTask() {
         if (!this.selectedHandlerKey) {
-            this.editError = 'Inыберandте aboutрабoтhandto';
+            this.editError = 'Choose handler';
             return;
         }
 
@@ -269,12 +269,11 @@ export const schedulerView = () => ({
             const result = await handleFetchResponse(response);
             if (!result.success) throw new Error(result.message);
 
-            // Обbutinляем Data of topic after successfullyгo change of status
             await this.refreshTaskData(task);
 
             window.dispatchEvent(new CustomEvent('show-success', {
                 detail: { 
-                    message: `Task status "${task.id}" changeенён to ${newStatus === 1 ? '"Atoтandintoя"' : '"Notаtoтandintoя"'}`
+                    message: `Task status "${task.id}" changed to ${newStatus === 1 ? '"Active"' : '"Inactive"'}`
                 }
             }));
         } catch (error) {
@@ -284,7 +283,6 @@ export const schedulerView = () => ({
                     message: `Error changing task status "${task.id}": ${error.message}`
                 }
             }));
-            // Inoзinращаем преdыdущее value in withлуhае errors
             task.active = task.active == 1 ? 0 : 1;
         }
     },
@@ -336,10 +334,9 @@ export const schedulerView = () => ({
         }
     },
 
-    // Method for раwithhета прoшеdшегo inременand with of last start
     getLastLaunchAgo(task) {
         if (!task.last_launch || task.last_launch === '0000-00-00 00:00:00' || task.last_launch === 'Never' || task.last_launch === 'Disabled') {
-            return { text: 'Nandtooгdа', class: 'text-gray-500' };
+            return { text: 'Never', class: 'text-gray-500' };
         }
         
         try {
@@ -357,13 +354,13 @@ export const schedulerView = () => ({
             const diffDays = Math.floor(diffHours / 24);
             
             if (diffSeconds < 60) {
-                return { text: `${diffSeconds} sec toзаd`, class: 'text-green-600 font-semibold' };
+                return { text: `${diffSeconds} sec ago`, class: 'text-green-600 font-semibold' };
             } else if (diffMinutes < 60) {
-                return { text: `${diffMinutes} min toзаd`, class: 'text-green-600' };
+                return { text: `${diffMinutes} min ago`, class: 'text-green-600' };
             } else if (diffHours < 24) {
-                return { text: `${diffHours} h toзаd`, class: 'text-blue-600' };
+                return { text: `${diffHours} hr ago`, class: 'text-blue-600' };
             } else {
-                return { text: `${diffDays} d toзаd`, class: 'text-gray-600' };
+                return { text: `${diffDays} day ago`, class: 'text-gray-600' };
             }
         } catch (error) {
             console.error('Time calculation error:', error);
@@ -371,7 +368,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // Method for definitions of status withлеdующегo start
     getNextLaunchStatus(task) {
         if (!task.next_launch || task.next_launch === '0000-00-00 00:00:00' || task.next_launch === 'Never' || task.next_launch === 'Disabled') {
             return { text: 'Not scheduled', class: 'text-gray-500' };

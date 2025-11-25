@@ -1,4 +1,4 @@
-﻿// MIT License
+// MIT License
 
 // Copyright (c) 2025 Anton Tsitavets
 
@@ -212,3 +212,16 @@
 КонецФункции
 
 #КонецОбласти
+
+
+#Region Alternate
+
+Procedure Initialize(InitializationStructure) Export
+	Инициализировать(InitializationStructure);
+EndProcedure
+
+Procedure MainHandle(Context, NextHandler) Export
+	ОсновнаяОбработка(Context, NextHandler);
+EndProcedure
+
+#EndRegion

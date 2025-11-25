@@ -212,3 +212,16 @@ Function GetRequestPath(Context, BasePath)
 EndFunction
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(СтруктураИнициализации) Export
+	Initialize(СтруктураИнициализации);
+EndProcedure
+
+Procedure ОсновнаяОбработка(Контекст, СледующийОбработчик) Export
+	MainHandle(Контекст, СледующийОбработчик);
+EndProcedure
+
+#EndRegion

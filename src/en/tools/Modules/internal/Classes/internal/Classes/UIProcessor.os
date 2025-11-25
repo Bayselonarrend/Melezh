@@ -87,3 +87,16 @@ Function AuthorizeSession(Context)
 EndFunction
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ПутьСервера_, ОбработчикСеансов_, ХранилищеНастроек_) Export
+	Initialize(ПутьСервера_, ОбработчикСеансов_, ХранилищеНастроек_);
+EndProcedure
+
+Function ОсновнаяОбработка(Val Контекст, Val Путь) Export
+	Return MainHandle(Контекст, Путь);
+EndFunction
+
+#EndRegion

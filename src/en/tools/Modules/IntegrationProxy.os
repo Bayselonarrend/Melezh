@@ -1741,3 +1741,124 @@ EndFunction
 #EndRegion
 
 #EndRegion
+
+
+#Region Alternate
+
+Function СоздатьПроект(Val Путь) Export
+	Return CreateProject(Путь);
+EndFunction
+
+Function ЗапуститьПроект(Val Порт, Val Проект) Export
+	Return RunProject(Порт, Проект);
+EndFunction
+
+Function ПолучитьНастройкиПроекта(Val Проект) Export
+	Return GetProjectSettings(Проект);
+EndFunction
+
+Function ЗаполнитьНастройкиПроекта(Val Проект, Val Настройки) Export
+	Return FillProjectSettings(Проект, Настройки);
+EndFunction
+
+Function УстановитьНастройкуПроекта(Val Проект, Val Настройка, Val Значение) Export
+	Return SetProjectSetting(Проект, Настройка, Значение);
+EndFunction
+
+Function СменитьПарольUI(Val Проект, Val Пароль) Export
+	Return UpdateUIPassword(Проект, Пароль);
+EndFunction
+
+Function ДобавитьОбработчикЗапросов(Val Проект, Val БиблиотекаОПИ, Val ФункцияОПИ, Val Метод = "GET") Export
+	Return AddRequestsHandler(Проект, БиблиотекаОПИ, ФункцияОПИ, Метод);
+EndFunction
+
+Function ПолучитьСписокОбработчиковЗапросов(Val Проект) Export
+	Return GetRequestsHandlersList(Проект);
+EndFunction
+
+Function ПолучитьОбработчикЗапросов(Val Проект, Val КлючОбработчика) Export
+	Return GetRequestsHandler(Проект, КлючОбработчика);
+EndFunction
+
+Function УдалитьОбработчикЗапросов(Val Проект, Val КлючОбработчика) Export
+	Return DeleteRequestsHandler(Проект, КлючОбработчика);
+EndFunction
+
+Function ИзменитьОбработчикЗапросов(Val Проект, Val КлючОбработчика, Val БиблиотекаОПИ = "", Val ФункцияОПИ = "", Val Метод = "") Export
+	Return UpdateRequestsHandler(Проект, КлючОбработчика, БиблиотекаОПИ, ФункцияОПИ, Метод);
+EndFunction
+
+Function ОтключитьОбработчикЗапросов(Val Проект, Val КлючОбработчика) Export
+	Return DisableRequestsHandler(Проект, КлючОбработчика);
+EndFunction
+
+Function ВключитьОбработчикЗапросов(Val Проект, Val КлючОбработчика) Export
+	Return EnableRequestsHandler(Проект, КлючОбработчика);
+EndFunction
+
+Function ОбновитьКлючОбработчика(Val Проект, Val КлючОбработчика, Val НовыйКлюч = "") Export
+	Return UpdateHandlersKey(Проект, КлючОбработчика, НовыйКлюч);
+EndFunction
+
+Function УстановитьОпциюОбработчика(Val Проект, Val КлючОбработчика, Val Опция, Val Значение) Export
+	Return SetHandlerOption(Проект, КлючОбработчика, Опция, Значение);
+EndFunction
+
+Function ПолучитьОпцииОбработчика(Val Проект, Val КлючОбработчика) Export
+	Return GetHandlerOption(Проект, КлючОбработчика);
+EndFunction
+
+Function УстановитьАргументОбработчика(Val Проект, Val КлючОбработчика, Val Аргумент, Val Значение, Val Строгий = True) Export
+	Return SetHandlerArgument(Проект, КлючОбработчика, Аргумент, Значение, Строгий);
+EndFunction
+
+Function ПолучитьАргументыОбработчика(Val Проект, Val КлючОбработчика) Export
+	Return GetHandlerArguments(Проект, КлючОбработчика);
+EndFunction
+
+Function ОчиститьАргументыОбработчика(Val Проект, Val КлючОбработчика) Export
+	Return ClearHandlerArguments(Проект, КлючОбработчика);
+EndFunction
+
+Function ДобавитьРегламентноеЗадание(Val Проект, Val КлючОбработчика, Val Расписание) Export
+	Return AddScheduledTask(Проект, КлючОбработчика, Расписание);
+EndFunction
+
+Function УдалитьРегламентноеЗадание(Val Проект, Val IDЗадания) Export
+	Return DeleteScheduledTask(Проект, IDЗадания);
+EndFunction
+
+Function ПолучитьСписокРегламентныхЗаданий(Val Проект) Export
+	Return GetScheduledTaskList(Проект);
+EndFunction
+
+Function ПолучитьРегламентноеЗадание(Val Проект, Val IDЗадания) Export
+	Return GetScheduledTask(Проект, IDЗадания);
+EndFunction
+
+Function ИзменитьРегламентноеЗадание(Val Проект, Val IDЗадания, Val Расписание = "", Val КлючОбработчика = "") Export
+	Return UpdateScheduledTask(Проект, IDЗадания, Расписание, КлючОбработчика);
+EndFunction
+
+Function ВключитьРегламентноеЗадание(Val Проект, Val IDЗадания) Export
+	Return EnableScheduledTask(Проект, IDЗадания);
+EndFunction
+
+Function ОтключитьРегламентноеЗадание(Val Проект, Val IDЗадания) Export
+	Return DisableScheduledTask(Проект, IDЗадания);
+EndFunction
+
+Function ПолучитьУникальныйКлючОбработчика(Путь) Export
+	Return ReceiveUniqueHandlerKey(Путь);
+EndFunction
+
+Procedure ЗапуститьВебСервер(Проект, Порт, СтруктураИнициализации) Export
+	StartWebServer(Проект, Порт, СтруктураИнициализации);
+EndProcedure
+
+Procedure ЗапуститьМенеджерРегламентныхЗаданий(Проект, СтруктураИнициализации) Export
+	StartScheduledTasksManager(Проект, СтруктураИнициализации);
+EndProcedure
+
+#EndRegion

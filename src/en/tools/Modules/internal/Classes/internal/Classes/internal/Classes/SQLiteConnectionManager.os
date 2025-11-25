@@ -27,3 +27,20 @@ Function GetRWConnection() Export
 EndFunction
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ПутьПроекта_) Export
+	Initialize(ПутьПроекта_);
+EndProcedure
+
+Function ПолучитьСоединениеRO() Export
+	Return GetROConnection();
+EndFunction
+
+Function ПолучитьСоединениеRW() Export
+	Return GetRWConnection();
+EndFunction
+
+#EndRegion

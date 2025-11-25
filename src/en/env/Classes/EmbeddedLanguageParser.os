@@ -1,4 +1,4 @@
-﻿
+
 // MIT License
 
 // Copyright (c) 2020 Tsukanov Alexander
@@ -3895,3 +3895,10 @@
 КонецПроцедуры 
 
 Инициализировать();
+
+
+#Region Alternate
+
+
+
+#EndRegion

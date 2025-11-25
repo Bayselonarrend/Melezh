@@ -95,3 +95,31 @@
 КонецФункции
 
 #КонецОбласти
+
+#Region Alternate
+
+Function CreateConnectionRO(Val Path) Export
+	Return СоздатьСоединениеRO(Path);
+EndFunction
+
+Function CreateConnectionRW(Val Path) Export
+	Return СоздатьСоединениеRW(Path);
+EndFunction
+
+Function GetJSON(Context) Export
+	Return ПолучитьJSON(Context);
+EndFunction
+
+Function HandlingError(Context, Code, Text) Export
+	Return ОшибкаОбработки(Context, Code, Text);
+EndFunction
+
+Function GetBoolean(Val Value) Export
+	Return ПолучитьБулево(Value);
+EndFunction
+
+Function StringStartsWithLetter(Val Value) Export
+	Return СтрокаНачинаетсяСБуквы(Value);
+EndFunction
+
+#EndRegion

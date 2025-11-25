@@ -340,3 +340,28 @@ Procedure WriteLogFile(LogPath, FileName, Data)
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ХранилищеНастроек_) Export
+	Initialize(ХранилищеНастроек_);
+EndProcedure
+
+Procedure ЗаписатьЛог(Контекст, Обработчик, ТелоЗапроса, Val Результат) Export
+	WriteLog(Контекст, Обработчик, ТелоЗапроса, Результат);
+EndProcedure
+
+Function ВернутьПоследниеДействия() Export
+	Return ReturnLastActions();
+EndFunction
+
+Function ВернутьДействия(Обработчик, Дата) Export
+	Return ReturnActions(Обработчик, Дата);
+EndFunction
+
+Function ВернутьЧислоЗапросов() Export
+	Return ReturnResponsesAmount();
+EndFunction
+
+#EndRegion

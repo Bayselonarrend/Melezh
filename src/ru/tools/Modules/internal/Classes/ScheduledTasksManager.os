@@ -148,3 +148,19 @@
 КонецПроцедуры
 
 #КонецОбласти
+
+#Region Alternate
+
+Procedure Initialize(InitializationStructure) Export
+	Инициализировать(InitializationStructure);
+EndProcedure
+
+Procedure Start() Export
+	Запустить();
+EndProcedure
+
+Procedure PerformHandling(Task) Export
+	ВыполнитьОбработку(Task);
+EndProcedure
+
+#EndRegion

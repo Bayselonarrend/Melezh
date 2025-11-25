@@ -95,3 +95,32 @@ Function StringStartsWithLetter(Val Value) Export
 EndFunction
 
 #EndRegion
+
+
+#Region Alternate
+
+Function СоздатьСоединениеRO(Val Путь) Export
+	Return CreateConnectionRO(Путь);
+EndFunction
+
+Function СоздатьСоединениеRW(Val Путь) Export
+	Return CreateConnectionRW(Путь);
+EndFunction
+
+Function ПолучитьJSON(Контекст) Export
+	Return GetJSON(Контекст);
+EndFunction
+
+Function ОшибкаОбработки(Контекст, Код, Текст) Export
+	Return HandlingError(Контекст, Код, Текст);
+EndFunction
+
+Function ПолучитьБулево(Val Значение) Export
+	Return GetBoolean(Значение);
+EndFunction
+
+Function СтрокаНачинаетсяСБуквы(Val Значение) Export
+	Return StringStartsWithLetter(Значение);
+EndFunction
+
+#EndRegion

@@ -148,3 +148,20 @@ Procedure PerformHandling(Task) Export
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(СтруктураИнициализации) Export
+	Initialize(СтруктураИнициализации);
+EndProcedure
+
+Procedure Запустить() Export
+	Start();
+EndProcedure
+
+Procedure ВыполнитьОбработку(Задание) Export
+	PerformHandling(Задание);
+EndProcedure
+
+#EndRegion

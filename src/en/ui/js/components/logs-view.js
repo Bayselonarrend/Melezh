@@ -65,7 +65,6 @@ export const logsView = () => ({
       this.isEventsLoading = false;
       this.isEventsLoaded = true;
 
-      // Inowithwithтаtoinлandinаем фotoуwith
       this.$nextTick(() => {
         if (focusedElement && focusedElement.tagName === 'INPUT') {
           focusedElement.focus();

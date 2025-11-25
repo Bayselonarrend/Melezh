@@ -87,3 +87,15 @@
 КонецФункции
 
 #КонецОбласти
+
+#Region Alternate
+
+Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export
+	Инициализировать(ServerPath_, SessionsHandler_, SettingsVault_);
+EndProcedure
+
+Function MainHandle(Val Context, Val Path) Export
+	Return ОсновнаяОбработка(Context, Path);
+EndFunction
+
+#EndRegion

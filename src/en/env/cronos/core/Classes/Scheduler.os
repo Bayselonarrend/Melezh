@@ -152,3 +152,9 @@
 КонецФункции
 
 #КонецОбласти
+
+#Region Alternate
+
+
+
+#EndRegion

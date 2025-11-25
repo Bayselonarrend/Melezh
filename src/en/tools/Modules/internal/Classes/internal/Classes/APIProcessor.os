@@ -1128,3 +1128,16 @@ Procedure FillAdvices()
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(СтруктураИнициализации) Export
+	Initialize(СтруктураИнициализации);
+EndProcedure
+
+Function ОсновнаяОбработка(Val Контекст, Val Путь) Export
+	Return MainHandle(Контекст, Путь);
+EndFunction
+
+#EndRegion

@@ -104,3 +104,32 @@ Procedure FillSettings(Val Forced = False)
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(МенеджерСоединений_, МодульПрокси_) Export
+	Initialize(МенеджерСоединений_, МодульПрокси_);
+EndProcedure
+
+Function ВернутьНастройкиПроектаПолные() Export
+	Return ReturnProjectSettingsFull();
+EndFunction
+
+Function ВернутьНастройкиПроектаUI() Export
+	Return ReturnProjectSettingsUI();
+EndFunction
+
+Function ВернутьНастройку(Val Имя) Export
+	Return ReturnSetting(Имя);
+EndFunction
+
+Function ВернутьБазовыйПуть() Export
+	Return ReturnBasePath();
+EndFunction
+
+Function ЗаписатьНастройкиПроекта(Val Данные) Export
+	Return WriteProjectSettings(Данные);
+EndFunction
+
+#EndRegion

@@ -493,3 +493,48 @@ Procedure HandleConnectionException(ExtensionFile, TroubleDescription, Test)
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ОбъектОПИ_, ХранилищеНастроек_, КаталогРасширений_, ПроцессорДействий_) Export
+	Initialize(ОбъектОПИ_, ХранилищеНастроек_, КаталогРасширений_, ПроцессорДействий_);
+EndProcedure
+
+Procedure ДополнитьСоставРасширениями() Export
+	CompleteCompositionWithExtensions();
+EndProcedure
+
+Function ПодключитьФайлРасширения(ФайлРасширения, Тест = False) Export
+	Return ConnectExtensionFile(ФайлРасширения, Тест);
+EndFunction
+
+Function ПолучитьСписокРасширений() Export
+	Return GetExtensionsList();
+EndFunction
+
+Function ОбновитьСписокРасширений() Export
+	Return UpdateExtensionsList();
+EndFunction
+
+Function ПолучитьТекстРасширения(ИмяМодуля) Export
+	Return GetExtensionText(ИмяМодуля);
+EndFunction
+
+Function СохранитьТекстРасширения(ИмяМодуля, ТекстМодуля) Export
+	Return SaveExtensionsText(ИмяМодуля, ТекстМодуля);
+EndFunction
+
+Function ПолучитьСписокКаталоговРасширений() Export
+	Return GetExtensionDirectoryList();
+EndFunction
+
+Function СоздатьФайлРасширения(ИмяМодуля, КаталогСоздания) Export
+	Return CreateExtensionFile(ИмяМодуля, КаталогСоздания);
+EndFunction
+
+Function УдалитьФайлРасширения(ИмяМодуля) Export
+	Return DeleteExtensionFile(ИмяМодуля);
+EndFunction
+
+#EndRegion

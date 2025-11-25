@@ -37,7 +37,6 @@ export const dashboardView = () => ({
 
       this.events = result.data || [];
 
-      // Todwithhёт withтатandwithтandtoand
       this.calculateStats();
 
     } catch (error) {

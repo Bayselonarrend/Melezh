@@ -1128,3 +1128,15 @@
 КонецПроцедуры
 
 #КонецОбласти
+
+#Region Alternate
+
+Procedure Initialize(InitializationStructure) Export
+	Инициализировать(InitializationStructure);
+EndProcedure
+
+Function MainHandle(Val Context, Val Path) Export
+	Return ОсновнаяОбработка(Context, Path);
+EndFunction
+
+#EndRegion

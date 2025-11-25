@@ -137,3 +137,24 @@ Procedure FillTypeMapping()
 EndProcedure
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(ХранилищеНастроек_, ПутьСервера_) Export
+	Initialize(ХранилищеНастроек_, ПутьСервера_);
+EndProcedure
+
+Function ВернутьСтатику(Val Путь, Val Контекст) Export
+	Return ReturnStatic(Путь, Контекст);
+EndFunction
+
+Function Перенаправление(Val Путь, Val Контекст) Export
+	Return Redirection(Путь, Контекст);
+EndFunction
+
+Function ЗаписатьФайлВОтвет(Путь, Контекст) Export
+	Return WriteFileInResponse(Путь, Контекст);
+EndFunction
+
+#EndRegion

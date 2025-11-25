@@ -82,7 +82,7 @@ export const handlersView = () => ({
       handler.active = newStatus;
 
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: `Status aboutрабoтhandtoа "${handler.key}" changeенён to ${newStatus === 1 ? '"Active"' : '"Inactive"'}` }
+        detail: { message: `Handler status "${handler.key}" changed to ${newStatus === 1 ? '"Active"' : '"Inactive"'}` }
       }));
     } catch (error) {
       console.error('Status change error:', error);
@@ -148,7 +148,7 @@ export const handlersView = () => ({
 
       this.handlers = this.handlers.filter(h => h.key !== handler.key);
       window.dispatchEvent(new CustomEvent('show-success', {
-        detail: { message: `Handler "${handler.key}" уdален` }
+        detail: { message: `Handler "${handler.key}" deleted` }
       }));
     } catch (error) {
       window.dispatchEvent(new CustomEvent('show-error', {

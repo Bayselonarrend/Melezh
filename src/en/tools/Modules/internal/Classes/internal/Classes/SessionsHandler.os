@@ -123,3 +123,24 @@ Function ProjectPassword()
 EndFunction
 
 #EndRegion
+
+
+#Region Alternate
+
+Procedure Инициализировать(МенеджерСоединений_, ХранилищеНастроек_) Export
+	Initialize(МенеджерСоединений_, ХранилищеНастроек_);
+EndProcedure
+
+Function АвторизоватьСеанс(Контекст) Export
+	Return AuthorizeSession(Контекст);
+EndFunction
+
+Function АвторизованныйСеанс(Контекст) Export
+	Return AuthorizedSession(Контекст);
+EndFunction
+
+Procedure УдалитьСеанс(Контекст) Export
+	DeleteSession(Контекст);
+EndProcedure
+
+#EndRegion

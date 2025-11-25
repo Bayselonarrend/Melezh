@@ -158,6 +158,26 @@ EndFunction
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(SettingsVault_, ServerPath_) Export
+	Initialize(SettingsVault_, ServerPath_);
+EndProcedure
+
+Function ReturnStatic(Val Path, Val Context) Export
+	Return ReturnStatic(Path, Context);
+EndFunction
+
+Function Redirection(Val Path, Val Context) Export
+	Return Redirection(Path, Context);
+EndFunction
+
+Function WriteFileInResponse(Path, Context) Export
+	Return WriteFileInResponse(Path, Context);
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

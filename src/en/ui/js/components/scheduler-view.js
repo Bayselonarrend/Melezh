@@ -250,7 +250,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // New method for переkeyенandя of status of topic
     async toggleTaskStatus(task) {
         const newStatus = task.active == 1 ? 0 : 1;
 

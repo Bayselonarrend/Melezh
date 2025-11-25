@@ -134,6 +134,34 @@ EndFunction
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(ConnectionManager_, ProxyModule_) Export
+	Initialize(ConnectionManager_, ProxyModule_);
+EndProcedure
+
+Function ReturnProjectSettingsFull() Export
+	Return ReturnProjectSettingsFull();
+EndFunction
+
+Function ReturnProjectSettingsUI() Export
+	Return ReturnProjectSettingsUI();
+EndFunction
+
+Function ReturnSetting(Val Name) Export
+	Return ReturnSetting(Name);
+EndFunction
+
+Function ReturnBasePath() Export
+	Return ReturnBasePath();
+EndFunction
+
+Function WriteProjectSettings(Val Data) Export
+	Return WriteProjectSettings(Data);
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

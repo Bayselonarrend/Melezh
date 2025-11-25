@@ -253,6 +253,26 @@ EndProcedure
 
 #EndRegion
 
+#Region Alternate
+
+Procedure DisplayStartPage(Val Version) Export
+	DisplayStartPage(Version);
+EndProcedure
+
+Procedure DisplayMethodHelp(Val ParametersTable) Export
+	DisplayMethodHelp(ParametersTable);
+EndProcedure
+
+Procedure DisplayParameterHelp(Val ParametersTable) Export
+	DisplayParameterHelp(ParametersTable);
+EndProcedure
+
+Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
+	DisplayExceptionMessage(Reason, OutputFile);
+EndProcedure
+
+#EndRegion
+
 
 #Region Alternate
 

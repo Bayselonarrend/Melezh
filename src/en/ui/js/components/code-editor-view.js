@@ -20,7 +20,7 @@ export const codeEditorView = () => ({
         this.fileName = match ? decodeURIComponent(match[1]) : null;
 
         if (!this.fileName) {
-            this.error = 'File not specified';
+            this.error = 'Не указан файл';
             return;
         }
 
@@ -55,7 +55,7 @@ export const codeEditorView = () => ({
             const res = await fetch(url);
             const data = await res.json();
 
-            if (!data.result) throw new Error(data.error || 'Failed to fetch');
+            if (!data.result) throw new Error(data.error || 'Ошибка загрузки');
 
             this.code = data.text || '';
             originalCode = this.code;
@@ -75,8 +75,8 @@ export const codeEditorView = () => ({
 
 
         } catch (err) {
-            console.error('Error:', err);
-            this.error = `Error: ${err.message}`;
+            console.error('Ошибка:', err);
+            this.error = `Ошибка: ${err.message}`;
             window.dispatchEvent(new CustomEvent('show-error', { detail: { message: this.error } }));
         }
     },
@@ -99,12 +99,12 @@ export const codeEditorView = () => ({
             const result = await handleFetchResponse(res);
             if (!result.success) throw new Error(result.message);
 
-            window.dispatchEvent(new CustomEvent('show-success', { detail: { message: 'Savedo' } }));
+            window.dispatchEvent(new CustomEvent('show-success', { detail: { message: 'Сохранено' } }));
             originalCode = text;
 
 
         } catch (err) {
-            this.error = `Error: ${err.message}`;
+            this.error = `Ошибка: ${err.message}`;
             window.dispatchEvent(new CustomEvent('show-error', { detail: { message: this.error } }));
         } finally {
             this.isSaving = false;
@@ -127,10 +127,10 @@ export const codeEditorView = () => ({
 
                     [/&[a-zа-яё_]\w*/, 'annotation'],
 
-                    [/\b(Procedure|Function|EndProcedure|EndFunction|If|Then|Else|ElsIf|EndIf|While|Do|EndDo|For|Each|In|To|Execute|Try|Except|EndTry|Return|Var|Val|Export|New|Break|Raise|Undefined|True|False)\b/i, 'keyword'],
+                    [/\b(Процедура|Функция|КонецПроцедуры|КонецФункции|Если|Тогда|Иначе|ИначеЕсли|КонецЕсли|Пока|Цикл|КонецЦикла|Для|Каждого|Из|По|Выполнить|Попытка|Исключение|КонецПопытки|Возврат|Перем|Знач|Экспорт|Новый|Прервать|ВызватьИсключение|Неопределено|Истина|Ложь)\b/i, 'keyword'],
                     [/\b(Procedure|Function|EndProcedure|EndFunction|If|Then|Else|ElsIf|EndIf|While|Do|EndDo|For|Each|In|To|Execute|Try|Except|EndTry|Return|Var|Val|Export|New|Break|Raise|Undefined|True|False)\b/i, 'keyword'],
 
-                    [/\b(Message|Message|Преdупрежdенandе|DoMessageBox|StrReplace|StrReplace|NStr|NStr|Format|Format|CurrentDate|CurrentDate|New|New|IsBlankString|IsBlankString|Type|Type|Number|Number|String|String|Date|Date)\b/i, 'support.function'],
+                    [/\b(Сообщить|Message|Предупреждение|DoMessageBox|СтрЗаменить|StrReplace|НСтр|NStr|Формат|Format|ТекущаяДата|CurrentDate|Новый|New|ПустаяСтрока|IsBlankString|Тип|Type|Число|Number|Строка|String|Дата|Date)\b/i, 'support.function'],
 
                     [/\b\d+(\.\d+)?\b/, 'number'],
 
@@ -234,7 +234,7 @@ export const codeEditorView = () => ({
 
     tryExit() {
         if (this.isDirty()) {
-            if (!confirm('У inаwith еwithть notwithхранённые change. Exit without saving?')) {
+            if (!confirm('У вас есть несохранённые изменения. Выйти без сохранения?')) {
                 return;
             }
         }
@@ -245,56 +245,56 @@ export const codeEditorView = () => ({
 
 
 const BSL_KEYWORDS = [
-    'Procedure', 'Procedure', 'Function', 'Function',
-    'EndProcedure', 'EndProcedure', 'EndFunction', 'EndFunction',
-    'If', 'If', 'Then', 'Then', 'Else', 'Else', 'ElsIf', 'ElsIf', 'EndIf', 'EndIf',
-    'For now', 'While', 'Do', 'Do', 'EndDo', 'EndDo',
-    'For', 'For', 'Each', 'Each', 'In', 'In', 'To', 'To', 'Execute', 'Execute',
-    'Try', 'Try', 'Except', 'Except', 'EndTry', 'EndTry',
-    'Return', 'Return', 'Var', 'Var', 'Val', 'Val', 'Export', 'Export',
-    'Break', 'Break', 'Continue', 'Continue',
-    'Raise', 'Raise',
-    'Not', 'NOT', 'And', 'AND', 'AndЛAnd', 'OR'
+    'Процедура', 'Procedure', 'Функция', 'Function',
+    'КонецПроцедуры', 'EndProcedure', 'КонецФункции', 'EndFunction',
+    'Если', 'If', 'Тогда', 'Then', 'Иначе', 'Else', 'ИначеЕсли', 'ElsIf', 'КонецЕсли', 'EndIf',
+    'Пока', 'While', 'Цикл', 'Do', 'КонецЦикла', 'EndDo',
+    'Для', 'For', 'Каждого', 'Each', 'Из', 'In', 'По', 'To', 'Выполнить', 'Execute',
+    'Попытка', 'Try', 'Исключение', 'Except', 'КонецПопытки', 'EndTry',
+    'Возврат', 'Return', 'Перем', 'Var', 'Знач', 'Val', 'Экспорт', 'Export',
+    'Прервать', 'Break', 'Продолжить', 'Continue',
+    'ВызватьИсключение', 'Raise',
+    'Не', 'NOT', 'И', 'AND', 'ИЛИ', 'OR'
 ];
 
 const BSL_FUNCTIONS = [
-    'StrLen', 'StrLen', 'TrimL', 'TrimL', 'СotoрП', 'TrimR', 'TrimAll', 'TrimAll',
-    'Left', 'Left', 'Right', 'Right', 'Mid', 'Mid', 'StrFind', 'StrFind',
-    'Upper', 'Upper', 'NРег', 'Lower', 'Title', 'Title',
-    'Symbol', 'Char', 'CodeSymbolа', 'CharCode',
-    'IsBlankString', 'IsBlankString', 'StrReplace', 'StrReplace',
-    'StrNumberStroto', 'StrLineCount', 'StrGetLine', 'StrGetLine',
-    'StrOccurrenceCount', 'StrOccurrenceCount', 'StrСраinнandть', 'StrCompare',
-    'StrStartsWith', 'StrStartWith', 'StrEndsWith', 'StrEndsWith',
-    'StrSplit', 'StrSplit', 'StrConcat', 'StrConcat',
+    'СтрДлина', 'StrLen', 'СокрЛ', 'TrimL', 'СокрП', 'TrimR', 'СокрЛП', 'TrimAll',
+    'Лев', 'Left', 'Прав', 'Right', 'Сред', 'Mid', 'СтрНайти', 'StrFind',
+    'ВРег', 'Upper', 'НРег', 'Lower', 'ТРег', 'Title',
+    'Символ', 'Char', 'КодСимвола', 'CharCode',
+    'ПустаяСтрока', 'IsBlankString', 'СтрЗаменить', 'StrReplace',
+    'СтрЧислоСтрок', 'StrLineCount', 'СтрПолучитьСтроку', 'StrGetLine',
+    'СтрЧислоВхождений', 'StrOccurrenceCount', 'СтрСравнить', 'StrCompare',
+    'СтрНачинаетсяС', 'StrStartWith', 'СтрЗаканчиваетсяНа', 'StrEndsWith',
+    'СтрРазделить', 'StrSplit', 'СтрСоединить', 'StrConcat',
 
-    'Int', 'Int', 'Round', 'Round', 'ACos', 'ASin', 'ATan', 'Cos', 'Exp', 'Log', 'Log10', 'Pow', 'Sin', 'Sqrt', 'Tan',
+    'Цел', 'Int', 'Окр', 'Round', 'ACos', 'ASin', 'ATan', 'Cos', 'Exp', 'Log', 'Log10', 'Pow', 'Sin', 'Sqrt', 'Tan',
 
-    'Гod', 'Year', 'Меwithяц', 'Month', 'День', 'Day', 'Hour', 'Hour', 'Minута', 'Minute', 'Сеtoунdа', 'Second',
-    'StartГodа', 'BegOfYear', 'BegOfDay', 'BegOfDay', 'StartKinартала', 'BegOfQuarter',
-    'StartМеwithяца', 'BegOfMonth', 'StartMinуты', 'BegOfMinute', 'StartNotdелand', 'BegOfWeek', 'StartHourа', 'BegOfHour',
-    'EndГodа', 'EndOfYear', 'EndOfDay', 'EndOfDay', 'EndKinартала', 'EndOfQuarter',
-    'EndМеwithяца', 'EndOfMonth', 'EndMinуты', 'EndOfMinute', 'EndNotdелand', 'EndOfWeek', 'EndHourа', 'EndOfHour',
-    'WeekГodа', 'WeekOfYear', 'ДеньГodа', 'DayOfYear', 'WeekDay', 'WeekDay',
-    'CurrentDate', 'CurrentDate', 'AddMonth', 'AddMonth',
+    'Год', 'Year', 'Месяц', 'Month', 'День', 'Day', 'Час', 'Hour', 'Минута', 'Minute', 'Секунда', 'Second',
+    'НачалоГода', 'BegOfYear', 'НачалоДня', 'BegOfDay', 'НачалоКвартала', 'BegOfQuarter',
+    'НачалоМесяца', 'BegOfMonth', 'НачалоМинуты', 'BegOfMinute', 'НачалоНедели', 'BegOfWeek', 'НачалоЧаса', 'BegOfHour',
+    'КонецГода', 'EndOfYear', 'КонецДня', 'EndOfDay', 'КонецКвартала', 'EndOfQuarter',
+    'КонецМесяца', 'EndOfMonth', 'КонецМинуты', 'EndOfMinute', 'КонецНедели', 'EndOfWeek', 'КонецЧаса', 'EndOfHour',
+    'НеделяГода', 'WeekOfYear', 'ДеньГода', 'DayOfYear', 'ДеньНедели', 'WeekDay',
+    'ТекущаяДата', 'CurrentDate', 'ДобавитьМесяц', 'AddMonth',
 
-    'Type', 'Type', 'TypeOf', 'TypeOf',
-    'Boolean', 'Boolean', 'Number', 'Number', 'String', 'String', 'Date', 'Date', 'Array', 'Structure', 'Map', 'Array', 'Map', 'Structure',
+    'Тип', 'Type', 'ТипЗнч', 'TypeOf',
+    'Булево', 'Boolean', 'Число', 'Number', 'Строка', 'String', 'Дата', 'Date', 'Массив', 'Структура', 'Соответствие', 'Array', 'Map', 'Structure',
 
-    'Message', 'Message', 'Преdупрежdенandе', 'DoMessageBox', 'For nowзатьПреdупрежdенandе', 'ShowMessageBox',
-    'Question', 'DoQueryBox', 'For nowзатьQuestion', 'ShowQueryBox',
-    'ClearMessages', 'ClearMessages', 'State', 'Status', 'Сandгtoл', 'Beep',
+    'Сообщить', 'Message', 'Предупреждение', 'DoMessageBox', 'ПоказатьПредупреждение', 'ShowMessageBox',
+    'Вопрос', 'DoQueryBox', 'ПоказатьВопрос', 'ShowQueryBox',
+    'ОчиститьСообщения', 'ClearMessages', 'Состояние', 'Status', 'Сигнал', 'Beep',
 
-    'Format', 'Format', 'NumberПрoпandwithью', 'NumberInWords', 'NStr', 'NStr', 'StrTemplate', 'StrTemplate',
+    'Формат', 'Format', 'ЧислоПрописью', 'NumberInWords', 'НСтр', 'NStr', 'СтрШаблон', 'StrTemplate',
 
-    'GetTempFileName', 'GetTempFileName', 'FileCopy', 'FileCopy',
+    'ПолучитьИмяВременногоФайла', 'GetTempFileName', 'КопироватьФайл', 'FileCopy',
 
-    'ReadJSON', 'ReadJSON', 'WriteJSON', 'WriteJSON',
-    'ReadXML', 'ReadXML', 'WriteXML', 'WriteXML',
+    'ПрочитатьJSON', 'ReadJSON', 'ЗаписатьJSON', 'WriteJSON',
+    'ПрочитатьXML', 'ReadXML', 'ЗаписатьXML', 'WriteXML',
 
-    'Min', 'Min', 'Max', 'Max', 'ErrorDescription', 'ErrorDescription',
-    'Base64String', 'Base64String', 'Base64Value', 'Base64Value',
-    'New', 'New'
+    'Мин', 'Min', 'Макс', 'Max', 'ОписаниеОшибки', 'ErrorDescription',
+    'Base64Строка', 'Base64String', 'Base64Значение', 'Base64Value',
+    'Новый', 'New'
 ];
 
 const BSL_GLOBAL_OBJECTS = [
@@ -302,5 +302,5 @@ const BSL_GLOBAL_OBJECTS = [
 ];
 
 const BSL_CONSTANTS = [
-    'True', 'True', 'False', 'False', 'Undefined', 'Undefined', 'NULL'
+    'Истина', 'True', 'Ложь', 'False', 'Неопределено', 'Undefined', 'NULL'
 ];

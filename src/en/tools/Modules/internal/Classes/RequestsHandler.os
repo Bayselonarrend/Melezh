@@ -226,6 +226,18 @@ EndProcedure
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(InitializationStructure) Export
+	Initialize(InitializationStructure);
+EndProcedure
+
+Procedure MainHandle(Context, NextHandler) Export
+	MainHandle(Context, NextHandler);
+EndProcedure
+
+#EndRegion
+
 
 #Region Alternate
 

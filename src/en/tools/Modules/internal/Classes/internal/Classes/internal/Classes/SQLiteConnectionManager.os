@@ -44,6 +44,22 @@ EndFunction
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(ProjectPath_) Export
+	Initialize(ProjectPath_);
+EndProcedure
+
+Function GetROConnection() Export
+	Return GetROConnection();
+EndFunction
+
+Function GetRWConnection() Export
+	Return GetRWConnection();
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

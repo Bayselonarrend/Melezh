@@ -289,7 +289,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // Новый метод для обновления данных конкретной задачи
     async refreshTaskData(task) {
         try {
             const response = await fetch('api/getSchedulerTasks');
@@ -300,7 +299,6 @@ export const schedulerView = () => ({
             const updatedTask = updatedTasks.find(t => t.id === task.id);
             
             if (updatedTask) {
-                // Обновляем только необходимые поля
                 task.active = updatedTask.active;
                 task.last_launch = updatedTask.last_launch;
                 task.next_launch = updatedTask.next_launch;
@@ -309,12 +307,10 @@ export const schedulerView = () => ({
             }
         } catch (error) {
             console.error('Ошибка обновления данных задачи:', error);
-            // В случае ошибки просто перезагружаем весь список
             await this.loadTasks();
         }
     },
 
-    // Метод для форматирования даты
     formatDateTime(dateString) {
         if (!dateString || dateString === '0000-00-00 00:00:00' || dateString === 'Never' || dateString === 'Disabled') {
             return '-';

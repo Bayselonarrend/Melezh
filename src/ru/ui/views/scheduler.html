@@ -34,12 +34,10 @@
 
     <hr class="mb-6">
 
-    <!-- Загрузка -->
     <div x-show="isLoading" class="flex justify-center py-4">
         <div class="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-green-500"></div>
     </div>
 
-    <!-- Таблица -->
     <div x-show="!isLoading" class="bg-white p-4 rounded-lg shadow overflow-hidden">
         <div x-show="tasks.length > 0" class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200">
@@ -54,7 +52,6 @@
                         <th
                             class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-3/12">
                             Расписание</th>
-                        <!-- Новые колонки для времени запуска -->
                         <th
                             class="px-4 py-2 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-2/12">
                             Последний запуск</th>
@@ -76,7 +73,6 @@
                             <td class="px-4 py-2 text-sm break-words" x-text="task.handler"></td>
                             <td class="px-4 py-2 text-sm font-mono break-words" x-text="task.cron"></td>
                             
-                            <!-- Колонка последнего запуска -->
                             <td class="px-4 py-2 text-sm">
                                 <div class="flex flex-col">
                                     <span x-text="formatDateTime(task.last_launch)"></span>
@@ -91,8 +87,7 @@
                                     </template>
                                 </div>
                             </td>
-                            
-                            <!-- Колонка следующего запуска -->
+
                             <td class="px-4 py-2 text-sm">
                                 <div class="flex flex-col">
                                     <span x-text="formatDateTime(task.next_launch)"></span>
@@ -108,7 +103,6 @@
                                 </div>
                             </td>
                             
-                            <!-- Ячейка с переключателем активности -->
                             <td class="px-4 py-2 whitespace-nowrap">
                                 <label class="relative inline-flex items-center cursor-pointer">
                                     <input type="checkbox" @change="toggleTaskStatus(task)" :checked="task.active == 1"
@@ -153,7 +147,6 @@
         </div>
     </div>
 
-    <!-- Модальное окно создания -->
     <template x-if="showCreateModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-0 relative">
@@ -170,7 +163,6 @@
                 </div>
 
                 <form @submit.prevent="createTask" class="px-6 py-6 space-y-5">
-                    <!-- Обработчик с поиском -->
                     <div>
                         <label class="block font-semibold mb-2">Обработчик</label>
                         <div class="relative mt-1" @keydown.escape="closeHandlerDropdown"
@@ -236,8 +228,6 @@
                             </div>
                         </div>
                     </div>
-
-                    <!-- Расписание -->
                     <div>
                         <label class="block font-semibold mb-2">Расписание запуска</label>
                         <input type="text" x-model="scheduleInput" class="w-full px-3 py-2 border rounded-md font-mono"
@@ -246,15 +236,12 @@
                             Укажите 7 значений через пробел:<br>
                             <code
                                 class="text-xs">секунды (0–59), минуты (0–59), часы (0–23), день месяца (1–31), месяц (1–12), день недели (1–7, Пн=1), год (* или 2025)</code><br>
-                            Пример: <code class="text-xs">0 30 9,12,15 1,15 5-8 1,3,5 *</code> → в 9:30, 12:30 и 15:30,
-                            по понедельникам, средам и пятницам, 1-го и 15-го числа, с мая по август, каждый год
+                            Пример: <code class="text-xs">0 30 9,12,15 1,15 5-8 1,3,5 *</code> → в 9:30, 12:30 и 15:30, по понедельникам, средам и пятницам, 1-го и 15-го числа, с мая по август, каждый год
                         </div>
                     </div>
 
-                    <!-- Ошибка -->
                     <div class="text-red-600 text-sm" x-show="createError" x-text="createError"></div>
 
-                    <!-- Кнопки -->
                     <div class="flex justify-end space-x-2 pt-2">
                         <button @click="closeCreateModal" type="button"
                             class="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">
@@ -271,7 +258,6 @@
         </div>
     </template>
 
-    <!-- Модальное окно редактирования -->
     <template x-if="showEditModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-0 relative">
@@ -288,13 +274,10 @@
                 </div>
 
                 <form @submit.prevent="updateTask" class="px-6 py-6 space-y-5">
-                    <!-- ID задачи -->
                     <div>
                         <label class="block font-semibold mb-2">ID задачи</label>
                         <input type="text" x-model="editingTask.id" class="w-full px-3 py-2 border rounded-md font-mono bg-gray-100" readonly>
                     </div>
-
-                    <!-- Обработчик с поиском -->
                     <div>
                         <label class="block font-semibold mb-2">Обработчик</label>
                         <div class="relative mt-1" @keydown.escape="closeHandlerDropdown"
@@ -361,7 +344,6 @@
                         </div>
                     </div>
 
-                    <!-- Расписание -->
                     <div>
                         <label class="block font-semibold mb-2">Расписание запуска</label>
                         <input type="text" x-model="scheduleInput" class="w-full px-3 py-2 border rounded-md font-mono"
@@ -375,10 +357,8 @@
                         </div>
                     </div>
 
-                    <!-- Ошибка -->
                     <div class="text-red-600 text-sm" x-show="editError" x-text="editError"></div>
 
-                    <!-- Кнопки -->
                     <div class="flex justify-end space-x-2 pt-2">
                         <button @click="closeEditModal" type="button"
                             class="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">

@@ -37,7 +37,6 @@ export const dashboardView = () => ({
 
       this.events = result.data || [];
 
-      // Подсчёт статистики
       this.calculateStats();
 
     } catch (error) {

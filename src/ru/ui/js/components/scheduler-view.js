@@ -269,7 +269,6 @@ export const schedulerView = () => ({
             const result = await handleFetchResponse(response);
             if (!result.success) throw new Error(result.message);
 
-            // Обновляем данные задачи после успешного изменения статуса
             await this.refreshTaskData(task);
 
             window.dispatchEvent(new CustomEvent('show-success', {
@@ -284,7 +283,6 @@ export const schedulerView = () => ({
                     message: `Ошибка изменения статуса задачи "${task.id}": ${error.message}`
                 }
             }));
-            // Возвращаем предыдущее значение в случае ошибки
             task.active = task.active == 1 ? 0 : 1;
         }
     },
@@ -336,7 +334,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // Метод для расчета прошедшего времени с последнего запуска
     getLastLaunchAgo(task) {
         if (!task.last_launch || task.last_launch === '0000-00-00 00:00:00' || task.last_launch === 'Never' || task.last_launch === 'Disabled') {
             return { text: 'Никогда', class: 'text-gray-500' };
@@ -371,7 +368,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // Метод для определения статуса следующего запуска
     getNextLaunchStatus(task) {
         if (!task.next_launch || task.next_launch === '0000-00-00 00:00:00' || task.next_launch === 'Never' || task.next_launch === 'Disabled') {
             return { text: 'Не запланирован', class: 'text-gray-500' };

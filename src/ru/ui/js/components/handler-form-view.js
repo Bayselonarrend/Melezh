@@ -11,11 +11,9 @@ export const handlerFormView = () => ({
   isLoading: false,
   isEditMode: false,
 
-  // Состояние dropdown'ов
   libraryDropdownOpen: false,
   functionDropdownOpen: false,
 
-  // Списки
   libraries: [],
   functions: [],
   isLibrariesLoading: true,
@@ -23,11 +21,9 @@ export const handlerFormView = () => ({
   args: [],
   isArgsLoading: false,
 
-  // Поиск
   librarySearch: '',
   functionSearch: '',
 
-  // Геттеры для фильтрации
   get filteredLibraries() {
     if (!this.librarySearch.trim()) return this.libraries;
     const term = this.librarySearch.toLowerCase();

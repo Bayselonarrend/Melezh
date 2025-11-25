@@ -127,7 +127,7 @@ Function RunProject(Val Port, Val Project) Export
         TaskObject = BackgroundTaskArray[FailedTask];
 
         Try
-            Error = DetailErrorDescription((TaskObject.ErrorInfo));
+            Error = DetailErrorDescription((TaskObject.ExceptionInfo));
         Except
             Error = "";
         EndTry;

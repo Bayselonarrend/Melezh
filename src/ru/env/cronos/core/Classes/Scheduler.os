@@ -155,6 +155,36 @@
 
 #Region Alternate
 
+Procedure Initialize(Val ScheduleStructure = "") Export
+	Инициализировать(ScheduleStructure);
+EndProcedure
 
+Function WaitEvent() Export
+	Return ОжидатьСобытие();
+EndFunction
+
+Function AddTask(Val Name, Val Schedule) Export
+	Return ДобавитьЗадание(Name, Schedule);
+EndFunction
+
+Function DeleteTask(Val Name) Export
+	Return УдалитьЗадание(Name);
+EndFunction
+
+Function UpdateTaskSchedule(Val Name, Val Schedule) Export
+	Return ИзменитьРасписаниеЗадания(Name, Schedule);
+EndFunction
+
+Function EnableTask(Val Name) Export
+	Return ВключитьЗадание(Name);
+EndFunction
+
+Function DisableTask(Val Name) Export
+	Return ОтключитьЗадание(Name);
+EndFunction
+
+Function GetTaskList() Export
+	Return ПолучитьСписокЗаданий();
+EndFunction
 
 #EndRegion

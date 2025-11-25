@@ -38,123 +38,153 @@
 //@skip-check module-accessibility-at-client
 //@skip-check object-module-export-variable
 
-Перем ОбъектКомпоненты;
+Var AddInObject;
 
-#Область ПрограммныйИнтерфейс
+#Region Public
 
-Процедура Инициализировать(Знач СтруктураРасписания = "") Экспорт
+Procedure Initialize(Val ScheduleStructure = "") Export
 
-	Если ЗначениеЗаполнено(СтруктураРасписания) Тогда
+	If ValueIsFilled(ScheduleStructure) Then
 
-		Если Не ТипЗнч(СтруктураРасписания) = Тип("Структура")
-			И Не ТипЗнч(СтруктураРасписания) = Тип("Соответствие") Тогда
+		If Not TypeOf(ScheduleStructure) = Type("Structure")
+			And Not TypeOf(ScheduleStructure) = Type("Map") Then
 
-			ВызватьИсключение "Расписание должно быть валидной коллекцией ключ и значение!";
-		КонецЕсли;
+			Raise "Schedule must be a valid key-value collection!";
+		EndIf;
 
-		РасписаниеСтрокой = РасписаниеВСтроку(СтруктураРасписания);
+		ScheduleAsString = ScheduleToString(ScheduleStructure);
 
-	Иначе
-		РасписаниеСтрокой = "";
-	КонецЕсли;
+	Else
+		ScheduleAsString = "";
+	EndIf;
 
-	ТекущийПуть = СтрЗаменить(ТекущийСценарий().Каталог, "\", "/");
-	ТекущийПуть = СтрРазделить(ТекущийПуть, "/");
+	CurrentPath = StrReplace(CurrentScript().Path, "\", "/");
+	CurrentPath = StrSplit(CurrentPath, "/");
 
-	ТекущийПуть.Удалить(ТекущийПуть.ВГраница());
-	ТекущийПуть.Удалить(ТекущийПуть.ВГраница());
+	CurrentPath.Delete(CurrentPath.UBound());
+	CurrentPath.Delete(CurrentPath.UBound());
 
-	ТекущийПуть.Добавить("addins");
-	ТекущийПуть.Добавить("Cronos.zip");
+	CurrentPath.Add("addins");
+	CurrentPath.Add("Cronos.zip");
 
-	ПодключитьВнешнююКомпоненту(СтрСоединить(ТекущийПуть, "/"), "Cronos", ТипВнешнейКомпоненты.Native);
+	AttachAddIn(StrConcat(CurrentPath, "/"), "Cronos", AddInType.Native);
 
-	ОбъектКомпоненты = Новый("AddIn.Cronos.Main");
-	Результат = ОбъектКомпоненты.Init(РасписаниеСтрокой);
+	AddInObject = New("AddIn.Cronos.Main");
+	Result = AddInObject.Init(ScheduleAsString);
 	
-	РезультатИнициализации = ПрочитатьJSONТекст(Результат);
+	InitializationResult = ReadJSONText(Result);
 
-	Если Не РезультатИнициализации["result"] Тогда
-		ВызватьИсключение Результат;
-	КонецЕсли
+	If Not InitializationResult["result"] Then
+		Raise Result;
+	EndIf
 	
-КонецПроцедуры
+EndProcedure
 
-Функция ОжидатьСобытие() Экспорт
+Function WaitEvent() Export
 
-	Событие = ОбъектКомпоненты.NextEvent();
+	Event = AddInObject.NextEvent();
 
-	Пока Событие = "" Цикл
+	While Event = "" Do
 
-		Приостановить(100);
-		Событие = ОбъектКомпоненты.NextEvent();
+		Sleep(100);
+		Event = AddInObject.NextEvent();
 
-	КонецЦикла;
+	EndDo;
 
-	Возврат Событие;
+	Return Event;
 	
-КонецФункции
+EndFunction
 
-Функция ДобавитьЗадание(Знач Имя, Знач Расписание) Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.AddJob(Строка(Имя), Расписание));
-КонецФункции
+Function AddTask(Val Name, Val Schedule) Export
+	Return ReadJSONText(AddInObject.AddJob(String(Name), Schedule));
+EndFunction
 
-Функция УдалитьЗадание(Знач Имя) Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.RemoveJob(Строка(Имя)));
-КонецФункции
+Function DeleteTask(Val Name) Export
+	Return ReadJSONText(AddInObject.RemoveJob(String(Name)));
+EndFunction
 
-Функция ИзменитьРасписаниеЗадания(Знач Имя, Знач Расписание) Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.UpdateJob(Строка(Имя), Расписание));
-КонецФункции
+Function UpdateTaskSchedule(Val Name, Val Schedule) Export
+	Return ReadJSONText(AddInObject.UpdateJob(String(Name), Schedule));
+EndFunction
 
-Функция ВключитьЗадание(Знач Имя) Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.EnableJob(Строка(Имя)));
-КонецФункции
+Function EnableTask(Val Name) Export
+	Return ReadJSONText(AddInObject.EnableJob(String(Name)));
+EndFunction
 
-Функция ОтключитьЗадание(Знач Имя) Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.DisableJob(Строка(Имя)));
-КонецФункции
+Function DisableTask(Val Name) Export
+	Return ReadJSONText(AddInObject.DisableJob(String(Name)));
+EndFunction
 
-Функция ПолучитьСписокЗаданий() Экспорт
-	Возврат ПрочитатьJSONТекст(ОбъектКомпоненты.GetJobList());
-КонецФункции
+Function GetTaskList() Export
+	Return ReadJSONText(AddInObject.GetJobList());
+EndFunction
 
-#КонецОбласти
+#EndRegion
 
-#Область СлужебныеПроцедурыИФункции
+#Region Private
 
-Функция ПрочитатьJSONТекст(Знач Текст)
+Function ReadJSONText(Val Text)
 
-	ЧтениеJSON = Новый ЧтениеJSON();
-	ЧтениеJSON.УстановитьСтроку(Текст);
+	JSONReader = New JSONReader();
+	JSONReader.SetString(Text);
 
-	Результат = ПрочитатьJSON(ЧтениеJSON);
+	Result = ReadJSON(JSONReader);
 
-	ЧтениеJSON.Закрыть();
+	JSONReader.Close();
 
-	Возврат Результат;
+	Return Result;
 
-КонецФункции
+EndFunction
 
-Функция РасписаниеВСтроку(Знач Расписание)
+Function ScheduleToString(Val Schedule)
 
-	Попытка
+	Try
 
-		ЗаписьJSON = Новый ЗаписьJSON();
-		ЗаписьJSON.УстановитьСтроку();
-		ЗаписатьJSON(ЗаписьJSON, Расписание);
-		Возврат ЗаписьJSON.Закрыть();
+		JSONWriter = New JSONWriter();
+		JSONWriter.SetString();
+		WriteJSON(JSONWriter, Schedule);
+		Return JSONWriter.Close();
 
-	Исключение
-		ВызватьИсключение "Ошибка преобразования расписания в JSON строку!";
-	КонецПопытки;
+	Except
+		Raise "Error converting schedule to JSON string!";
+	EndTry;
 
-КонецФункции
+EndFunction
 
-#КонецОбласти
+#EndRegion
 
 #Region Alternate
 
+Procedure Инициализировать(Val СтруктураРасписания = "") Export
+	Initialize(СтруктураРасписания);
+EndProcedure
 
+Function ОжидатьСобытие() Export
+	Return WaitEvent();
+EndFunction
+
+Function ДобавитьЗадание(Val Имя, Val Расписание) Export
+	Return AddTask(Имя, Расписание);
+EndFunction
+
+Function УдалитьЗадание(Val Имя) Export
+	Return DeleteTask(Имя);
+EndFunction
+
+Function ИзменитьРасписаниеЗадания(Val Имя, Val Расписание) Export
+	Return UpdateTaskSchedule(Имя, Расписание);
+EndFunction
+
+Function ВключитьЗадание(Val Имя) Export
+	Return EnableTask(Имя);
+EndFunction
+
+Function ОтключитьЗадание(Val Имя) Export
+	Return DisableTask(Имя);
+EndFunction
+
+Function ПолучитьСписокЗаданий() Export
+	Return GetTaskList();
+EndFunction
 
 #EndRegion

@@ -1,4 +1,3 @@
-// #melezh_base_path#js/components/scheduler-view.js
 import { handleFetchResponse } from '#melezh_base_path#js/error-fetch.js';
 
 export const schedulerView = () => ({
@@ -33,9 +32,9 @@ export const schedulerView = () => ({
             if (!result.success) throw new Error(result.message);
             this.tasks = Array.isArray(result.data) ? result.data : [];
         } catch (error) {
-            console.error('Failed to fetch заdаh:', error);
+            console.error('Error loading tasks:', error);
             window.dispatchEvent(new CustomEvent('show-error', {
-                detail: { message: `Failed to fetch заdаh: ${error.message}` }
+                detail: { message: `Error loading tasks: ${error.message}` }
             }));
             this.tasks = [];
         } finally {
@@ -131,7 +130,7 @@ export const schedulerView = () => ({
     validateSchedule(schedule) {
         const parts = schedule.trim().split(/\s+/);
         if (parts.length !== 7) {
-            return 'Schedule doлжbut withdержать 7 toлей: withеto min hаwith dень меwithяц dень_notdелand гod';
+            return 'Schedule must contain 7 fields: sec min hour day month day_of_week year';
         }
         return null;
     },
@@ -170,7 +169,7 @@ export const schedulerView = () => ({
             await this.loadTasks();
             
             window.dispatchEvent(new CustomEvent('show-success', {
-                detail: { message: 'Task successfully createdа' }
+                detail: { message: 'Task created successfully' }
             }));
         } catch (error) {
             this.createError = `Creation error: ${error.message}`;
@@ -214,40 +213,189 @@ export const schedulerView = () => ({
             await this.loadTasks();
             
             window.dispatchEvent(new CustomEvent('show-success', {
-                detail: { message: 'Task successfully aboutbutinлеto' }
+                detail: { message: 'Task updated successfully' }
             }));
         } catch (error) {
-            this.editError = `Error aboutbutinленandя: ${error.message}`;
+            this.editError = `Update error: ${error.message}`;
         } finally {
             this.isEditing = false;
         }
     },
 
-    deleteTask(task) {
-        if (!confirm(`You sure, that want delete заdаhу with ID "${task.id}"?`)) return;
+    async deleteTask(task) {
+        if (!confirm(`Are you sure you want to delete the task with ID "${task.id}"?`)) return;
 
-        const formData = new URLSearchParams();
-        formData.append('id', task.id);
+        try {
+            const payload = {
+                id: task.id
+            };
 
-        fetch('api/deleteSchedulerTask', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: formData
-        })
-            .then(async (response) => {
-                const result = await handleFetchResponse(response);
-                if (!result.success) throw new Error(result.message);
-
-                this.tasks = this.tasks.filter(t => t.id !== task.id);
-                window.dispatchEvent(new CustomEvent('show-success', {
-                    detail: { message: `Task ID "${task.id}" уdалеto` }
-                }));
-            })
-            .catch((error) => {
-                window.dispatchEvent(new CustomEvent('show-error', {
-                    detail: { message: `Deletion error of topic ID "${task.id}": ${error.message}` }
-                }));
+            const response = await fetch('api/deleteSchedulerTask', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
+
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+
+            this.tasks = this.tasks.filter(t => t.id !== task.id);
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { message: `Task ID "${task.id}" deleted` }
+            }));
+        } catch (error) {
+            window.dispatchEvent(new CustomEvent('show-error', {
+                detail: { message: `Error deleting task ID "${task.id}": ${error.message}` }
+            }));
+        }
+    },
+
+    // New method for переkeyенandя of status of topic
+    async toggleTaskStatus(task) {
+        const newStatus = task.active == 1 ? 0 : 1;
+
+        try {
+            const payload = {
+                id: task.id,
+                active: newStatus
+            };
+
+            const response = await fetch('api/updateSchedulerTaskStatus', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+
+            // Обbutinляем Data of topic after successfullyгo change of status
+            await this.refreshTaskData(task);
+
+            window.dispatchEvent(new CustomEvent('show-success', {
+                detail: { 
+                    message: `Task status "${task.id}" changeенён to ${newStatus === 1 ? '"Atoтandintoя"' : '"Notаtoтandintoя"'}`
+                }
+            }));
+        } catch (error) {
+            console.error('Status change error:', error);
+            window.dispatchEvent(new CustomEvent('show-error', {
+                detail: { 
+                    message: `Error changing task status "${task.id}": ${error.message}`
+                }
+            }));
+            // Inoзinращаем преdыdущее value in withлуhае errors
+            task.active = task.active == 1 ? 0 : 1;
+        }
+    },
+
+    async refreshTaskData(task) {
+        try {
+            const response = await fetch('api/getSchedulerTasks');
+            const result = await handleFetchResponse(response);
+            if (!result.success) throw new Error(result.message);
+            
+            const updatedTasks = Array.isArray(result.data) ? result.data : [];
+            const updatedTask = updatedTasks.find(t => t.id === task.id);
+            
+            if (updatedTask) {
+                task.active = updatedTask.active;
+                task.last_launch = updatedTask.last_launch;
+                task.next_launch = updatedTask.next_launch;
+                task.cron = updatedTask.cron;
+                task.handler = updatedTask.handler;
+            }
+        } catch (error) {
+            console.error('Error updating task data:', error);
+            await this.loadTasks();
+        }
+    },
+
+    formatDateTime(dateString) {
+        if (!dateString || dateString === '0000-00-00 00:00:00' || dateString === 'Never' || dateString === 'Disabled') {
+            return '-';
+        }
+        
+        try {
+            const date = new Date(dateString);
+            if (isNaN(date.getTime())) {
+                return '-';
+            }
+            
+            return date.toLocaleString('ru-RU', {
+                day: '2-digit',
+                month: '2-digit',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit'
+            });
+        } catch (error) {
+            console.error('Date formatting error:', error);
+            return '-';
+        }
+    },
+
+    // Method for раwithhета прoшеdшегo inременand with of last start
+    getLastLaunchAgo(task) {
+        if (!task.last_launch || task.last_launch === '0000-00-00 00:00:00' || task.last_launch === 'Never' || task.last_launch === 'Disabled') {
+            return { text: 'Nandtooгdа', class: 'text-gray-500' };
+        }
+        
+        try {
+            const lastLaunch = new Date(task.last_launch);
+            const now = new Date();
+            
+            if (isNaN(lastLaunch.getTime())) {
+                return { text: 'Date error', class: 'text-red-500' };
+            }
+            
+            const diffMs = now - lastLaunch;
+            const diffSeconds = Math.floor(diffMs / 1000);
+            const diffMinutes = Math.floor(diffSeconds / 60);
+            const diffHours = Math.floor(diffMinutes / 60);
+            const diffDays = Math.floor(diffHours / 24);
+            
+            if (diffSeconds < 60) {
+                return { text: `${diffSeconds} sec toзаd`, class: 'text-green-600 font-semibold' };
+            } else if (diffMinutes < 60) {
+                return { text: `${diffMinutes} min toзаd`, class: 'text-green-600' };
+            } else if (diffHours < 24) {
+                return { text: `${diffHours} h toзаd`, class: 'text-blue-600' };
+            } else {
+                return { text: `${diffDays} d toзаd`, class: 'text-gray-600' };
+            }
+        } catch (error) {
+            console.error('Time calculation error:', error);
+            return { text: 'Error', class: 'text-red-500' };
+        }
+    },
+
+    // Method for definitions of status withлеdующегo start
+    getNextLaunchStatus(task) {
+        if (!task.next_launch || task.next_launch === '0000-00-00 00:00:00' || task.next_launch === 'Never' || task.next_launch === 'Disabled') {
+            return { text: 'Not scheduled', class: 'text-gray-500' };
+        }
+        
+        const nextLaunch = new Date(task.next_launch);
+        const now = new Date();
+        
+        if (nextLaunch < now) {
+            return { text: 'Overdue', class: 'text-red-600 font-semibold' };
+        }
+        
+        const diffMs = nextLaunch - now;
+        const diffHours = Math.floor(diffMs / (1000 * 60 * 60));
+        
+        if (diffHours < 1) {
+            const diffMinutes = Math.floor(diffMs / (1000 * 60));
+            return { text: `In ${diffMinutes} min`, class: 'text-green-600' };
+        } else if (diffHours < 24) {
+            return { text: `In ${diffHours} h`, class: 'text-green-600' };
+        } else {
+            const diffDays = Math.floor(diffHours / 24);
+            return { text: `In ${diffDays} d`, class: 'text-blue-600' };
+        }
     },
 
     handleImageError(event) {

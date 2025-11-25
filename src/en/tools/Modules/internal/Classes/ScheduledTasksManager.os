@@ -139,7 +139,7 @@ Procedure PerformHandling(Task) Export
 		CurrentHandler = CurrentHandler["data"];
 		CurrentHandler = ?(TypeOf(CurrentHandler) = Type("Array"), CurrentHandler[0], CurrentHandler);
 		
-		ActionsProcessor.PerformUniversalProcessing(Undefined, CurrentHandler, New Structure);
+		ActionsProcessor.PerformUniversalProcessing(Undefined, CurrentHandler, New Structure, Undefined, Name);
 		
 	Except
 		Message(StrTemplate("Error executing scheduler task %1: %2", Task, DetailErrorDescription(ErrorInfo())));

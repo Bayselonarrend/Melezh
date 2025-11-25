@@ -75,6 +75,7 @@ export const logsView = () => ({
   },
 
   getStatusText(status) {
+    if (status === 0) return 'LocalLaunch';
     if (status >= 200 && status < 300) return 'Success';
     if (status >= 400 && status < 500) return 'Client error';
     if (status >= 500) return 'Server error';

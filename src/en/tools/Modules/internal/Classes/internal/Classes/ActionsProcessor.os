@@ -36,7 +36,7 @@ Function MainHandle(Val Context, Val Path) Export
             Handler = HandlerDescription["data"];
             Handler = ?(TypeOf(Handler) = Type("Array"), Handler[0], Handler);
             
-            Result = PerformHandling(Context, Handler, RequestBody);
+            Result = PerformHandling(Context, Handler, RequestBody, Path);
             
         Else
             Result = Toolbox.HandlingError(Context, 404, "Not Found");
@@ -50,12 +50,9 @@ Function MainHandle(Val Context, Val Path) Export
         ResponseCode = ?(ExecutionError, 400, 500);
         
         Result = Toolbox.HandlingError(Context, ResponseCode, ErrorInfo);
+        Logger.WriteLog(Context, Path, RequestBody, Result);
         
     EndTry;
-    
-    If Not NotFound Then
-        Logger.WriteLog(Context, Path, RequestBody, Result);
-    EndIf;
     
     RunGarbageCollection();
     
@@ -63,7 +60,7 @@ Function MainHandle(Val Context, Val Path) Export
     
 EndFunction
 
-Function PerformUniversalProcessing(Context, Handler, Parameters) Export
+Function PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path) Export
     
     #If Client Then
     Raise "The method is not available on the client!";
@@ -164,6 +161,8 @@ Function PerformUniversalProcessing(Context, Handler, Parameters) Export
     Except
         Message("Failed to delete temporary files!");
     EndTry;
+
+    Logger.WriteLog(Context, Path, RequestBody, Response);
     
     Return Response;
     
@@ -194,7 +193,7 @@ EndProcedure
 
 #Region Main
 
-Function PerformHandling(Context, Handler, RequestBody)
+Function PerformHandling(Context, Handler, RequestBody, Path)
     
     If Not ValueIsFilled(Handler["active"]) Then
         Return Toolbox.HandlingError(Context, 403, "Forbidden");
@@ -214,15 +213,15 @@ Function PerformHandling(Context, Handler, RequestBody)
     
     If HandlersMethod = "GET" Then
         
-        Result = ExecuteGetProcessing(Context, Handler);
+        Result = ExecuteGetProcessing(Context, Handler, RequestBody, Path);
         
     ElsIf HandlersMethod = "JSON" Then
         
-        Result = ExecutePostProcessing(Context, Handler, RequestBody);
+        Result = ExecutePostProcessing(Context, Handler, RequestBody, Path);
         
     ElsIf HandlersMethod = "FORM" Then
         
-        Result = ExecuteFormDataProcessing(Context, Handler);
+        Result = ExecuteFormDataProcessing(Context, Handler, RequestBody, Path);
         
     Else
         
@@ -234,16 +233,16 @@ Function PerformHandling(Context, Handler, RequestBody)
     
 EndFunction
 
-Function ExecuteGetProcessing(Context, Handler)
+Function ExecuteGetProcessing(Context, Handler, RequestBody, Path)
     
     Request = Context.Request;
     Parameters = Request.Parameters;
     
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
+    Return PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path);
     
 EndFunction
 
-Function ExecutePostProcessing(Context, Handler, RequestBody)
+Function ExecutePostProcessing(Context, Handler, RequestBody, Path)
     
     Request = Context.Request;
     
@@ -256,11 +255,11 @@ Function ExecutePostProcessing(Context, Handler, RequestBody)
     Parameters = ReadJSON(JSONReader, True);
     JSONReader.Close();
     
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
+    Return PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path);
     
 EndFunction
 
-Function ExecuteFormDataProcessing(Context, Handler)
+Function ExecuteFormDataProcessing(Context, Handler, RequestBody, Path)
     
     #If Client Then
     Raise "The method is not available on the client!";
@@ -274,7 +273,7 @@ Function ExecuteFormDataProcessing(Context, Handler)
     
     Parameters = SplitFormData(Request.Form);
     
-    Return PerformUniversalProcessing(Context, Handler, Parameters);
+    Return PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path);
     
     #EndIf
     
@@ -403,7 +402,7 @@ Function CallHandler(Val Path, Val Parameters) Export
         Handler = ?(TypeOf(Handler) = Type("Array"), Handler[0], Handler);
 
         Try
-            Return PerformUniversalProcessing(Undefined, Handler, Parameters);
+            Return PerformUniversalProcessing(Undefined, Handler, Parameters, Undefined, Path);
         Except
             Return New Structure("result,error", False, DetailErrorDescription(ErrorInfo()));
         EndTry;

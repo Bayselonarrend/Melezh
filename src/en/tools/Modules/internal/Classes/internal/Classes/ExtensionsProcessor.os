@@ -30,33 +30,54 @@ Procedure CompleteCompositionWithExtensions() Export
 
         For Each ExtensionFile In ExtensionFiles Do
 
-            Try
-
-                ExtensionName = ExtensionFile.BaseName;
-
-                If Not Toolbox.StringStartsWithLetter(ExtensionName) Then
-                    Message(StrTemplate("Error applying extension %1: module name must start with a letter", ExtensionName));
-                    Continue;
-                EndIf;
-
-                ParametersTable = ParseModule(ExtensionFile);
-                OPIObject.CompleteCompositionCache(ExtensionFile.BaseName, ParametersTable); 
-                ActionsProcessor.ConnectExtensionScript(ExtensionFile.FullName, ExtensionFile.BaseName);
-
-            Except
-
-                TroubleDescription = StrTemplate("Error applying the extension: %1", DetailErrorDescription(ErrorInfo()));
-
-                AddExtensionToCache(ExtensionFile.BaseName, ExtensionFile.FullName, TroubleDescription);
-                Message(TroubleDescription);
-
-            EndTry;
+            ConnectExtensionFile(ExtensionFile);
 
         EndDo;
 
     EndDo;
 
 EndProcedure
+
+Function ConnectExtensionFile(ExtensionFile, Test = False) Export
+
+    Try
+
+        ExtensionName = ExtensionFile.BaseName;
+
+        If Not Toolbox.StringStartsWithLetter(ExtensionName) Then
+
+            TroubleDescription = StrTemplate("Error applying extension %1: module name must start with a letter", ExtensionName);
+            HandleConnectionException(ExtensionFile, TroubleDescription, Test);
+            Return TroubleDescription;
+
+        EndIf;
+
+        Try 
+            ObjectTest = LoadScript(ExtensionFile.FullName, New Structure("Melezh", ActionsProcessor));
+        Except
+            TroubleDescription = StrTemplate("Error applying the extension: %1", DetailErrorDescription(ErrorInfo()));
+            HandleConnectionException(ExtensionFile, TroubleDescription, Test);
+            Return TroubleDescription;
+        EndTry;
+
+        ParametersTable = ParseModule(ExtensionFile);
+
+        If Not Test Then
+            OPIObject.CompleteCompositionCache(ExtensionFile.BaseName, ParametersTable); 
+            ActionsProcessor.ConnectExtensionScript(ExtensionFile.FullName, ExtensionFile.BaseName);
+        EndIf;
+
+    Except
+
+        TroubleDescription = StrTemplate("Error applying the extension: %1", DetailErrorDescription(ErrorInfo()));
+        HandleConnectionException(ExtensionFile, TroubleDescription, Test);
+        Return TroubleDescription;
+
+    EndTry;
+
+    Return Undefined;
+
+EndFunction
 
 Function GetExtensionsList() Export
 
@@ -458,6 +479,16 @@ Procedure AddExtensionToCache(Val Name, Val Path, Val Count)
 
     CacheStructure = New Structure("filepath,count", Path, Count);
     ExtensionsCache.Insert(Name, CacheStructure);
+
+EndProcedure
+
+Procedure HandleConnectionException(ExtensionFile, TroubleDescription, Test)
+
+    If Not Test Then
+        AddExtensionToCache(ExtensionFile.BaseName, ExtensionFile.FullName, TroubleDescription);
+    EndIf;
+
+    Message(TroubleDescription); 
 
 EndProcedure
 

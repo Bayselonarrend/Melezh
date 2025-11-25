@@ -21,6 +21,7 @@ Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 	Try
 
 		LogPath = SettingsVault.ReturnSetting("logs_path");
+		HasContext = Context <> Undefined;
 		
 		If Not ValueIsFilled(LogPath) Then
 			Return;		
@@ -33,7 +34,13 @@ Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 		WritingPath = OrganizeLogCatalog(LogPath, RequestDate, HandlerEscaped, RequestUUID);
 		
 		If RequestBody = Undefined Then
-			BodySize = Context.Request.ContentLength;
+
+			If HasContext Then
+				BodySize = Context.Request.ContentLength;
+		    Else
+				BodySize = 0;
+			EndIf;
+
 		Else
 			BodySize = RequestBody.Size();
 		EndIf;
@@ -46,11 +53,11 @@ Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 		
 		WriteRequestInfo(WritingPath, Context, RequestDate, BodySize, RequestUUID, Handler);
 
-		If RecordRequestHeaders Then
+		If RecordRequestHeaders And HasContext Then
 			WriteRequestHeaders(WritingPath, Context.Request.Headers);
 		EndIf;
 		
-		If RecordRequestBody Then
+		If RecordRequestBody And HasContext Then
 
 			If RequestBody <> Undefined Then
 				
@@ -283,16 +290,23 @@ EndFunction
 
 Function WriteRequestInfo(Val LogPath, Val Context, Val RequestDate, Val BodySize, Val RequestUUID, Val Handler)
 	
-	ContentType = Context.Request.ContentType;
-	ContentType = ?(ValueIsFilled(ContentType), ContentType, "<no/undefined>");
+	HasContext = Context <> Undefined;
+	ContentType = Undefined;
 	
+	If HasContext Then
+		ContentType = Context.Request.ContentType;
+		ContentType = ?(ValueIsFilled(ContentType), ContentType, "<no/undefined>");
+	Else
+		ContentType = "LocalLaunch";
+	EndIf;
+
 	RequestData = New Structure;
 	RequestData.Insert("key" , RequestUUID);
 	RequestData.Insert("date" , RequestDate);		
-	RequestData.Insert("method" , Context.Request.Method);
+	RequestData.Insert("method" , ?(HasContext, Context.Request.Method, "Task"));
 	RequestData.Insert("type" , ContentType);
 	RequestData.Insert("size" , ?(ValueIsFilled(BodySize), BodySize, 0));
-	RequestData.Insert("status" , Context.Response.StatusCode);
+	RequestData.Insert("status" , ?(HasContext, Context.Response.StatusCode, 0));
 	RequestData.Insert("handler" , Handler);
 	
 	LastActions.Insert(0, RequestData);
@@ -301,9 +315,15 @@ Function WriteRequestInfo(Val LogPath, Val Context, Val RequestDate, Val BodySiz
 		LastActions.Delete(LastActions.Count() - 1);
 	EndDo;
 	
-	RequestData.Insert("protocol", Context.Request.Protocol);
-	RequestData.Insert("form" , Context.Request.HasFormContentType);
-	RequestData.Insert("params" , Context.Request.Parameters);
+	If HasContext Then
+		RequestData.Insert("protocol", Context.Request.Protocol);
+		RequestData.Insert("form" , Context.Request.HasFormContentType);
+		RequestData.Insert("params" , Context.Request.Parameters);
+	Else
+		RequestData.Insert("protocol", "LocalLaunch");
+		RequestData.Insert("form" , False);
+		RequestData.Insert("params" , New Array);
+	EndIf;
 	
 	JSONWriter = New JSONWriter();
 	JSONWriter.OpenFile(StrTemplate("%1/%2", LogPath, "req.info"));

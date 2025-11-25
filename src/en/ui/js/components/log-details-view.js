@@ -36,12 +36,13 @@ export const logDetailsView = () => ({
     }
   },
   getStatusText(status) {
+    if (status === 0) return 'LocalLaunch';
     if (status >= 200 && status < 300) return 'Success';
     if (status >= 400 && status < 500) return 'Client error';
     if (status >= 500) return 'Server error';
     return 'Unknown status';
   },
-  // Method for othreewithintoand JSON
+
   renderJson(value) {
     return jsonViewer.renderValue(value, 0);
   },

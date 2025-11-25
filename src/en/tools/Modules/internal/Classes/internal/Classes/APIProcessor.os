@@ -105,6 +105,8 @@ Function MainHandle(Val Context, Val Path) Export
 			Result = CreateScheduledTask(Context);
 		ElsIf Command = "updateschedulertask" Then
 			Result = UpdateScheduledTask(Context);
+		ElsIf Command = "updateschedulertaskstatus" Then
+			Result = ChangeScheduledTaskStatus(Context);
 		Else
 			NotFound = True;
 		EndIf;
@@ -176,7 +178,8 @@ Function ReturnFunctionList(Context)
 	
 	Try
 		
-		Library = Context.Request.Form["library"][0];
+		Data = Toolbox.GetJSON(Context);
+		Library = Data["library"];
 
 		Index = OPIObject.GetIndexData(Library);
 		Composition = Index["Composition"].Copy();
@@ -203,8 +206,9 @@ Function ReturnArgumentList(Context)
 	
 	Try
 		
-		Library = Context.Request.Form["library"][0];
-		Method = Context.Request.Form["function"][0];
+		Data = Toolbox.GetJSON(Context);
+		Library = Data["library"];
+		Method = Data["function"];
 		
 		Index = OPIObject.GetIndexData(Library);
 		Composition = Index["Composition"].Copy();
@@ -499,7 +503,8 @@ Function ReturnHandler(Context)
 	
 	Try
 		
-		HandlersKey = Context.Request.Form["key"][0];
+		Data = Toolbox.GetJSON(Context);
+		HandlersKey = Data["key"];
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
 		Result = ProxyModule.GetRequestsHandler(ConnectionRO, HandlersKey);
@@ -518,8 +523,9 @@ Function UpdateHandlerStatus(Context)
 	
 	Try
 		
-		HandlersKey = Context.Request.Form["key"][0];
-		HandlerStatus = Context.Request.Form["active"][0];
+		Data = Toolbox.GetJSON(Context);
+		HandlersKey = Data["key"];
+		HandlerStatus = Data["active"];
 		
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		
@@ -604,7 +610,8 @@ EndFunction
 Function DeleteRequestsHandler(Context)
 	
 	Try
-		Handler = Context.Request.Form["key"][0];
+		Data = Toolbox.GetJSON(Context);
+		Handler = Data["key"];
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		Result = ProxyModule.DeleteRequestsHandler(ConnectionRW, Handler);
 	Except
@@ -834,7 +841,30 @@ Function ReturnScheduledTaskList(Context)
 	Try
 		
 		ConnectionRO = ConnectionManager.GetROConnection();
+		SessionTasks = TaskScheduler.GetTaskList();
 		Result = ProxyModule.GetScheduledTaskList(ConnectionRO);
+
+		If SessionTasks["result"] And Result["result"] Then
+
+			ActiveTasks = SessionTasks["jobs"];
+			TaskList = New Map();
+
+			For Each ActiveTask In ActiveTasks Do
+				TaskList.Insert(ActiveTask["name"], ActiveTask)
+			EndDo;
+			
+			For N = 0 To Result["data"].UBound() Do
+				
+				CurrentValue = Result["data"][N];
+				FoundTask = TaskList.Get(String(CurrentValue["id"]));
+
+				If FoundTask <> Undefined Then
+					Result["data"][N].Insert("last_launch", FoundTask["last_triggered"]);
+					Result["data"][N].Insert("next_launch", FoundTask["next_launch"]);
+				EndIf;
+			EndDo;
+			
+		EndIf;
 		
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
@@ -848,7 +878,8 @@ Function DeleteScheduledTask(Context)
 	
 	Try
 
-		Task = Context.Request.Form["id"][0];
+		Data = Toolbox.GetJSON(Context);
+		Task = Data["id"];
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		Result = ProxyModule.DeleteScheduledTask(ConnectionRW, Task);
 
@@ -911,8 +942,7 @@ Function UpdateScheduledTask(Context)
 			Return Toolbox.HandlingError(Context, 400, Result["error"]);
 		EndIf;
 
-		TaskID = Result["id"];
-		Result = TaskScheduler.UpdateTaskSchedule(TaskID, Schedule);
+		Result = TaskScheduler.UpdateTaskSchedule(String(Task), Schedule);
 
 		If Not Result["result"] Then
 			Result = Toolbox.HandlingError(Context, 400, Result["error"]);
@@ -924,6 +954,46 @@ Function UpdateScheduledTask(Context)
 	
 	Return Result;
 
+EndFunction
+
+Function ChangeScheduledTaskStatus(Context)
+	
+	Result = Undefined;
+	
+	Try
+		
+		ChangeStructure = Toolbox.GetJSON(Context);
+		Task = ChangeStructure["id"];
+		Status = ChangeStructure["active"];
+		
+		ConnectionRW = ConnectionManager.GetRWConnection();
+		
+		If Status = 0 Then
+			Result = ProxyModule.DisableScheduledTask(ConnectionRW, Task);
+		Else
+			Result = ProxyModule.EnableScheduledTask(ConnectionRW, Task);
+		EndIf;
+		
+		If Not Result["result"] Then
+			Return Toolbox.HandlingError(Context, 400, Result["error"]);
+		EndIf;
+
+		If Status = 0 Then
+			Result = TaskScheduler.DisableTask(Task);
+		Else
+			Result = TaskScheduler.EnableTask(Task);
+		EndIf;
+
+		If Not Result["result"] Then
+			Result = Toolbox.HandlingError(Context, 400, Result["error"]);
+		EndIf;
+		
+	Except
+		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
+	EndTry;
+	
+	Return Result;
+	
 EndFunction
 
 Procedure FillLibraryContent()

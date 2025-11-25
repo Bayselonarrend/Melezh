@@ -250,7 +250,6 @@ export const schedulerView = () => ({
         }
     },
 
-    // Новый метод для переключения статуса задачи
     async toggleTaskStatus(task) {
         const newStatus = task.active == 1 ? 0 : 1;
 

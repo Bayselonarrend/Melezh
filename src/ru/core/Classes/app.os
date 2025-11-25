@@ -361,17 +361,7 @@
 
 КонецПопытки;
 
-#Region Alternate
 
-
-
-#EndRegion
-
-#Region Alternate
-
-
-
-#EndRegion
 
 #Region Alternate
 

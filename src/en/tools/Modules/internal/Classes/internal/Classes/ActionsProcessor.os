@@ -417,61 +417,6 @@ EndFunction
 
 #EndRegion
 
-#Region Alternate
-
-Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_) Export
-	Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-Function PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path) Export
-	Return PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path);
-EndFunction
-
-Procedure ConnectExtensionScript(Val Path, Val Name) Export
-	ConnectExtensionScript(Path, Name);
-EndProcedure
-
-Procedure ClearActiveExtensionsList() Export
-	ClearActiveExtensionsList();
-EndProcedure
-
-Function CallHandler(Val Path, Val Parameters) Export
-	Return CallHandler(Path, Parameters);
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_) Export
-	Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-Function PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path) Export
-	Return PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path);
-EndFunction
-
-Procedure ConnectExtensionScript(Val Path, Val Name) Export
-	ConnectExtensionScript(Path, Name);
-EndProcedure
-
-Procedure ClearActiveExtensionsList() Export
-	ClearActiveExtensionsList();
-EndProcedure
-
-Function CallHandler(Val Path, Val Parameters) Export
-	Return CallHandler(Path, Parameters);
-EndFunction
-
-#EndRegion
 
 
 #Region Alternate

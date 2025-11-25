@@ -124,45 +124,7 @@
 
 #КонецОбласти
 
-#Region Alternate
 
-Procedure Initialize(ConnectionManager_, SettingsVault_) Export
-	Инициализировать(ConnectionManager_, SettingsVault_);
-EndProcedure
-
-Function AuthorizeSession(Context) Export
-	Return АвторизоватьСеанс(Context);
-EndFunction
-
-Function AuthorizedSession(Context) Export
-	Return АвторизованныйСеанс(Context);
-EndFunction
-
-Procedure DeleteSession(Context) Export
-	УдалитьСеанс(Context);
-EndProcedure
-
-#EndRegion
-
-#Region Alternate
-
-Procedure Initialize(ConnectionManager_, SettingsVault_) Export
-	Инициализировать(ConnectionManager_, SettingsVault_);
-EndProcedure
-
-Function AuthorizeSession(Context) Export
-	Return АвторизоватьСеанс(Context);
-EndFunction
-
-Function AuthorizedSession(Context) Export
-	Return АвторизованныйСеанс(Context);
-EndFunction
-
-Procedure DeleteSession(Context) Export
-	УдалитьСеанс(Context);
-EndProcedure
-
-#EndRegion
 
 #Region Alternate
 

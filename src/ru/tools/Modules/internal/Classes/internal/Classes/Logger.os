@@ -342,53 +342,7 @@
 #КонецОбласти
 
 
-#Region Alternate
 
-Procedure Initialize(SettingsVault_) Export
-	Инициализировать(SettingsVault_);
-EndProcedure
-
-Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
-	ЗаписатьЛог(Context, Handler, RequestBody, Result);
-EndProcedure
-
-Function ReturnLastActions() Export
-	Return ВернутьПоследниеДействия();
-EndFunction
-
-Function ReturnActions(Handler, Date) Export
-	Return ВернутьДействия(Handler, Date);
-EndFunction
-
-Function ReturnResponsesAmount() Export
-	Return ВернутьЧислоЗапросов();
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Procedure Initialize(SettingsVault_) Export
-	Инициализировать(SettingsVault_);
-EndProcedure
-
-Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
-	ЗаписатьЛог(Context, Handler, RequestBody, Result);
-EndProcedure
-
-Function ReturnLastActions() Export
-	Return ВернутьПоследниеДействия();
-EndFunction
-
-Function ReturnActions(Handler, Date) Export
-	Return ВернутьДействия(Handler, Date);
-EndFunction
-
-Function ReturnResponsesAmount() Export
-	Return ВернутьЧислоЗапросов();
-EndFunction
-
-#EndRegion
 
 #Region Alternate
 

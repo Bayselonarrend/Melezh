@@ -29,21 +29,7 @@
 
 КонецФункции
 
-#Region Alternate
 
-Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) Export
-	Return ПолучитьФайлИзКаталога(Directory, FileName, MIME, Context);
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) Export
-	Return ПолучитьФайлИзКаталога(Directory, FileName, MIME, Context);
-EndFunction
-
-#EndRegion
 
 #Region Alternate
 

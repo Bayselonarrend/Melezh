@@ -88,29 +88,6 @@ EndFunction
 
 #EndRegion
 
-#Region Alternate
-
-Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export
-	Initialize(ServerPath_, SessionsHandler_, SettingsVault_);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Procedure Initialize(ServerPath_, SessionsHandler_, SettingsVault_) Export
-	Initialize(ServerPath_, SessionsHandler_, SettingsVault_);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-#EndRegion
 
 
 #Region Alternate

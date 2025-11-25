@@ -233,45 +233,7 @@
 
 #КонецОбласти
 
-#Region Alternate
 
-Procedure DisplayStartPage(Val Version) Export
-	ВывестиНачальнуюСтраницу(Version);
-EndProcedure
-
-Procedure DisplayMethodHelp(Val ParametersTable) Export
-	ВывестиСправкуПоМетодам(ParametersTable);
-EndProcedure
-
-Procedure DisplayParameterHelp(Val ParametersTable) Export
-	ВывестиСправкуПоПараметрам(ParametersTable);
-EndProcedure
-
-Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
-	ВывестиСообщениеИсключения(Reason, OutputFile);
-EndProcedure
-
-#EndRegion
-
-#Region Alternate
-
-Procedure DisplayStartPage(Val Version) Export
-	ВывестиНачальнуюСтраницу(Version);
-EndProcedure
-
-Procedure DisplayMethodHelp(Val ParametersTable) Export
-	ВывестиСправкуПоМетодам(ParametersTable);
-EndProcedure
-
-Procedure DisplayParameterHelp(Val ParametersTable) Export
-	ВывестиСправкуПоПараметрам(ParametersTable);
-EndProcedure
-
-Procedure DisplayExceptionMessage(Val Reason, Val OutputFile = "") Export
-	ВывестиСообщениеИсключения(Reason, OutputFile);
-EndProcedure
-
-#EndRegion
 
 #Region Alternate
 

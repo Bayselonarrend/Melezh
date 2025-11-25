@@ -1129,29 +1129,6 @@ EndProcedure
 
 #EndRegion
 
-#Region Alternate
-
-Procedure Initialize(InitializationStructure) Export
-	Initialize(InitializationStructure);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Procedure Initialize(InitializationStructure) Export
-	Initialize(InitializationStructure);
-EndProcedure
-
-Function MainHandle(Val Context, Val Path) Export
-	Return MainHandle(Context, Path);
-EndFunction
-
-#EndRegion
 
 
 #Region Alternate

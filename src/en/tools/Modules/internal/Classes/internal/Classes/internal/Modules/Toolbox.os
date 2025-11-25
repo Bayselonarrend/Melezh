@@ -96,61 +96,6 @@ EndFunction
 
 #EndRegion
 
-#Region Alternate
-
-Function CreateConnectionRO(Val Path) Export
-	Return CreateConnectionRO(Path);
-EndFunction
-
-Function CreateConnectionRW(Val Path) Export
-	Return CreateConnectionRW(Path);
-EndFunction
-
-Function GetJSON(Context) Export
-	Return GetJSON(Context);
-EndFunction
-
-Function HandlingError(Context, Code, Text) Export
-	Return HandlingError(Context, Code, Text);
-EndFunction
-
-Function GetBoolean(Val Value) Export
-	Return GetBoolean(Value);
-EndFunction
-
-Function StringStartsWithLetter(Val Value) Export
-	Return StringStartsWithLetter(Value);
-EndFunction
-
-#EndRegion
-
-#Region Alternate
-
-Function CreateConnectionRO(Val Path) Export
-	Return CreateConnectionRO(Path);
-EndFunction
-
-Function CreateConnectionRW(Val Path) Export
-	Return CreateConnectionRW(Path);
-EndFunction
-
-Function GetJSON(Context) Export
-	Return GetJSON(Context);
-EndFunction
-
-Function HandlingError(Context, Code, Text) Export
-	Return HandlingError(Context, Code, Text);
-EndFunction
-
-Function GetBoolean(Val Value) Export
-	Return GetBoolean(Value);
-EndFunction
-
-Function StringStartsWithLetter(Val Value) Export
-	Return StringStartsWithLetter(Value);
-EndFunction
-
-#EndRegion
 
 
 #Region Alternate

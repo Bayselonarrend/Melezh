@@ -444,3 +444,31 @@ Function CallHandler(Val Path, Val Parameters) Export
 EndFunction
 
 #EndRegion
+
+#Region Alternate
+
+Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_) Export
+	Инициализировать(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, SettingsVault_);
+EndProcedure
+
+Function MainHandle(Val Context, Val Path) Export
+	Return ОсновнаяОбработка(Context, Path);
+EndFunction
+
+Function PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, Path) Export
+	Return ВыполнитьУниверсальнуюОбработку(Context, Handler, Parameters, RequestBody, Path);
+EndFunction
+
+Procedure ConnectExtensionScript(Val Path, Val Name) Export
+	ПодключитьСценарийРасширения(Path, Name);
+EndProcedure
+
+Procedure ClearActiveExtensionsList() Export
+	ОчиститьСписокАктивныхРасширений();
+EndProcedure
+
+Function CallHandler(Val Path, Val Parameters) Export
+	Return ВызватьОбработчик(Path, Parameters);
+EndFunction
+
+#EndRegion

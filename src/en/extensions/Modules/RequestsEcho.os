@@ -41,6 +41,22 @@ Function ReturnDataByURL(Val URL) Export
 
 EndFunction
 
+#Region Alternate
+
+Function FieldsEcho(Val Field1, Val Field2, Val Field3 = "") Export
+	Return FieldsEcho(Field1, Field2, Field3);
+EndFunction
+
+Function EchoText(Val Field1, Val Field2, Val Field3 = "") Export
+	Return EchoText(Field1, Field2, Field3);
+EndFunction
+
+Function ReturnDataByURL(Val URL) Export
+	Return ReturnDataByURL(URL);
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

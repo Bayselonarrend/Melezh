@@ -1861,3 +1861,123 @@ Procedure StartScheduledTasksManager(Project, InitializationStructure) Export
 EndProcedure
 
 #EndRegion
+
+#Region Alternate
+
+Function CreateProject(Val Path) Export
+	Return СоздатьПроект(Path);
+EndFunction
+
+Function RunProject(Val Port, Val Project) Export
+	Return ЗапуститьПроект(Port, Project);
+EndFunction
+
+Function GetProjectSettings(Val Project) Export
+	Return ПолучитьНастройкиПроекта(Project);
+EndFunction
+
+Function FillProjectSettings(Val Project, Val Settings) Export
+	Return ЗаполнитьНастройкиПроекта(Project, Settings);
+EndFunction
+
+Function SetProjectSetting(Val Project, Val Setting, Val Value) Export
+	Return УстановитьНастройкуПроекта(Project, Setting, Value);
+EndFunction
+
+Function UpdateUIPassword(Val Project, Val Password) Export
+	Return СменитьПарольUI(Project, Password);
+EndFunction
+
+Function AddRequestsHandler(Val Project, Val OintLibrary, Val OintFunction, Val Method = "GET") Export
+	Return ДобавитьОбработчикЗапросов(Project, OintLibrary, OintFunction, Method);
+EndFunction
+
+Function GetRequestsHandlersList(Val Project) Export
+	Return ПолучитьСписокОбработчиковЗапросов(Project);
+EndFunction
+
+Function GetRequestsHandler(Val Project, Val HandlersKey) Export
+	Return ПолучитьОбработчикЗапросов(Project, HandlersKey);
+EndFunction
+
+Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
+	Return УдалитьОбработчикЗапросов(Project, HandlersKey);
+EndFunction
+
+Function UpdateRequestsHandler(Val Project, Val HandlersKey, Val OintLibrary = "", Val OintFunction = "", Val Method = "") Export
+	Return ИзменитьОбработчикЗапросов(Project, HandlersKey, OintLibrary, OintFunction, Method);
+EndFunction
+
+Function DisableRequestsHandler(Val Project, Val HandlersKey) Export
+	Return ОтключитьОбработчикЗапросов(Project, HandlersKey);
+EndFunction
+
+Function EnableRequestsHandler(Val Project, Val HandlersKey) Export
+	Return ВключитьОбработчикЗапросов(Project, HandlersKey);
+EndFunction
+
+Function UpdateHandlersKey(Val Project, Val HandlersKey, Val NewKey = "") Export
+	Return ОбновитьКлючОбработчика(Project, HandlersKey, NewKey);
+EndFunction
+
+Function SetHandlerOption(Val Project, Val HandlersKey, Val Option, Val Value) Export
+	Return УстановитьОпциюОбработчика(Project, HandlersKey, Option, Value);
+EndFunction
+
+Function GetHandlerOption(Val Project, Val HandlersKey) Export
+	Return ПолучитьОпцииОбработчика(Project, HandlersKey);
+EndFunction
+
+Function SetHandlerArgument(Val Project, Val HandlersKey, Val Argument, Val Value, Val Strict = True) Export
+	Return УстановитьАргументОбработчика(Project, HandlersKey, Argument, Value, Strict);
+EndFunction
+
+Function GetHandlerArguments(Val Project, Val HandlersKey) Export
+	Return ПолучитьАргументыОбработчика(Project, HandlersKey);
+EndFunction
+
+Function ClearHandlerArguments(Val Project, Val HandlersKey) Export
+	Return ОчиститьАргументыОбработчика(Project, HandlersKey);
+EndFunction
+
+Function AddScheduledTask(Val Project, Val HandlersKey, Val Schedule) Export
+	Return ДобавитьРегламентноеЗадание(Project, HandlersKey, Schedule);
+EndFunction
+
+Function DeleteScheduledTask(Val Project, Val TaskID) Export
+	Return УдалитьРегламентноеЗадание(Project, TaskID);
+EndFunction
+
+Function GetScheduledTaskList(Val Project) Export
+	Return ПолучитьСписокРегламентныхЗаданий(Project);
+EndFunction
+
+Function GetScheduledTask(Val Project, Val TaskID) Export
+	Return ПолучитьРегламентноеЗадание(Project, TaskID);
+EndFunction
+
+Function UpdateScheduledTask(Val Project, Val TaskID, Val Schedule = "", Val HandlersKey = "") Export
+	Return ИзменитьРегламентноеЗадание(Project, TaskID, Schedule, HandlersKey);
+EndFunction
+
+Function EnableScheduledTask(Val Project, Val TaskID) Export
+	Return ВключитьРегламентноеЗадание(Project, TaskID);
+EndFunction
+
+Function DisableScheduledTask(Val Project, Val TaskID) Export
+	Return ОтключитьРегламентноеЗадание(Project, TaskID);
+EndFunction
+
+Function ReceiveUniqueHandlerKey(Path) Export
+	Return ПолучитьУникальныйКлючОбработчика(Path);
+EndFunction
+
+Procedure StartWebServer(Project, Port, InitializationStructure) Export
+	ЗапуститьВебСервер(Project, Port, InitializationStructure);
+EndProcedure
+
+Procedure StartScheduledTasksManager(Project, InitializationStructure) Export
+	ЗапуститьМенеджерРегламентныхЗаданий(Project, InitializationStructure);
+EndProcedure
+
+#EndRegion

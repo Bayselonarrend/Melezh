@@ -494,6 +494,50 @@ EndProcedure
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_, ActionsProcessor_) Export
+	Initialize(OPIObject_, SettingsVault_, ExtensionsCatalog_, ActionsProcessor_);
+EndProcedure
+
+Procedure CompleteCompositionWithExtensions() Export
+	CompleteCompositionWithExtensions();
+EndProcedure
+
+Function ConnectExtensionFile(ExtensionFile, Test = False) Export
+	Return ConnectExtensionFile(ExtensionFile, Test);
+EndFunction
+
+Function GetExtensionsList() Export
+	Return GetExtensionsList();
+EndFunction
+
+Function UpdateExtensionsList() Export
+	Return UpdateExtensionsList();
+EndFunction
+
+Function GetExtensionText(ModuleName) Export
+	Return GetExtensionText(ModuleName);
+EndFunction
+
+Function SaveExtensionsText(ModuleName, ModuleText) Export
+	Return SaveExtensionsText(ModuleName, ModuleText);
+EndFunction
+
+Function GetExtensionDirectoryList() Export
+	Return GetExtensionDirectoryList();
+EndFunction
+
+Function CreateExtensionFile(ModuleName, CreationDirectory) Export
+	Return CreateExtensionFile(ModuleName, CreationDirectory);
+EndFunction
+
+Function DeleteExtensionFile(ModuleName) Export
+	Return DeleteExtensionFile(ModuleName);
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

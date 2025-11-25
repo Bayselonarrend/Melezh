@@ -149,6 +149,22 @@ EndProcedure
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(InitializationStructure) Export
+	Initialize(InitializationStructure);
+EndProcedure
+
+Procedure Start() Export
+	Start();
+EndProcedure
+
+Procedure PerformHandling(Task) Export
+	PerformHandling(Task);
+EndProcedure
+
+#EndRegion
+
 
 #Region Alternate
 

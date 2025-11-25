@@ -319,7 +319,7 @@ Function GetComposition() Export
     NewLine.Method = "SetHandlerArgument";
     NewLine.SearchMethod = "SETHANDLERARGUMENT";
     NewLine.Parameter = "--strict";
-    NewLine.Description = "True > argument cannot be overwritten with data from the query (optional, def. val. - Yes)";
+    NewLine.Description = "True > argument cannot be overwritten with data from the query (optional, def. val. - True)";
     NewLine.Region = "Argument setting";
 
 

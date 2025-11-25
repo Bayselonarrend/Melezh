@@ -133,3 +133,31 @@ Function WriteProjectSettings(Val Data) Export
 EndFunction
 
 #EndRegion
+
+#Region Alternate
+
+Procedure Initialize(ConnectionManager_, ProxyModule_) Export
+	Инициализировать(ConnectionManager_, ProxyModule_);
+EndProcedure
+
+Function ReturnProjectSettingsFull() Export
+	Return ВернутьНастройкиПроектаПолные();
+EndFunction
+
+Function ReturnProjectSettingsUI() Export
+	Return ВернутьНастройкиПроектаUI();
+EndFunction
+
+Function ReturnSetting(Val Name) Export
+	Return ВернутьНастройку(Name);
+EndFunction
+
+Function ReturnBasePath() Export
+	Return ВернутьБазовыйПуть();
+EndFunction
+
+Function WriteProjectSettings(Val Data) Export
+	Return ЗаписатьНастройкиПроекта(Data);
+EndFunction
+
+#EndRegion

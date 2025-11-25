@@ -29,6 +29,14 @@ Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) E
 
 EndFunction
 
+#Region Alternate
+
+Function GetFileFromFolder(Val Directory, Val FileName, Val MIME, Val Context) Export
+	Return GetFileFromFolder(Directory, FileName, MIME, Context);
+EndFunction
+
+#EndRegion
+
 
 #Region Alternate
 

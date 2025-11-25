@@ -124,6 +124,26 @@ EndFunction
 
 #EndRegion
 
+#Region Alternate
+
+Procedure Initialize(ConnectionManager_, SettingsVault_) Export
+	Initialize(ConnectionManager_, SettingsVault_);
+EndProcedure
+
+Function AuthorizeSession(Context) Export
+	Return AuthorizeSession(Context);
+EndFunction
+
+Function AuthorizedSession(Context) Export
+	Return AuthorizedSession(Context);
+EndFunction
+
+Procedure DeleteSession(Context) Export
+	DeleteSession(Context);
+EndProcedure
+
+#EndRegion
+
 
 #Region Alternate
 

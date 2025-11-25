@@ -1742,6 +1742,126 @@ EndFunction
 
 #EndRegion
 
+#Region Alternate
+
+Function CreateProject(Val Path) Export
+	Return CreateProject(Path);
+EndFunction
+
+Function RunProject(Val Port, Val Project) Export
+	Return RunProject(Port, Project);
+EndFunction
+
+Function GetProjectSettings(Val Project) Export
+	Return GetProjectSettings(Project);
+EndFunction
+
+Function FillProjectSettings(Val Project, Val Settings) Export
+	Return FillProjectSettings(Project, Settings);
+EndFunction
+
+Function SetProjectSetting(Val Project, Val Setting, Val Value) Export
+	Return SetProjectSetting(Project, Setting, Value);
+EndFunction
+
+Function UpdateUIPassword(Val Project, Val Password) Export
+	Return UpdateUIPassword(Project, Password);
+EndFunction
+
+Function AddRequestsHandler(Val Project, Val OintLibrary, Val OintFunction, Val Method = "GET") Export
+	Return AddRequestsHandler(Project, OintLibrary, OintFunction, Method);
+EndFunction
+
+Function GetRequestsHandlersList(Val Project) Export
+	Return GetRequestsHandlersList(Project);
+EndFunction
+
+Function GetRequestsHandler(Val Project, Val HandlersKey) Export
+	Return GetRequestsHandler(Project, HandlersKey);
+EndFunction
+
+Function DeleteRequestsHandler(Val Project, Val HandlersKey) Export
+	Return DeleteRequestsHandler(Project, HandlersKey);
+EndFunction
+
+Function UpdateRequestsHandler(Val Project, Val HandlersKey, Val OintLibrary = "", Val OintFunction = "", Val Method = "") Export
+	Return UpdateRequestsHandler(Project, HandlersKey, OintLibrary, OintFunction, Method);
+EndFunction
+
+Function DisableRequestsHandler(Val Project, Val HandlersKey) Export
+	Return DisableRequestsHandler(Project, HandlersKey);
+EndFunction
+
+Function EnableRequestsHandler(Val Project, Val HandlersKey) Export
+	Return EnableRequestsHandler(Project, HandlersKey);
+EndFunction
+
+Function UpdateHandlersKey(Val Project, Val HandlersKey, Val NewKey = "") Export
+	Return UpdateHandlersKey(Project, HandlersKey, NewKey);
+EndFunction
+
+Function SetHandlerOption(Val Project, Val HandlersKey, Val Option, Val Value) Export
+	Return SetHandlerOption(Project, HandlersKey, Option, Value);
+EndFunction
+
+Function GetHandlerOption(Val Project, Val HandlersKey) Export
+	Return GetHandlerOption(Project, HandlersKey);
+EndFunction
+
+Function SetHandlerArgument(Val Project, Val HandlersKey, Val Argument, Val Value, Val Strict = True) Export
+	Return SetHandlerArgument(Project, HandlersKey, Argument, Value, Strict);
+EndFunction
+
+Function GetHandlerArguments(Val Project, Val HandlersKey) Export
+	Return GetHandlerArguments(Project, HandlersKey);
+EndFunction
+
+Function ClearHandlerArguments(Val Project, Val HandlersKey) Export
+	Return ClearHandlerArguments(Project, HandlersKey);
+EndFunction
+
+Function AddScheduledTask(Val Project, Val HandlersKey, Val Schedule) Export
+	Return AddScheduledTask(Project, HandlersKey, Schedule);
+EndFunction
+
+Function DeleteScheduledTask(Val Project, Val TaskID) Export
+	Return DeleteScheduledTask(Project, TaskID);
+EndFunction
+
+Function GetScheduledTaskList(Val Project) Export
+	Return GetScheduledTaskList(Project);
+EndFunction
+
+Function GetScheduledTask(Val Project, Val TaskID) Export
+	Return GetScheduledTask(Project, TaskID);
+EndFunction
+
+Function UpdateScheduledTask(Val Project, Val TaskID, Val Schedule = "", Val HandlersKey = "") Export
+	Return UpdateScheduledTask(Project, TaskID, Schedule, HandlersKey);
+EndFunction
+
+Function EnableScheduledTask(Val Project, Val TaskID) Export
+	Return EnableScheduledTask(Project, TaskID);
+EndFunction
+
+Function DisableScheduledTask(Val Project, Val TaskID) Export
+	Return DisableScheduledTask(Project, TaskID);
+EndFunction
+
+Function ReceiveUniqueHandlerKey(Path) Export
+	Return ReceiveUniqueHandlerKey(Path);
+EndFunction
+
+Procedure StartWebServer(Project, Port, InitializationStructure) Export
+	StartWebServer(Project, Port, InitializationStructure);
+EndProcedure
+
+Procedure StartScheduledTasksManager(Project, InitializationStructure) Export
+	StartScheduledTasksManager(Project, InitializationStructure);
+EndProcedure
+
+#EndRegion
+
 
 #Region Alternate
 

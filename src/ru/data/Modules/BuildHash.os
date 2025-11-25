@@ -28,11 +28,18 @@
 
 Function GetHashSum() Export
 
-    LastBuildHash  = "D5EB40380B4B6C4951E7914590E088735E78625B449E1B5393118595CA8C6AC5";
+    LastBuildHash  = "54DA7FFDCD9EA0D7372AE8B7A9A313AE41C88769E3B6CE2AEF6EACDADAF94FD0";
 
     Return LastBuildHash;
 
 EndFunction
+
+
+#Region Alternate
+
+
+
+#EndRegion
 
 
 #Region Alternate

@@ -56,3 +56,19 @@ Function ReturnDataByURL(Val URL) Export
 EndFunction
 
 #EndRegion
+
+#Region Alternate
+
+Function FieldsEcho(Val Field1, Val Field2, Val Field3 = "") Export
+	Return ЭхоПолей(Field1, Field2, Field3);
+EndFunction
+
+Function EchoText(Val Field1, Val Field2, Val Field3 = "") Export
+	Return ЭхоТекст(Field1, Field2, Field3);
+EndFunction
+
+Function ReturnDataByURL(Val URL) Export
+	Return ВернутьДанныеПоURL(URL);
+EndFunction
+
+#EndRegion

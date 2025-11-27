@@ -57,4 +57,8 @@ Function GetRWConnection() Export
 	Return ПолучитьСоединениеRW();
 EndFunction
 
+Procedure ReturnRWConnection() Export
+	ВернутьСоединениеRW();
+EndProcedure
+
 #EndRegion

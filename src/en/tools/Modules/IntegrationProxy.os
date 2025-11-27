@@ -1282,7 +1282,7 @@ Function CheckRestoreProject(Val Path, Val Create = False)
 
         Text = "The project file does not exist at the specified location!";
         Response = FormResponse(False, Text, FullPath);
-        
+
     Else
         
         Result = CreateNewProject(FullPath);
@@ -1573,7 +1573,6 @@ Function GetDefaultSettings()
     SettingsList.Insert("ext_path" , New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart or cache update to apply)", "", "string"));
     SettingsList.Insert("ui_show" , New Structure(SettingsFields, "ui_show" , "Enables and disables the availability of the Web Console", "true", "bool"));
     SettingsList.Insert("index_redirect" , New Structure(SettingsFields, "index_redirect" , "Replaces the output of the title (root) page of Melezh with a redirect to the specified path", "", "string"));
-    
     
     Return SettingsList;
     

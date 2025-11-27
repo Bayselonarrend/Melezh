@@ -58,6 +58,8 @@ Function WriteProjectSettings(Val Data) Export
 	
 	ConnectionRW = ConnectionManager.GetRWConnection();
 	Result = ProxyModule.FillProjectSettings(ConnectionRW, Data);
+	ConnectionManager.ReturnRWConnection();
+	
 	FillSettings(True);
 	
 	Return Result;

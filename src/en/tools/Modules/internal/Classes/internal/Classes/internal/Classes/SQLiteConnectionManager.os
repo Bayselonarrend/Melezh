@@ -2,6 +2,7 @@
 
 Var ConnectionRO;
 Var ConnectionRW;
+Var RWGuard;
 
 #Region Internal
 
@@ -11,7 +12,8 @@ Procedure Initialize(ProjectPath_) Export
 
 	ConnectionRO = OPI_SQLite.CreateConnection(ROProjectPath);
 	ConnectionRW = OPI_SQLite.CreateConnection(ProjectPath_);
-	
+	RWGuard = True;
+
 EndProcedure
 
 Function GetROConnection() Export
@@ -21,10 +23,20 @@ Function GetROConnection() Export
 EndFunction
 
 Function GetRWConnection() Export
+
+	While Not RWGuard Do
+		Sleep(200);
+	EndDo;
+
+	RWGuard = False;
 	
 	Return ConnectionRW;
 
 EndFunction
+
+Procedure ReturnRWConnection() Export
+	RWGuard = True;
+EndProcedure
 
 #EndRegion
 
@@ -41,5 +53,9 @@ EndFunction
 Function ПолучитьСоединениеRW() Export
 	Return GetRWConnection();
 EndFunction
+
+Procedure ВернутьСоединениеRW() Export
+	ReturnRWConnection();
+EndProcedure
 
 #EndRegion

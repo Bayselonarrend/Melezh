@@ -1752,8 +1752,8 @@ Function CreateProject(Val Path) Export
 	Return СоздатьПроект(Path);
 EndFunction
 
-Function RunProject(Val Port, Val Project) Export
-	Return ЗапуститьПроект(Port, Project);
+Function RunProject(Val Port, Val Project, Val Create = False) Export
+	Return ЗапуститьПроект(Port, Project, Create);
 EndFunction
 
 Function GetProjectSettings(Val Project) Export

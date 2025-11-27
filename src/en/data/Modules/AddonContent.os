@@ -39,6 +39,14 @@ Function GetComposition() Export
 
 
     NewLine = CompositionTable.Add();
+    NewLine.Method = "RunProject";
+    NewLine.SearchMethod = "RUNPROJECT";
+    NewLine.Parameter = "--create";
+    NewLine.Description = "Create a new project if it doesnt exist (optional, default - False)";
+    NewLine.Region = "Projects setup";
+
+
+    NewLine = CompositionTable.Add();
     NewLine.Method = "GetProjectSettings";
     NewLine.SearchMethod = "GETPROJECTSETTINGS";
     NewLine.Parameter = "--proj";
@@ -319,7 +327,7 @@ Function GetComposition() Export
     NewLine.Method = "SetHandlerArgument";
     NewLine.SearchMethod = "SETHANDLERARGUMENT";
     NewLine.Parameter = "--strict";
-    NewLine.Description = "True > argument cannot be overwritten with data from the query (optional, def. val. - True)";
+    NewLine.Description = "True > argument cannot be overwritten with data from the query (optional, def. val. - Yes)";
     NewLine.Region = "Argument setting";
 
 

@@ -67,10 +67,11 @@ EndFunction
 // Parameters:
 // Port - Number - Server startup port - port
 // Project - String - Project filepath - proj
+// Create - Boolean - Create a new project if it doesnt exist - create
 //
 // Returns:
 // Structure Of KeyAndValue - Server shutdown result
-Function RunProject(Val Port, Val Project) Export
+Function RunProject(Val Port, Val Project, Val Create = False) Export
 
     If Not OPI_Tools.IsOneScript() Then
         BackgroundTasksManager = Undefined;
@@ -79,7 +80,7 @@ Function RunProject(Val Port, Val Project) Export
 
     OPI_TypeConversion.GetNumber(Port);
 
-    Check = CheckRestoreProject(Project);
+    Check = CheckRestoreProject(Project, Create);
 
     If Not Check["result"] Then
         Return Check;
@@ -1268,17 +1269,20 @@ Function NormalizeProject(Path)
 
 EndFunction
 
-Function CheckRestoreProject(Val Path)
+Function CheckRestoreProject(Val Path, Val Create = False)
 
+    OPI_TypeConversion.GetBoolean(Create);
     OPI_TypeConversion.GetLine(Path);
     OPI_Tools.RestoreEscapeSequences(Path);
 
     BaseFile = New File(Path);
     FullPath = BaseFile.FullName;
 
-    If Not BaseFile.Exists() Then
+    If Not BaseFile.Exists() And Not Create Then
+
         Text = "The project file does not exist at the specified location!";
         Response = FormResponse(False, Text, FullPath);
+        
     Else
         
         Result = CreateNewProject(FullPath);
@@ -1748,8 +1752,8 @@ Function СоздатьПроект(Val Путь) Export
 	Return CreateProject(Путь);
 EndFunction
 
-Function ЗапуститьПроект(Val Порт, Val Проект) Export
-	Return RunProject(Порт, Проект);
+Function ЗапуститьПроект(Val Порт, Val Проект, Val Создавать = False) Export
+	Return RunProject(Порт, Проект, Создавать);
 EndFunction
 
 Function ПолучитьНастройкиПроекта(Val Проект) Export

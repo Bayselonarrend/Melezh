@@ -206,7 +206,11 @@ impl CronScheduler {
                     Self::disable_job_internal(name, Arc::clone(&jobs)).await;
                 }
                 JobControlMessage::EnableJob(name) => {
-                    Self::enable_job_internal(name, Arc::clone(&jobs)).await;
+                    Self::enable_job_internal(
+                        name,
+                        Arc::clone(&jobs),
+                        Arc::clone(&event_queue)
+                    ).await;
                 }
                 JobControlMessage::Shutdown => {
                     break;
@@ -285,9 +289,25 @@ impl CronScheduler {
     async fn enable_job_internal(
         name: String,
         jobs: Arc<RwLock<HashMap<String, JobState>>>,
+        event_queue: Arc<Mutex<Vec<String>>>,
     ) {
         if let Some(job_state) = jobs.write().await.get_mut(&name) {
             job_state.is_active = true;
+
+            // Перезапускаем задачу (как при update)
+            if let Some(handle) = job_state.task_handle.take() {
+                handle.abort();
+            }
+
+            let event_for_task = job_state.event.clone();
+            let event_queue_clone = Arc::clone(&event_queue);
+            let jobs_clone = Arc::clone(&jobs);
+
+            let task_handle = tokio::spawn(async move {
+                Self::schedule_watcher(event_for_task, event_queue_clone, jobs_clone).await;
+            });
+
+            job_state.task_handle = Some(task_handle);
         }
     }
 
@@ -332,22 +352,14 @@ impl CronScheduler {
                         }
                     }
 
+                    // Небольшая задержка для точности времени
                     sleep(Duration::from_millis(50)).await;
 
+                    // Простая проверка - если задача активна, запускаем
                     let should_trigger = {
                         let jobs_read = jobs.read().await;
                         if let Some(job_state) = jobs_read.get(&event_name) {
-                            if !job_state.is_active {
-                                false // Задача отключена
-                            } else {
-                                match job_state.last_triggered {
-                                    Some(last) => {
-                                        let time_since_last = Local::now() - last;
-                                        time_since_last.num_seconds() >= duration_until.num_seconds()
-                                    }
-                                    None => true,
-                                }
-                            }
+                            job_state.is_active
                         } else {
                             false
                         }
@@ -364,6 +376,7 @@ impl CronScheduler {
                         }
                     }
                 } else {
+                    // Пропустили время, ждем и пересчитываем
                     sleep(Duration::from_millis(100)).await;
                 }
             }

@@ -534,6 +534,8 @@ Function UpdateHandlerStatus(Context)
 		Else
 			Result = ProxyModule.EnableRequestsHandler(ConnectionRW, HandlersKey);
 		EndIf;
+
+		ConnectionManager.ReturnRWConnection();
 		
 		If Result["result"] Then
 			Context.Response.StatusCode = 200;
@@ -568,6 +570,7 @@ Function CreateHandler(Context)
 		CurrentHandler = ProxyModule.AddRequestsHandler(ConnectionRW, Library, OintMethod, HTTPMethod);
 		
 		If Not CurrentHandler["result"] Then
+			ConnectionManager.ReturnRWConnection();
 			Raise CurrentHandler["error"];
 		Else
 			HandlerUUID = CurrentHandler["key"];
@@ -576,6 +579,7 @@ Function CreateHandler(Context)
 		Result = ProxyModule.UpdateHandlersKey(ConnectionRW, HandlerUUID, UUID);
 		
 		If Not Result["result"] Then
+			ConnectionManager.ReturnRWConnection();
 			Raise Result["error"];
 		Else
 			HandlerUUID = UUID;
@@ -588,7 +592,8 @@ Function CreateHandler(Context)
 			ArgumentStrict = Argument["strict"];
 			
 			Adding = ProxyModule.SetHandlerArgument(ConnectionRW, HandlerUUID, ArgumentName, ArgumentValue, ArgumentStrict);
-			
+			ConnectionManager.ReturnRWConnection();
+
 			If Not Adding["result"] Then
 				Raise Adding["error"];
 			EndIf;
@@ -600,6 +605,7 @@ Function CreateHandler(Context)
 		
 	Except
 		ProxyModule.DeleteRequestsHandler(ConnectionRW, HandlerUUID);
+		ConnectionManager.ReturnRWConnection();
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
 	EndTry;
 	
@@ -614,6 +620,7 @@ Function DeleteRequestsHandler(Context)
 		Handler = Data["key"];
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		Result = ProxyModule.DeleteRequestsHandler(ConnectionRW, Handler);
+		ConnectionManager.ReturnRWConnection();
 	Except
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
 	EndTry;
@@ -797,6 +804,7 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 		Result = ProxyModule.UpdateHandlersKey(ConnectionRW, HandlerUUID, NewKey);
 		
 		If Not Result["result"] Then
+			ConnectionManager.ReturnRWConnection();
 			Raise Result["error"];
 		Else
 			HandlerUUID = NewKey;
@@ -807,6 +815,7 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 	Cleaning = ProxyModule.ClearHandlerArguments(ConnectionRW, HandlerUUID);
 	
 	If Not Cleaning["result"] Then
+		ConnectionManager.ReturnRWConnection();
 		Raise Cleaning["error"];
 	EndIf;
 	
@@ -819,6 +828,7 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 		Adding = ProxyModule.SetHandlerArgument(ConnectionRW, HandlerUUID, ArgumentName, ArgumentValue, ArgumentStrict);
 		
 		If Not Adding["result"] Then
+			ConnectionManager.ReturnRWConnection();
 			Raise Adding["error"];
 		EndIf;
 		
@@ -830,6 +840,8 @@ Procedure UpdateHandlerData(HandlerUUID, HandlerStructure)
 	, OintMethod
 	, HTTPMethod);
 	
+	ConnectionManager.ReturnRWConnection();
+
 	If Not Updating["result"] Then
 		Raise Updating["error"];
 	EndIf;
@@ -882,6 +894,7 @@ Function DeleteScheduledTask(Context)
 		Task = Data["id"];
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		Result = ProxyModule.DeleteScheduledTask(ConnectionRW, Task);
+		ConnectionManager.ReturnRWConnection();
 
 		If Result["result"] Then
 			Result = TaskScheduler.DeleteTask(Task);
@@ -907,6 +920,7 @@ Function CreateScheduledTask(Context)
 		Result = ProxyModule.AddScheduledTask(ConnectionRW, Handler, Schedule);
 
 		If Not Result["result"] Then
+			ConnectionManager.ReturnRWConnection();
 			Return Toolbox.HandlingError(Context, 500, Result["error"]);
 		EndIf;
 
@@ -922,6 +936,8 @@ Function CreateScheduledTask(Context)
 		Result = Toolbox.HandlingError(Context, 500, ErrorInfo());
 	EndTry;
 	
+	ConnectionManager.ReturnRWConnection();
+
 	Return Result;
 
 EndFunction
@@ -937,6 +953,7 @@ Function UpdateScheduledTask(Context)
 
 		ConnectionRW = ConnectionManager.GetRWConnection();
 		Result = ProxyModule.UpdateScheduledTask(ConnectionRW, Task, Schedule, Handler);
+		ConnectionManager.ReturnRWConnection();
 
 		If Not Result["result"] Then
 			Return Toolbox.HandlingError(Context, 400, Result["error"]);
@@ -973,6 +990,8 @@ Function ChangeScheduledTaskStatus(Context)
 		Else
 			Result = ProxyModule.EnableScheduledTask(ConnectionRW, Task);
 		EndIf;
+
+		ConnectionManager.ReturnRWConnection();
 		
 		If Not Result["result"] Then
 			Return Toolbox.HandlingError(Context, 400, Result["error"]);

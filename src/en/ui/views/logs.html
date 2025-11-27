@@ -83,6 +83,7 @@
                 <span
                   :class="{
                     'inline-block w-3 h-3 rounded-full bg-blue-500': event.status === 0,
+                    'inline-block w-3 h-3 rounded-full bg-rose-500': event.status === 1,
                     'inline-block w-3 h-3 rounded-full bg-green-500': event.status >= 200 && event.status < 300,
                     'inline-block w-3 h-3 rounded-full bg-yellow-500': event.status >= 400 && event.status < 500,
                     'inline-block w-3 h-3 rounded-full bg-red-500': event.status >= 500

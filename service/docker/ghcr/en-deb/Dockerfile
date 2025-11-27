@@ -21,4 +21,4 @@ ENV MELEZH_DEBUG="1931"
 
 EXPOSE 1921 1931
 
-CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "1921"]
+CMD ["melezh", "RunProject", "--proj", "proj.melezh", "--port", "1921", "--create", "true"]

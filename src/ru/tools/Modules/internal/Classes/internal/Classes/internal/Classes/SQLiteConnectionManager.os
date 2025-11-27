@@ -61,4 +61,12 @@ Function GetRWConnection() Export
 	Return ПолучитьСоединениеRW();
 EndFunction
 
+Function LockRW() Export
+	Return ЗаблокироватьRW();
+EndFunction
+
+Function UnlockRW() Export
+	Return РазблокироватьRW();
+EndFunction
+
 #EndRegion

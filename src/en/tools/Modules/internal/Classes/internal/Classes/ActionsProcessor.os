@@ -146,7 +146,7 @@ Function PerformUniversalProcessing(Context, Handler, Parameters, RequestBody, P
         
         If Not TypeOf(Response) = Type("BinaryData") 
             And SettingsVault.ReturnSetting("res_wrapper")
-            And Not Context = Undefined Then
+            And Not TypeOf(Context) = Type("Structure") Then
 
             Response = New Structure("result,data", True, Response);
 

@@ -49,6 +49,7 @@ Var TaskScheduler;
 Var SQLiteConnectionManager;
 Var ActionsProcessor;
 Var BackgroundTasksManager;
+Var Logger;
 
 #EndRegion
 
@@ -62,6 +63,7 @@ Procedure Initialize(InitializationStructure) Export
 	TaskScheduler = InitializationStructure["TaskScheduler"];
 	SQLiteConnectionManager = InitializationStructure["SQLiteConnectionManager"];
 	ActionsProcessor = InitializationStructure["ActionsProcessor"];
+	Logger = InitializationStructure["Logger"];
 	
 	ConnectionRO = SQLiteConnectionManager.GetROConnection();
 	ExistingTasks = ProxyModule.GetScheduledTaskList(ConnectionRO);
@@ -116,6 +118,8 @@ EndProcedure
 Procedure PerformHandling(Task) Export
 	
 	Try
+
+		Name = "Unknown handler";
 		ConnectionRO = SQLiteConnectionManager.GetROConnection();
 		
 		TaskDescription = ProxyModule.GetScheduledTask(ConnectionRO, Task);
@@ -139,10 +143,15 @@ Procedure PerformHandling(Task) Export
 		CurrentHandler = CurrentHandler["data"];
 		CurrentHandler = ?(TypeOf(CurrentHandler) = Type("Array"), CurrentHandler[0], CurrentHandler);
 		
-		ActionsProcessor.PerformUniversalProcessing(Undefined, CurrentHandler, New Structure, Undefined, Name);
+		ActionsProcessor.PerformUniversalProcessing(New Structure, CurrentHandler, New Structure, Undefined, Name);
 		
 	Except
-		Message(StrTemplate("Error executing scheduler task %1: %2", Task, DetailErrorDescription(ErrorInfo())));
+
+		ErrorText = StrTemplate("Error executing scheduler task %1: %2", Task, DetailErrorDescription(ErrorInfo()));
+		Message(ErrorText);
+
+		Logger.WriteLog(New Structure("status", 1), Name, Undefined, New Structure("result,error", False, ErrorText));
+
 	EndTry;
 	
 EndProcedure

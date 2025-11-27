@@ -21,7 +21,7 @@ Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 	Try
 
 		LogPath = SettingsVault.ReturnSetting("logs_path");
-		HasContext = Context <> Undefined;
+		HasContext = TypeOf(Context) <> Type("Structure");
 		
 		If Not ValueIsFilled(LogPath) Then
 			Return;		
@@ -290,7 +290,7 @@ EndFunction
 
 Function WriteRequestInfo(Val LogPath, Val Context, Val RequestDate, Val BodySize, Val RequestUUID, Val Handler)
 	
-	HasContext = Context <> Undefined;
+	HasContext = TypeOf(Context) <> Type("Structure");
 	ContentType = Undefined;
 	
 	If HasContext Then
@@ -324,6 +324,8 @@ Function WriteRequestInfo(Val LogPath, Val Context, Val RequestDate, Val BodySiz
 		RequestData.Insert("form" , False);
 		RequestData.Insert("params" , New Array);
 	EndIf;
+
+	FillPropertyValues(RequestData, Context);
 	
 	JSONWriter = New JSONWriter();
 	JSONWriter.OpenFile(StrTemplate("%1/%2", LogPath, "req.info"));

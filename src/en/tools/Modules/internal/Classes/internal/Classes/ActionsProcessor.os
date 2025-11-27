@@ -7,6 +7,7 @@ Var ConnectionManager;
 Var Logger;
 Var SettingsVault;
 Var ActiveExtensionsList;
+Var UserCache;
 
 #Region Internal
 
@@ -19,6 +20,7 @@ Procedure Initialize(OPIObject_, ProxyModule_, ConnectionManager_, Logger_, Sett
     SettingsVault = SettingsVault_;
 
     ActiveExtensionsList = New Map();
+    UserCache = New Map();
     
 EndProcedure
 
@@ -388,6 +390,7 @@ Function NormalizeString(Val Value)
     Return Value;
 
 EndFunction
+
 #EndRegion
 
 #Region ExtensionContext
@@ -412,6 +415,18 @@ Function CallHandler(Val Path, Val Parameters) Export
     EndIf;
 
 EndFunction
+
+Function GetFromCache(Val Name) Export
+    Return UserCache.Get(Name);
+EndFunction
+
+Procedure WriteToCache(Val Name, Val Value) Export
+    UserCache.Insert(Name, Value);
+EndProcedure
+
+Procedure DeleteFromCache(Val Name) Export
+    UserCache.Delete(Name);
+EndProcedure
 
 #EndRegion
 
@@ -442,5 +457,17 @@ EndProcedure
 Function ВызватьОбработчик(Val Путь, Val Параметры) Export
 	Return CallHandler(Путь, Параметры);
 EndFunction
+
+Function ПолучитьЗначениеИзКэша(Val Имя) Export
+	Return GetFromCache(Имя);
+EndFunction
+
+Procedure ЗаписатьЗначениеВКэш(Val Имя, Val Значение) Export
+	WriteToCache(Имя, Значение);
+EndProcedure
+
+Procedure УдалитьЗначениеИзКэша(Val Имя) Export
+	DeleteFromCache(Имя);
+EndProcedure
 
 #EndRegion

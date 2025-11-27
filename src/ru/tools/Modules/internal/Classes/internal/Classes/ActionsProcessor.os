@@ -458,4 +458,16 @@ Function CallHandler(Val Path, Val Parameters) Export
 	Return ВызватьОбработчик(Path, Parameters);
 EndFunction
 
+Function GetFromCache(Val Name) Export
+	Return ПолучитьЗначениеИзКэша(Name);
+EndFunction
+
+Procedure WriteToCache(Val Name, Val Value) Export
+	ЗаписатьЗначениеВКэш(Name, Value);
+EndProcedure
+
+Procedure DeleteFromCache(Val Name) Export
+	УдалитьЗначениеИзКэша(Name);
+EndProcedure
+
 #EndRegion

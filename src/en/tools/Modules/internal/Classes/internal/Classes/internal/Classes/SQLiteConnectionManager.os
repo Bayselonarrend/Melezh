@@ -24,8 +24,11 @@ EndFunction
 
 Function GetRWConnection() Export
 
-	While Not RWGuard Do
+	Counter = 0;
+
+	While Not RWGuard Or Counter < 10 Do
 		Sleep(200);
+		Counter = Counter + 1;
 	EndDo;
 
 	RWGuard = False;

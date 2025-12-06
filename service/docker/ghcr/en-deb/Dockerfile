@@ -17,7 +17,7 @@ COPY melezh.deb /tmp/melezh.deb
 RUN sudo dpkg -i /tmp/oint.deb /tmp/melezh.deb || apt-get install -f -y
 RUN sudo melezh CreateProject --path proj.melezh
 
-ENV MELEZH_DEBUG="1931"
+# ENV MELEZH_DEBUG="1931"
 
 EXPOSE 1921 1931
 

@@ -6,6 +6,7 @@ services:
     container_name: Melezh-RPM-RU
     ports:
       - "1921:1921"
+      - "2021:1931"
     volumes:
       - ../../tests/test_volumes/Melezh-RPM-RU:/app
     restart: unless-stopped
@@ -15,6 +16,7 @@ services:
     container_name: Melezh-RPM-EN
     ports:
       - "1922:1921"
+      - "2022:1931"
     volumes:
       - ../../tests/test_volumes/Melezh-RPM-EN:/app
     restart: unless-stopped
@@ -24,6 +26,7 @@ services:
     container_name: Melezh-DEB-RU
     ports:
       - "1923:1921"
+      - "2023:1931"
     volumes:
       - ../../tests/test_volumes/Melezh-DEB-RU:/app
     restart: unless-stopped
@@ -33,6 +36,7 @@ services:
     container_name: Melezh-DEB-EN
     ports:
       - "1924:1921"
+      - "2024:1931"
     volumes:
       - ../../tests/test_volumes/Melezh-DEB-EN:/app
     restart: unless-stopped

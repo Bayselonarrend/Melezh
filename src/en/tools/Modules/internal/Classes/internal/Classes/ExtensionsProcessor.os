@@ -61,6 +61,7 @@ Function ConnectExtensionFile(ExtensionFile, Test = False) Export
         EndTry;
 
         ParametersTable = ParseModule(ExtensionFile);
+        AddExtensionToCache(ExtensionFile.BaseName, ExtensionFile.FullName, ParametersTable["methods"].Count());
 
         If Not Test Then
             OPIObject.CompleteCompositionCache(ExtensionFile.BaseName, ParametersTable); 
@@ -421,6 +422,7 @@ Function GetParametersDefaultValue(Val Name, Val Method)
         If MethodParameter.Name = Name Then
             
             ParameterValue = MethodParameter.Value;
+
             If ValueIsFilled(ParameterValue) Then
                 Try
                     Value = ParameterValue["Items"][0]["Value"];

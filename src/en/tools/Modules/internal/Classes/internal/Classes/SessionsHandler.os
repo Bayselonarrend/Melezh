@@ -4,6 +4,13 @@ Var SessionList;
 Var ConnectionManager;
 Var SettingsVault;
 
+Var TrackFailedAttempts;
+Var Attempts;
+Var BlockingDuration;
+
+Var BlockList;
+Var AttemptsList;
+
 #Region Internal
 
 Procedure Initialize(ConnectionManager_, SettingsVault_) Export
@@ -11,6 +18,9 @@ Procedure Initialize(ConnectionManager_, SettingsVault_) Export
 	SessionList = New Map;
 	ConnectionManager = ConnectionManager_;
 	SettingsVault = SettingsVault_;
+	
+	BlockList = New Map();
+	AttemptsList = New Map();
 	
 EndProcedure
 
@@ -20,6 +30,12 @@ Function AuthorizeSession(Context) Export
 	
 	If Context.Request.Method <> "POST" Then
 		Return Toolbox.HandlingError(Context, 405, "Method Not Allowed");
+	EndIf;
+	
+	ClientIP = Context.Connection.RemoteIPAddress;
+
+	If CheckAuthorizationBlock(ClientIP) Then
+		Return Toolbox.HandlingError(Context, 429, "Maximum number of failed authorization attempts exceeded. Please try again later.");
 	EndIf;
 	
 	ContentLength = Context.Request.ContentLength;
@@ -51,6 +67,8 @@ Function AuthorizeSession(Context) Export
 		Context.Response.StatusCode = 200;
 		
 		Result = New Structure("result", True);
+
+		AttemptsList.Delete(ClientIP);
 		
 	Else
 		
@@ -106,6 +124,44 @@ Function GetCookieAuth(Context)
 	EndDo;
 	
 	Return Token;
+	
+EndFunction
+
+Function CheckAuthorizationBlock(ClientIP)
+	
+	MaximumRetryCount = SettingsVault.ReturnSetting("auth_attempts");
+	BlockingDuration = SettingsVault.ReturnSetting("auth_ban_duration");
+	
+	If MaximumRetryCount = 0 Or BlockingDuration = 0 Then
+		Return False;
+	EndIf;
+
+	CurrentBlocking = BlockList.Get(ClientIP);
+
+	If CurrentBlocking <> Undefined Then
+
+		RemainingTime = CurrentBlocking - CurrentDate();
+
+		If RemainingTime <= 0 Then
+			BlockList.Delete(ClientIP);
+		Else
+			Return True;
+		EndIf;
+
+	EndIf;
+
+	Attempts = AttemptsList.Get(ClientIP);
+	Attempts = ?(Attempts = Undefined, 0, Attempts);
+
+	If Attempts >= MaximumRetryCount Then
+		AttemptsList.Delete(ClientIP);
+		BlockList.Insert(ClientIP, CurrentDate() + BlockingDuration * 60);
+		Return True;
+	Else
+		Attempts = Attempts + 1;
+		AttemptsList.Insert(ClientIP, Attempts);
+		Return False;
+	EndIf;
 	
 EndFunction
 

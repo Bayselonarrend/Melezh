@@ -30,7 +30,7 @@ Procedure WriteLog(Context, Handler, RequestBody, Val Result) Export
 		RequestDate = CurrentDate();
 		Identifier = Left(String(New UUID), 8);
 		HandlerEscaped = StrReplace(String(Handler), "/", "%2F");
-		RequestUUID = StrTemplate("%1-%2-%3", Format(RequestDate, "DF=hh-mm-ss"), Identifier, HandlerEscaped);
+		RequestUUID = StrTemplate("%1-%2-%3", Format(RequestDate, "DF=yyyy-MM-dd-hh-mm-ss"), Identifier, HandlerEscaped);
 		WritingPath = OrganizeLogCatalog(LogPath, RequestDate, HandlerEscaped, RequestUUID);
 		
 		If RequestBody = Undefined Then

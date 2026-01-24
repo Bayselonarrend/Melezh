@@ -49,7 +49,7 @@ EndProcedure
 Procedure FormInput()
 
 	Parser.AddParameter("Method");
-	AddMethodsParameters();
+	AddMethodParams();
 	
 	Parser.AddFlagParam("--help");
 	Parser.AddFlagParam("--debug");
@@ -58,7 +58,7 @@ Procedure FormInput()
 
 EndProcedure
 
-Procedure AddMethodsParameters();
+Procedure AddMethodParams();
 	
 	ParamsList = MethodsTable.FindRows(New Structure("SearchMethod", Upper(CurrentMethod)));
 

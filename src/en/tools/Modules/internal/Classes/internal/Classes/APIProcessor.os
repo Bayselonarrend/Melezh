@@ -182,14 +182,13 @@ Function ReturnFunctionList(Context)
 		Library = Data["library"];
 
 		Index = OPIObject.GetIndexData(Library);
-		Composition = Index["Composition"].Copy();
-		Composition.GroupBy("Method");
-		
-		FunctionArray = Composition.UnloadColumn("Method");
 		OptionsArray = New Array;
-		
-		For Each OintFunction In FunctionArray Do
+
+		For Each CurrentFunction In Index["methods"] Do
+
+			OintFunction = CurrentFunction["name"];
 			OptionsArray.Add(New Structure("name,title", OintFunction, Synonymizer(OintFunction)));
+
 		EndDo;
 		
 		Result = New Structure("result,data", True, OptionsArray);
@@ -210,23 +209,26 @@ Function ReturnArgumentList(Context)
 		Library = Data["library"];
 		Method = Data["function"];
 		
-		Index = OPIObject.GetIndexData(Library);
-		Composition = Index["Composition"].Copy();
-		Composition.GroupBy("Method,Parameter,Description");
-		
-		ArgumentList = Composition.FindRows(New Structure("Method", Method));
+		Index = OPIObject.GetMethodData(Library, Method);
+		ArgumentList = Index["params"];
 		
 		OptionsArray = New Array;
 		
 		For Each Argument In ArgumentList Do
 			
-			CurrentParameter = StrReplace(Argument["Parameter"], "--", "");
+			CurrentParameter = StrReplace(Argument["name"], "--", "");
 
 			If CurrentParameter = "melezhcontext" Then
 				Continue;
 			EndIf;
 
-			OptionsArray.Add(New Structure("arg,description", CurrentParameter, Argument["Description"]));
+			DefaultValue = Argument["default"];
+			ParamDescription = Argument["description"];
+			ParamDescription = ?(DefaultValue = Undefined
+				, ParamDescription
+				, ParamDescription + StrTemplate(" (optional, def. val. - %1)", DefaultValue));
+
+			OptionsArray.Add(New Structure("arg,description", CurrentParameter, ParamDescription));
 
 		EndDo;
 		
@@ -351,12 +353,26 @@ Function ReturnEventInfo(Context)
 			Return Toolbox.HandlingError(Context, 410, "No log path specified for the search!");
 		EndIf;
 		
-		LogPath = FindFiles(LogPath, LogKey, True);
-		
-		If Not ValueIsFilled(LogPath) Then
-			Return Toolbox.HandlingError(Context, 404, "No entry found. The path to the log directory may have been changed!");
+		KeyParts = StrSplit(LogKey, "-");
+
+		LogPath = CombinePath(LogPath
+			, KeyParts[KeyParts.UBound()]
+			, StrTemplate("%1-%2-%3", KeyParts[0], KeyParts[1], KeyParts[2])
+			, LogKey);
+
+		LogPath = New File(LogPath);
+
+		If LogPath.Exists() Then
+			LogCatalog = LogPath.FullName;
 		Else
-			LogCatalog = LogPath[0].FullName;
+
+			LogPath = FindFiles(LogPath, LogKey, True);
+			
+			If Not ValueIsFilled(LogPath) Then
+				Return Toolbox.HandlingError(Context, 404, "No entry found. The path to the log directory may have been changed!");
+			Else
+				LogCatalog = LogPath[0].FullName;
+			EndIf;
 		EndIf;
 		
 		ErrorFile = StrTemplate("%1/%2", LogCatalog, "error.json");
@@ -1053,30 +1069,30 @@ Function Synonymizer(PropName)
 		
 	EndDo;
 	
-	WordsArray = StrSplit(Synonym, " ");
+	WordArray = StrSplit(Synonym, " ");
 	
-	For N = 1 To WordsArray.UBound() Do
+	For N = 1 To WordArray.UBound() Do
 		
-		CurrentWord = WordsArray[N];
+		CurrentWord = WordArray[N];
 		
 		If StrLen(CurrentWord) = 1 Then
-			WordsArray[N] = Lower(CurrentWord);
+			WordArray[N] = Lower(CurrentWord);
 			Continue;
 		Else
 			
 			SecondSymbol = Mid(CurrentWord, 2, 1);
 			
 			If SecondSymbol = Lower(SecondSymbol) Then
-				WordsArray[N] = Lower(CurrentWord);
+				WordArray[N] = Lower(CurrentWord);
 			Else
-				WordsArray[N] = Upper(CurrentWord);
+				WordArray[N] = Upper(CurrentWord);
 			EndIf;
 			
 		EndIf;
 		
 	EndDo;
 	
-	Synonym = StrConcat(WordsArray, " ");
+	Synonym = StrConcat(WordArray, " ");
 	
 	ChangeNameRegister(Synonym);
 	

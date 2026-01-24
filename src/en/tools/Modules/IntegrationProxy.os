@@ -135,7 +135,7 @@ Function RunProject(Val Port, Val Project, Val Create = False) Export
 
         Message(StrTemplate("Critical error in task %1: %2 Restarting...", FailedTask, Error));
 
-        Sleep(2000);
+        Sleep(5000);
 
         TaskDescription = TaskDescriptionArray[FailedTask];
 
@@ -1573,6 +1573,8 @@ Function GetDefaultSettings()
     SettingsList.Insert("ext_path" , New Structure(SettingsFields, "ext_path" , "Additional extensions directory (requires restart or cache update to apply)", "", "string"));
     SettingsList.Insert("ui_show" , New Structure(SettingsFields, "ui_show" , "Enables and disables the availability of the Web Console", "true", "bool"));
     SettingsList.Insert("index_redirect" , New Structure(SettingsFields, "index_redirect" , "Replaces the output of the title (root) page of Melezh with a redirect to the specified path", "", "string"));
+    SettingsList.Insert("auth_attempts" , New Structure(SettingsFields, "auth_attempts" , "Maximum number of allowed incorrect password attempts during authorization. 0 - unlimited.", "0", "number"));
+    SettingsList.Insert("auth_ban_duration", New Structure(SettingsFields, "auth_ban_duration", "Lockout duration when maximum allowed authorization attempts are exceeded (in minutes))", "0", "number"));
     
     Return SettingsList;
     

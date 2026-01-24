@@ -209,68 +209,177 @@ EndFunction
 
 Function ParseModule(Module)
     
-    CompositionTable = New ValueTable();
-    CompositionTable.Columns.Add("Library");
-    CompositionTable.Columns.Add("Module");
-    CompositionTable.Columns.Add("Method");
-    CompositionTable.Columns.Add("SearchMethod");
-    CompositionTable.Columns.Add("Parameter");
-    CompositionTable.Columns.Add("ParameterTrim");
-    CompositionTable.Columns.Add("Description");
-    CompositionTable.Columns.Add("MethodDescription");
-    CompositionTable.Columns.Add("Region");
-    
-    Parser = New("EmbeddedLanguageParser");
-    ModuleDocument = New TextDocument;
-    ModuleDocument.Read(Module.FullName, "UTF-8");
-
-    ModuleText = ModuleDocument.GetText();
-    ModuleStructure = Parser.Parse(ModuleText);
+    CurrentModule = Module.BaseName;
     CurrentRegion = "Common methods";
-
-    MethodCounter = 0;
+    
+    Parser = New EmbeddedLanguageParser;
+    ModuleDocument = New TextDocument;
+    ModuleDocument.Read(Module.FullName);
+    
+    ModuleText = ModuleDocument.GetText();  
+    ModuleStructure = Parser.Parse(ModuleText);
+    
+    CurrentIndex = New Structure;
+    CurrentIndex.Insert("module" , CurrentModule);
+    CurrentIndex.Insert("library" , CurrentModule);
+    CurrentIndex.Insert("self_depend", StrOccurrenceCount(ModuleText, CurrentModule) > 1);
+        
+    MethodArray = New Array;
+    RegionMethodsArray = New Array;
+    RegionArray = New Array;
+    
     For Each Method In ModuleStructure.Declarations Do
-  
+        
         If Method.Type = "InstructionPreprocessorRegion" Then
+
+            If ValueIsFilled(RegionMethodsArray) Then
+                RegionStructure = New Structure("name,methods", CurrentRegion, RegionMethodsArray);
+                RegionArray.Add(RegionStructure);
+                RegionMethodsArray = New Array;
+            EndIf;
+
             CurrentRegion = Synonymizer(Method.Name);
         EndIf;
         
         If Method.Type = "MethodDeclaration" And Method.Signature.Export = True Then
+            
+            MethodName = Method.Signature.Name;
+            CurrentMethod = ParseMethodComment(ModuleDocument, Method, Module);	 
 
-            ParseMethodComment(ModuleDocument, Method, Module, CurrentRegion, CompositionTable);	 
-
-            If ValueIsFilled(CompositionTable) Then
-                MethodCounter = MethodCounter + 1;      
+            If CurrentMethod = Undefined Then
+                Continue;
             EndIf;
 
+            CurrentMethod.Insert("region", CurrentRegion);
+            
+            MethodArray.Add(CurrentMethod);
+            RegionMethodsArray.Add(MethodName);
+            
         EndIf;
         
     EndDo;
 
-    AddExtensionToCache(Module.BaseName, Module.FullName, MethodCounter);
+    CurrentIndex.Insert("regions", RegionArray);
+    CurrentIndex.Insert("methods", MethodArray);
 
-    Return CompositionTable;
-
+    Return CurrentIndex;
+    
 EndFunction
 
-Procedure ParseMethodComment(TextDocument, Method, Module, Region, CompositionTable)
+Function ParseMethodComment(TextDocument, Method, Module)
+    
+    CurrentMethod = New Map();
     
     LineNumber = Method.Start.LineNumber;
     MethodName = Method.Signature.Name;
     
     CommentArray = CommentParsing(TextDocument, LineNumber);
-    
-    If CommentArray.Count() = 0 Then
-        Return;
+
+    If Not ValueIsFilled(CommentArray) Then
+        Return Undefined;
     EndIf;
-    
+
     ParameterArray = New Array;
+    
+    MethodDescription = FormMethodStructure(CommentArray, ParameterArray);
+    ArrayOfDescriptions = New Array;
+    
+    For Each ParamString In ParameterArray Do
+        CurrentDescription = FormParameterDescriptionStructure(Method, ParamString);
+        ArrayOfDescriptions.Add(CurrentDescription);
+    EndDo;
+
+    MethodDescription = TrimAll(MethodDescription);
+    
+    CurrentMethod.Insert("name" , MethodName);
+    CurrentMethod.Insert("id" , Upper(MethodName));
+    CurrentMethod.Insert("description", MethodDescription);
+    CurrentMethod.Insert("params" , ArrayOfDescriptions);
+    
+    Return CurrentMethod;
+    
+EndFunction
+
+Function FormMethodStructure(Val CommentArray, ParameterArray)
+    
     MethodDescription = "";
     
-    FormMethodStructure(CommentArray, ParameterArray, MethodDescription);
-    FormParamsDescriptionTable(ParameterArray, Method, CompositionTable, Module, MethodDescription, Region);
+    RecordParameters = False;
+    RecordDescription = True;
     
-EndProcedure
+    Counter = 0;
+    For Each CommentLine In CommentArray Do
+        
+        Counter = Counter + 1;
+        
+        If Not ValueIsFilled(TrimAll(CommentLine)) Then
+            RecordDescription = False;
+        EndIf;
+        
+        If RecordDescription = True And Counter > 1 Then
+            MethodDescription = ?(ValueIsFilled(MethodDescription), MethodDescription + " | ", MethodDescription) 
+            + CommentLine;
+        EndIf;
+        
+        If StrFind(CommentLine, "Parameters:") > 0 Or StrFind(CommentLine, "Parameters:") > 0 Then
+            RecordParameters = True;
+            RecordDescription = False;
+            
+        ElsIf StrFind(CommentLine, "Returns:") > 0 Or StrFind(CommentLine, "Returns:") > 0 Then
+            Break;
+            
+        ElsIf RecordParameters = True 
+            And ValueIsFilled(TrimAll(CommentLine)) 
+            And Not StrStartsWith(TrimAll(CommentLine), "*") Then
+            
+            ParameterArray.Add(CommentLine);
+            
+        Else
+            Continue;
+        EndIf;
+        
+    EndDo;
+    
+    Return MethodDescription;
+    
+EndFunction
+
+Function FormParameterDescriptionStructure(Val Method, Val MethodParameter)
+    
+    CurrentDescription = New Map();
+
+    Delimiter = "-";
+    
+    ParamItemsArray = StrSplit(MethodParameter, Delimiter, False);
+    ItemsCount = ParamItemsArray.Count();
+    
+    For N = 0 To ParamItemsArray.UBound() Do
+        ParamItemsArray[N] = TrimAll(ParamItemsArray[N]);
+    EndDo;
+    
+    If ItemsCount < 4 Then
+        Raise("Insufficient data set in doc. comment: " + Method.Signature.Name);
+    EndIf;
+     
+    Name1C = ParamItemsArray[0];
+    Name = "--" + ParamItemsArray[3];
+    Letter = Left(ParamItemsArray[3], 1);
+    Types = ParamItemsArray[1];
+    Description = ?(ItemsCount >= 5, ParamItemsArray[4], ParamItemsArray[2]);
+    DefValue = GetParametersDefaultValue(Name1C, Method);
+    
+    If ItemsCount > 5 Or StrFind(Name, " ") > 0 Then
+        Raise("Incorrect documentation comment in method: " + Method.Signature.Name);
+    EndIf;
+    
+    CurrentDescription.Insert("name" , Name);
+    CurrentDescription.Insert("types" , Types);
+    CurrentDescription.Insert("description", Description);
+    CurrentDescription.Insert("default" , DefValue);
+    
+    Return CurrentDescription;
+
+EndFunction
 
 Function CommentParsing(Val TextDocument, Val LineNumber)
     
@@ -294,7 +403,6 @@ Function CommentParsing(Val TextDocument, Val LineNumber)
     CommentArray = StrSplit(CommentText, "//", False);
     
     If CommentArray.Count() = 0 Then
-        Message(CommentText);
         Return New Array;
     Else
         CommentArray.Delete(0);
@@ -303,106 +411,6 @@ Function CommentParsing(Val TextDocument, Val LineNumber)
     Return CommentArray;
     
 EndFunction
-
-Procedure FormMethodStructure(Val CommentArray, ParameterArray, MethodDescription)
-    
-    RecordParameters = False;
-    RecordDescription = True;
-    
-    Counter = 0;
-    For Each CommentLine In CommentArray Do
-        
-        Counter = Counter + 1;
-        
-        If Not ValueIsFilled(TrimAll(CommentLine)) Then
-            RecordDescription = False;
-        EndIf;
-        
-        If RecordDescription = True And Counter > 1 Then
-            MethodDescription = MethodDescription + CommentLine;
-        EndIf;
-        
-        If StrFind(CommentLine, "Parameters:") > 0 Or StrFind(CommentLine, "Parameters:") > 0 Then
-            RecordParameters = True;
-            RecordDescription = False;
-            
-        ElsIf StrFind(CommentLine, "Returns:") > 0 Or StrFind(CommentLine, "Returns:") > 0 Then
-            Break;
-            
-        ElsIf RecordParameters = True 
-            And ValueIsFilled(TrimAll(CommentLine)) 
-            And Not StrStartsWith(TrimAll(CommentLine), "*") Then
-            
-            ParameterArray.Add(CommentLine);
-            
-        Else
-            Continue;
-        EndIf;
-        
-    EndDo;
-    
-EndProcedure
-
-Procedure FormParamsDescriptionTable(Val ParameterArray, Val Method, CompositionTable, Module, MethodDescription, Region)
-    
-    Delimiter = "-";
-    ArrayOfCurrentItems = New Array;
-    
-    For Each MethodParameter In ParameterArray Do
-        
-        ParamItemsArray = StrSplit(MethodParameter, Delimiter, False);
-        ItemsCount = ParamItemsArray.Count();
-        
-        For N = 0 To ParamItemsArray.UBound() Do
-            ParamItemsArray[N] = TrimAll(ParamItemsArray[N]);
-        EndDo;
-        
-        If ItemsCount < 4 Then
-            
-            For Each Current In ArrayOfCurrentItems Do
-                CompositionTable.Delete(Current);
-            EndDo;
-
-            Return;
-        EndIf;
-         
-        Name1C = ParamItemsArray[0];
-        Name = "--" + ParamItemsArray[3];
-        Types = ParamItemsArray[1];
-        Description = ?(ItemsCount >= 5, ParamItemsArray[4], ParamItemsArray[2]);
-        
-        If ItemsCount > 5 Or StrFind(Name, " ") > 0 Then
-            For Each Current In ArrayOfCurrentItems Do
-                CompositionTable.Delete(Current);
-            EndDo;
-            Return;
-        EndIf;
-
-        Value = GetParametersDefaultValue(Name1C, Method);
-        Library = Module.BaseName;
-        
-        If ValueIsFilled(Value) Then
-            Description = Description + " (optional, def. val. - " + Value + ")";
-        EndIf;
-        
-        NewLine = CompositionTable.Add();
-        NewLine.Library = Library;
-        NewLine.Module = Library;
-        NewLine.Method = Method.Signature.Name;
-        NewLine.SearchMethod = Upper(NewLine.Method);
-        NewLine.Description = Description;
-        NewLine.Region = Region;
-        NewLine.Parameter = Name;
-
-        If ValueIsFilled(MethodDescription) Then
-            NewLine.MethodDescription = MethodDescription;
-        EndIf;       
-
-        ArrayOfCurrentItems.Add(NewLine);
-
-    EndDo;
-    
-EndProcedure
 
 Function GetParametersDefaultValue(Val Name, Val Method)
     

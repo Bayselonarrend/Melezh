@@ -2,13 +2,13 @@
 
 if [ -n "$MELEZH_DEBUG" ]; then
     if echo "$MELEZH_DEBUG" | grep -qE '^[0-9]+$'; then
-        /usr/share/oint/bin/oscript -debug -port="$MELEZH_DEBUG" -noWait /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+        /usr/lib/oint/bin/oscript -debug -port="$MELEZH_DEBUG" -noWait /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
         echo "Debug port found: $MELEZH_DEBUG"
     else
-        /usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+        /usr/lib/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
         echo "Debug port not found"
     fi
 else
-    /usr/share/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
+    /usr/lib/oint/bin/oscript /usr/share/oint/lib/melezh/core/Classes/app.os "$@"
     echo "Debug port not found"
 fi

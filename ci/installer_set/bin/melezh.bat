@@ -10,5 +10,5 @@ if defined MELEZH_DEBUG (
     )
 )
 
-call "%oint_folder%..\share\oint\bin\oscript.exe" %debug_args% "%oint_folder%..\share\oint\lib\melezh\core\Classes\app.os" %*
+call "%oint_folder%..\lib\oint\bin\oscript.exe" %debug_args% "%oint_folder%..\share\oint\lib\melezh\core\Classes\app.os" %*
 @exit /b %ERRORLEVEL%

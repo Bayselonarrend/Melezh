@@ -22,7 +22,7 @@
 	CommonTools.СообщитьПроцесс("Creating release artifacts");
 	
 	Репозиторий = "https://github.com/Bayselonarrend/Melezh";
-	Версия   = "0.10.0";
+	Версия   = "0.11.0";
 
 	Кугвин            = "C:\cygwin64\bin\";
 	ОСкрипт           = "C:\Program Files\OneScript\";

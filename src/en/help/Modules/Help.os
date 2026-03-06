@@ -71,7 +71,7 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 
 	ParametersTable.GroupBy("Method,Region");
 
-	ColorOutput.WriteLine(" (##|#color=Green) Available methods: " + Chars.LF);
+	ColorOutput.WriteLine(" (■|#color=Green) Available methods: " + Chars.LF);
 	Console.TextColor = ConsoleColor.White;
 
 	CurrentRegion       = "";
@@ -86,7 +86,7 @@ Procedure DisplayMethodHelp(Val ParametersTable) Export
 
 		If CurrentRegion <> MethodLine.Region Then
 			CurrentRegion = MethodLine.Region;
-			ColorOutput.WriteLine("    (o|#color=Yellow) (" + CurrentRegion + "|#color=Cyan)");
+			ColorOutput.WriteLine("    (■|#color=Yellow) (" + CurrentRegion + "|#color=Cyan)");
 			First = True;
 		EndIf;
 
@@ -126,8 +126,8 @@ Procedure DisplayParameterHelp(Val ParametersTable) Export
 
 	MethodName    = ParametersTable[0].Method;
 	HelpText = "
-	| (##|#color=Green) Method (" + MethodName + "|#color=Cyan)
-	| (##|#color=Green) "       + ParametersTable[0].MethodDescription; 
+	| (■|#color=Green) Method (" + MethodName + "|#color=Cyan)
+	| (■|#color=Green) "       + ParametersTable[0].MethodDescription; 
 	
 	ColorOutput.WriteLine(HelpText);
 	HelpText = "";

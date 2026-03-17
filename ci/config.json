@@ -66,6 +66,10 @@
    "npmPath": {
     "description": "NPM executable",
     "value": "C:/Program Files/nodejs/npm.cmd"
+   },
+   "releaseWorkspace": {
+    "description": "Artifacts root folder",
+    "value": "C:/ProgramData/Jenkins/.jenkins/workspace/OpiBuild/OpiRelease/"
    }
   }
  },
@@ -195,7 +199,8 @@
      "BuildCheck": true,
      "MongoDB": true,
      "GRPC": true,
-     "ClickHouse": true
+     "ClickHouse": true,
+     "RSS": true
     }
    }
   }
@@ -555,6 +560,75 @@
    "tokenField": {
     "description": "Secret token field in credentials file",
     "value": "CI_Sonar_Token"
+   }
+  }
+ },
+ "sourceforge": {
+  "description": "SourceForge credentials",
+  "value": {
+   "login": {
+    "description": "SourceForge username",
+    "value": "bayselonarrend"
+   },
+   "projectName": {
+    "description": "SourceForge project name",
+    "value": "openintegrations"
+   },
+   "hostUrl": {
+    "description": "SourceForge upload server URL",
+    "value": "frs.sourceforge.net"
+   },
+   "privateKey": {
+    "description": "SourceForge auth private key",
+    "value": "D:/Important/id_ed25519"
+   },
+   "publicKey": {
+    "description": "SourceForge auth private key",
+    "value": "D:/Important/id_ed25519.pub"
+   }
+  }
+ },
+ "github": {
+  "description": "GitHub credentials",
+  "value": {
+   "tokenField": {
+    "description": "GitHub Access token field",
+    "value": "CI_GH_Token"
+   },
+   "contentPath": {
+    "description": "Base URL for raw media content",
+    "value": "https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/"
+   }
+  }
+ },
+ "sourcecraft": {
+  "description": "SourceCraft credentials",
+  "value": {
+   "tokenField": {
+    "description": "SourceCraft Access token field",
+    "value": "CI_SC_Token"
+   },
+   "contentPath": {
+    "description": "Base URL for raw media content",
+    "value": "https://sourcecraft.dev/file?owner=bayselonarrend&repo=openintegrations&rev=main&path="
+   },
+   "diskTokenField": {
+    "description": "Yandex Disk token field for assets upload",
+    "value": "CI_YD_Token"
+   }
+  }
+ },
+ "oscript": {
+  "description": "OneScript and OPM options",
+  "value": {
+   "dependencies": {
+    "description": "OPM dependencies",
+    "value": [
+     "osparser",
+     "cmdline",
+     "asserts",
+     "coloratos"
+    ]
    }
   }
  },

@@ -1,19 +1,14 @@
 ![image](/media/cover_s.png)
 
-
-
 # Melezh
 
-[![OpenIntegrations](media/addon.svg)](https://github.com/Bayselonarrend/OpenIntegrations)
-[![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript)
-[![OneScript](media/boosty.svg)](https://boosty.to/bayselonarrend)
-
+[![OpenIntegrations](media/addon.svg)](https://en.openintegrations.dev/) [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) [![Boosty](media/boosty.svg)](https://boosty.to/bayselonarrend)
 
 Server version of the Open Integrations Package, providing a unified configurable HTTP API for accessing its libraries and custom `.os` scripts (extensions), with support for default values, a web console, and built-in logging of incoming requests
 
 ## How It Works
 
-This server is based on `oint` - the console application of the [Open Integrations Package](https://github.com/bayselonarrend/OpenIntegrations), and allows remote invocation of its methods via HTTP requests from anywhere, just as it would happen in the console on a local machine. Melezh uses the Kestrel server built into OneScript to receive HTTP requests, which are then interpreted into `oint` commands (or commands of extension modules) for further execution.
+This server is based on `oint` - the console application of the [OpenIntegrations](https://en.openintegrations.dev/), and allows remote invocation of its methods via HTTP requests from anywhere, just as it would happen in the console on a local machine. Melezh uses the Kestrel server built into OneScript to receive HTTP requests, which are then interpreted into `oint` commands (or commands of extension modules) for further execution.
 
 The solution features a flexible configuration system that allows defining restrictions for the list of available commands and methods, as well as setting default parameter values for command execution. This enables both reducing the amount of data transmitted and hiding sensitive data from the client side when necessary
 
@@ -45,7 +40,7 @@ As you may have noticed, we're not passing the token as it's set by default
 
 In addition to the CLI interface, for easier interactive configuration and management, you can use the web console built into Melezh:
 
-![chrome_aDGtJZRrD8](https://github.com/user-attachments/assets/25762182-19b5-446c-8135-e87339cd7b02)
+![demo](media/demo.gif)
 
 *On the recording: logging into the console, adding a new handler for creating a Bitrix24 news item with two default parameters specified, disabling two handlers, viewing details of one of the recent events, reviewing all logs for one of today’s handlers*
 
@@ -73,11 +68,24 @@ Melezh can be installed using a Windows installer, rpm or deb package, OneScript
 
 ## Documentation
 
-<img src="https://github.com/user-attachments/assets/44614ade-d524-475b-ad5e-f4790994e836" align="left" width="200">
+<img src="/media/book_s.png" align="left" width="200">
 
 <br>
 
 More information about console commands, logging, Web UI capabilities, and working with Melezh in general can be found in the [online documentation](https://en.openintegrations.dev/docs/Addons/Melezh).  It is hosted on the same portal as the documentation for the main project - Open Integration Package, where you can also find information about methods available as handler functions within Melezh. The documentation is available in two language versions - Russian and English
+
+<br><br>
+
+## Sponsors [?](https://boosty.to/bayselonarrend/purchase/3429871?ssource=DIRECT&share=subscription_link)
+
+The companies listed below support the development of the Open Integration Package and make significant contributions to its progress.
+
+||
+|-|
+| <img width="100" height="120" alt="Logo_GREEN-API_icon_G_green" src="media/Sponsors/GreenAPI.png" /> |
+| **GreenAPI** <br/> Stable WhatsApp API <br/> Gateway <br/> <br/> [green-api.com](https://green-api.com/en) 🌍 |
+
+<br/>
 
 ## Support the project
 

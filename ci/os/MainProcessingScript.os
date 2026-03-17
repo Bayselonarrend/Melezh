@@ -1,8 +1,18 @@
+#Использовать oint/tools/http
 #Использовать "./internal"
 #Использовать "./internal/Classes/internal"
 
 Процедура ПриСозданииОбъекта()
 
+    Результат = OPI_ЗапросыHTTP.НовыйЗапрос()
+        .Инициализировать("https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/refs/heads/main/ci/config.json")
+		.УстановитьФайлОтвета("./ci/config.json")
+		.ОбработатьЗапрос("GET");
+
+	Если Результат.ВернутьОтвет().КодСостояния > 299 Тогда
+		ВызватьИсключение Результат.ВернутьОтветКакСтроку();
+	КонецЕсли;
+		
 	ДанныеПроекта = Новый ProjectData;
 
 	Обработчик = Новый CLIMethods(ДанныеПроекта);

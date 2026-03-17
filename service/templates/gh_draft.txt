@@ -1,4 +1,4 @@
-<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/logo_np.png" align="right" width="240">
+<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/logo_np.png" align="right" width="240">
 
 
 🇷🇺:
@@ -18,11 +18,11 @@
 
 || Тип поставки / Release type | Русская версия | English version |
 |-|-|-|-|
-|<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/pins/10.png" width="32"/>| Dockerfile (OInt CLI + Melezh, Docker) | [melezh-docker-ru.zip](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-docker-ru.zip) | [melezh-docker-en.zip](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-docker-en.zip) |
-|<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/pins/6.png" width="32"/>| Installer (OInt CLI + Melezh, Windows) | [В релизах OpenIntegrations](https://github.com/Bayselonarrend/OpenIntegrations/releases/latest) |  [In OpenIntegrations releases](https://github.com/Bayselonarrend/OpenIntegrations/releases/latest) |
-|<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/pins/7.png" width="32"/>| DEB-package (Melezh, Debian/Ubuntu) | [melezh_%3_all_ru.deb](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh_%3_all_ru.deb) | [melezh_%3_all_ru.deb](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh_%3_all_en.deb) |
-|<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/pins/8.png" width="32"/>| RPM-package (Melezh, Fedora/RHEL) | [melezh-%3-1.noarch_ru.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_ru.rpm) | [melezh-%3-1.noarch_en.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_en.rpm) |
-|<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/pins/9.png" width="32"/>| OSPX (Melezh, OneScript) | [melezh-%3_ru.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_ru.ospx) | [melezh-%3_en.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_en.ospx) | 
+|<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/pins/10.png" width="32"/>| Dockerfile (OInt CLI + Melezh, Docker) | [melezh-docker-ru.zip](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-docker-ru.zip) | [melezh-docker-en.zip](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-docker-en.zip) |
+|<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/pins/6.png" width="32"/>| Installer (OInt CLI + Melezh, Windows) | [В релизах OpenIntegrations](https://github.com/Bayselonarrend/OpenIntegrations/releases/latest) |  [In OpenIntegrations releases](https://github.com/Bayselonarrend/OpenIntegrations/releases/latest) |
+|<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/pins/7.png" width="32"/>| DEB-package (Melezh, Debian/Ubuntu) | [melezh_%3_all_ru.deb](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh_%3_all_ru.deb) | [melezh_%3_all_ru.deb](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh_%3_all_en.deb) |
+|<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/pins/8.png" width="32"/>| RPM-package (Melezh, Fedora/RHEL) | [melezh-%3-1.noarch_ru.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_ru.rpm) | [melezh-%3-1.noarch_en.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_en.rpm) |
+|<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/pins/9.png" width="32"/>| OSPX (Melezh, OneScript) | [melezh-%3_ru.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_ru.ospx) | [melezh-%3_en.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_en.ospx) | 
 
 <hr>
 
@@ -39,7 +39,7 @@ docker run -d -p 1921:1921 -p 1931:1931 --name melezh ghcr.io/bayselonarrend/mel
 
 <br>
 
-<img src="https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/main/media/Star.png" alt="Star-Struck" width="40" height="40" align=left />
+<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/main/media/Star.png" alt="Star-Struck" width="40" height="40" align=left />
 
 
 ## Поддержать проект / Support the project

@@ -5,8 +5,8 @@
 Процедура ПриСозданииОбъекта()
 
     Результат = OPI_ЗапросыHTTP.НовыйЗапрос()
-        .Инициализировать("https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/refs/heads/main/ci/config.json")
-		.УстановитьФайлОтвета("./ci/config.json")
+        .Инициализировать("https://raw.githubusercontent.com/Bayselonarrend/OpenIntegrations/refs/heads/main/ci/config_global.json")
+		.УстановитьФайлОтвета("./ci/config_global.json")
 		.ОбработатьЗапрос("GET");
 
 	Если Результат.ВернутьОтвет().КодСостояния > 299 Тогда

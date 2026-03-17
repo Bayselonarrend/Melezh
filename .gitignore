@@ -8,3 +8,5 @@ logs
 
 target/
 .idea/
+
+data.json

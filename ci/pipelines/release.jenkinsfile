@@ -8,7 +8,9 @@ pipeline {
     stages {
         stage('Release') {
             steps {
-                bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/MainProcessingScript.os'
+                withCredentials([string(credentialsId: 'gpgkey', variable: 'GPGKEY')]) {
+                    bat encoding: 'UTF-8', script:'chcp 65001 & oscript ./ci/os/MainProcessingScript.os %GPGKEY%'
+                }}
                 script {
                     def melezhVersion = params.MELEZH_VERSION
                     archiveArtifacts artifacts: "${melezhVersion}/*"

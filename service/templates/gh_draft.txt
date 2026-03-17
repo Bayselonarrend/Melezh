@@ -1,6 +1,5 @@
 <img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/master/media/logo_np.png" align="right" width="240">
 
-
 🇷🇺:
  
 %1

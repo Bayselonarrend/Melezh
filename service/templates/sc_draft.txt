@@ -1,6 +1,5 @@
 <img src="https://sourcecraft.dev/file?owner=bayselonarrend&repo=melezh&rev=master&path=media/logo_np.png" align="right" width="240">
 
-
 🇷🇺:
  
 %1

@@ -1,6 +1,6 @@
 #Использовать "./internal"
-#Использовать "../../../../src/ru/OInt/tools/http"
-#Использовать "../../../../src/ru/OInt/tools/main"
+#Использовать oint/tools/http
+#Использовать oint/tools/main
 
 Перем ДанныеПроекта;
 Перем Версия;

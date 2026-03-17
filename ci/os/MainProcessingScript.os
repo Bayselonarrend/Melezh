@@ -15,6 +15,7 @@
 		
 	ДанныеПроекта = Новый ProjectData;
 
+	Обработчик = Новый DraftMethods(ДанныеПроекта);
 	Обработчик = Новый CLIMethods(ДанныеПроекта);
 	Обработчик = Новый DictionariesMethods(ДанныеПроекта);
 	Обработчик = Новый LocalizationMethods(ДанныеПроекта);

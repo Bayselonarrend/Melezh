@@ -85,8 +85,6 @@ The companies listed below support the development of the Open Integration Packa
 | <img width="100" height="120" alt="Logo_GREEN-API_icon_G_green" src="media/Sponsors/GreenAPI.png" /> |
 | **GreenAPI** <br/> Stable WhatsApp API <br/> Gateway <br/> <br/> [green-api.com](https://green-api.com/en) 🌍 |
 
-<br/>
-
 ## Support the project
 
 ![image](media/boosty.png)

@@ -89,7 +89,6 @@ Melezh может быть установлен при помощи Windows-ус
 | <img width="100" height="120" alt="Logo_GREEN-API_значок G_зеленый" src="media/Sponsors/GreenAPI.png" /> |
 | **GreenAPI** <br/> Стабильный шлюз <br/> WhatsApp API <br/> <br/>  [green-api.com](https://green-api.com/) 🌍 |
 
-<br/>
 
 ## Поддержать проект
 

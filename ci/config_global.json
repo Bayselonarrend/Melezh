@@ -24,7 +24,7 @@
             },
             "osPath": {
                 "description": "OneScript exe path",
-                "value": "C:/Program Files/OneScript/"
+                "value": "D:/OneScript/"
             },
             "ghcliPath": {
                 "description": "GitHub CLI exe path",
@@ -40,7 +40,7 @@
             },
             "edtProjectsPath": {
                 "description": "EDT projects directory",
-                "value": "C:/Users/bayse/AppData/Local/1C/1cedtstart/projects"
+                "value": "C:/Users/bayselonarrend/AppData/Local/1C/1cedtstart/projects"
             },
             "jenkinsHost": {
                 "description": "Jenkins URL",
@@ -56,7 +56,7 @@
             },
             "releaseWorkspace": {
                 "description": "Artifacts root folder",
-                "value": "C:/ProgramData/Jenkins/.jenkins/workspace/OpiBuild/OpiRelease/"
+                "value": "C:/Users/bayselonarrend/AppData/Local/Jenkins/.jenkins/workspace/OpiBuild/OpiRelease"
             }
         }
     },
@@ -115,6 +115,10 @@
                             "wslDistro": {
                                 "description": "WSL linux distro",
                                 "value": "Ubuntu"
+                            },
+                            "buildScript": {
+                                "description": "FPM-based shell script",
+                                "value": "./service/templates/builddeb.sh"
                             }
                         }
                     },
@@ -123,7 +127,11 @@
                         "value": {
                             "wslDistro": {
                                 "description": "WSL linux distro",
-                                "value": "OracleLinux_9_1"
+                                "value": "OracleLinux_9_5"
+                            },
+                            "buildScript": {
+                                "description": "FPM-based shell script",
+                                "value": "./service/templates/buildrpm.sh"
                             }
                         }
                     },

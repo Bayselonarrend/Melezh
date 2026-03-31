@@ -4,8 +4,8 @@
         "title": "Version 0.12.0 - 0.04.2026",
         "changes": [
             {
-                "description_ru": "Поднята версия `oint` до 1.35.0",
-                "description_en": "The `oint` version has been upgraded to 1.35.0"
+                "description_ru": "Поднята версия `oint` до 2.0.0",
+                "description_en": "The `oint` version has been upgraded to 2.0.0"
             }       
         ]
     },

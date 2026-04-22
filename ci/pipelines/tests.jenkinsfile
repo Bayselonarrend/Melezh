@@ -32,10 +32,8 @@ pipeline {
 
         stage('Main UI Tests (RPM, RU)') {
             steps {
-                retry(3) {
-                    bat 'npm install selenium-side-runner --save-dev'
-                    bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921 --retries 3 -c "browserName=chrome goog:chromeOptions.binary=\'C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe\' goog:chromeOptions.args=[--headless,--disable-gpu,--disable-dev-shm-usage,--remote-debugging-pipe]"'
-                }
+                bat 'npm install selenium-side-runner --save-dev'
+                bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921'
             }
         }
     }

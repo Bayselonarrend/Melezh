@@ -34,7 +34,7 @@ pipeline {
             steps {
                 retry(3) {
                     bat 'npm install selenium-side-runner --save-dev'
-                    bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921 --retries 3'
+                    bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921 --retries 3 -c "browserName=chrome goog:chromeOptions.args=[--headless=new,--disable-gpu,--no-sandbox,--disable-dev-shm-usage,--disable-software-rasterizer,--window-size=1920,1080,--remote-debugging-port=9222]"'
                 }
             }
         }

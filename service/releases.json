@@ -6,7 +6,15 @@
             {
                 "description_ru": "Поднята версия `oint` до 2.0.0",
                 "description_en": "The `oint` version has been upgraded to 2.0.0"
-            }       
+            },
+            {
+                "description_ru": "Добавлена поддержка заголовка `X-Forwarded-For` при определении IP для блокировки авторизации",
+                "description_en": "Added support for `X-Forwarded-For` header when determining IP for authorization blocking"
+            },
+            {
+                "description_ru": "Улучшено логирование внутренних процессов в консоль",
+                "description_en": "Improved logging of internal processes to console"
+            }
         ]
     },
     {

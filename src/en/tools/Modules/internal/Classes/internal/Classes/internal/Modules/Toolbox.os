@@ -1,5 +1,7 @@
 #Use oint
 
+Var LogErrorTemplate;
+
 #Region Internal
 
 Function CreateConnectionRO(Val Path) Export
@@ -47,14 +49,14 @@ Function HandlingError(Context, Code, Text) Export
 
         Result = New Structure("result,error", False, Text.Description);
 
-        If StrFind(Text.SourceLine, "Raise") = 0 Then
+        If StrFind(Text.SourceString, "Raise") = 0 Then
 
             ModuleFile = New File(Text.ModuleName);
 
             ExceptionStructure = New Structure;
             ExceptionStructure.Insert("module", ModuleFile.Name);
             ExceptionStructure.Insert("row" , Text.LineNumber);
-            ExceptionStructure.Insert("code" , TrimAll(Text.SourceLine));
+            ExceptionStructure.Insert("code" , TrimAll(Text.SourceString));
 
             Result.Insert("exception", ExceptionStructure);
 
@@ -65,6 +67,9 @@ Function HandlingError(Context, Code, Text) Export
     EndIf;
 
     Context.Response.StatusCode = Code;
+
+    WriteErrorToLog(Result);
+
     Return Result;
 
 EndFunction
@@ -94,6 +99,29 @@ Function StringStartsWithLetter(Val Value) Export
 
 EndFunction
 
+Procedure WriteErrorToLog(Val Result) Export
+
+    InitLogErrorTemplate();
+
+    OPI_TypeConversion.GetLine(Result);
+    Message(StrTemplate(LogErrorTemplate, Result));
+    
+EndProcedure
+
+#EndRegion
+
+#Region Private
+
+Procedure InitLogErrorTemplate()
+
+    If Not ValueIsFilled(LogErrorTemplate) Then
+
+        LogErrorTemplate = "info: Melezh.Internal
+        | %1";
+    EndIf;
+    
+EndProcedure
+
 #EndRegion
 
 #Region Alternate
@@ -121,5 +149,9 @@ EndFunction
 Function СтрокаНачинаетсяСБуквы(Val Значение) Export
 	Return StringStartsWithLetter(Значение);
 EndFunction
+
+Procedure ВывестиОшибкуВЛог(Val Результат) Export
+	WriteErrorToLog(Результат);
+EndProcedure
 
 #EndRegion

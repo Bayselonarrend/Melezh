@@ -32,10 +32,16 @@ Function AuthorizeSession(Context) Export
 		Return Toolbox.HandlingError(Context, 405, "Method Not Allowed");
 	EndIf;
 	
-	ClientIP = Context.Connection.RemoteIPAddress;
+	ClientIP = Context.Request.Headers.Get("X-Forwarded-For");
+	ClientIP = ?(ValueIsFilled(ClientIP), ClientIP, Context.Connection.RemoteIPAddress);
 
 	If CheckAuthorizationBlock(ClientIP) Then
-		Return Toolbox.HandlingError(Context, 429, "Maximum number of failed authorization attempts exceeded. Please try again later.");
+
+		Result = Toolbox.HandlingError(Context, 429, "Maximum number of failed authorization attempts exceeded. Please try again later.");
+		Toolbox.WriteErrorToLog(StrTemplate("Blocked IP:", ClientIP));
+
+		Return Result;
+
 	EndIf;
 	
 	ContentLength = Context.Request.ContentLength;

@@ -150,4 +150,8 @@ Function StringStartsWithLetter(Val Value) Export
 	Return СтрокаНачинаетсяСБуквы(Value);
 EndFunction
 
+Procedure WriteErrorToLog(Val Result) Export
+	ВывестиОшибкуВЛог(Result);
+EndProcedure
+
 #EndRegion

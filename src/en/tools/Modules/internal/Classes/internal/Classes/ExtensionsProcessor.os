@@ -225,7 +225,7 @@ Function ParseModule(Module)
     CurrentIndex.Insert("library" , CurrentModule);
     CurrentIndex.Insert("self_depend", StrOccurrenceCount(ModuleText, CurrentModule) > 1);
         
-    MethodArray = New Array;
+    MethodsArray = New Array;
     RegionMethodsArray = New Array;
     RegionArray = New Array;
     
@@ -253,7 +253,7 @@ Function ParseModule(Module)
 
             CurrentMethod.Insert("region", CurrentRegion);
             
-            MethodArray.Add(CurrentMethod);
+            MethodsArray.Add(CurrentMethod);
             RegionMethodsArray.Add(MethodName);
             
         EndIf;
@@ -261,7 +261,7 @@ Function ParseModule(Module)
     EndDo;
 
     CurrentIndex.Insert("regions", RegionArray);
-    CurrentIndex.Insert("methods", MethodArray);
+    CurrentIndex.Insert("methods", MethodsArray);
 
     Return CurrentIndex;
     

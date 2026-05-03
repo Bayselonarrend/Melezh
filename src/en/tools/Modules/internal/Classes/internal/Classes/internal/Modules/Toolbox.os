@@ -104,6 +104,9 @@ Procedure WriteErrorToLog(Val Result) Export
     InitLogErrorTemplate();
 
     OPI_TypeConversion.GetLine(Result);
+
+    Result = StrReplace(Result, Chars.LF, " ");
+
     Message(StrTemplate(LogErrorTemplate, Result));
     
 EndProcedure

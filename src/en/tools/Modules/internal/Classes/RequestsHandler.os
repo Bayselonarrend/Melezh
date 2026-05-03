@@ -95,7 +95,7 @@ Procedure MainHandle(Context, NextHandler) Export
     
     Try
         
-        Context.Response.Headers["Server"] = "Melezh/0.12.0 (Kestrel)";
+        Context.Response.Headers["Server"] = "Melezh/0.13.0 (Kestrel)";
         
         Result = ProcessRequest(Context, NextHandler);
         

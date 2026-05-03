@@ -149,7 +149,7 @@
 
     <template x-if="showCreateModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-0 relative">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-0 relative">
                 <div class="border-b px-6 py-4 flex items-center justify-between">
                     <h3 class="text-lg font-bold">Создать задачу</h3>
                     <button @click="closeCreateModal" type="button"
@@ -228,15 +228,179 @@
                             </div>
                         </div>
                     </div>
-                    <div>
-                        <label class="block font-semibold mb-2">Расписание запуска</label>
-                        <input type="text" x-model="scheduleInput" class="w-full px-3 py-2 border rounded-md font-mono"
-                            placeholder="сек мин час день месяц день_недели год">
-                        <div class="mt-2 text-sm text-gray-600">
-                            Укажите 7 значений через пробел:<br>
-                            <code
-                                class="text-xs">секунды (0–59), минуты (0–59), часы (0–23), день месяца (1–31), месяц (1–12), день недели (1–7, Пн=1), год (* или 2025)</code><br>
-                            Пример: <code class="text-xs">0 30 9,12,15 1,15 5-8 1,3,5 *</code> → в 9:30, 12:30 и 15:30, по понедельникам, средам и пятницам, 1-го и 15-го числа, с мая по август, каждый год
+                    <!-- Расписание: конструктор + строка cron -->
+                    <div class="space-y-5">
+                        <label class="block font-semibold">Расписание запуска</label>
+
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-4">
+                            <p class="text-amber-800 text-sm rounded bg-amber-50 px-2 py-1.5" x-show="scheduleConstructorHint && !scheduleConstructorInSync"
+                                x-text="scheduleConstructorHint"></p>
+
+                            <div class="space-y-5 transition-opacity" :class="{ 'opacity-50 pointer-events-none': !scheduleConstructorInSync }">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Секунды</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('seconds')"
+                                                @change="scheduleSetTimeStar('seconds', $event.target.checked, 0, 59, 0)">
+                                            <span>Каждую секунду (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('seconds')">
+                                            <template x-for="s in scheduleSecondMarks" :key="'c-sec-' + s">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('seconds', s) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(s).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('seconds', 0, 59, s, 0)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Минуты</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('minutes')"
+                                                @change="scheduleSetTimeStar('minutes', $event.target.checked, 0, 59, 0)">
+                                            <span>Каждую минуту (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('minutes')">
+                                            <template x-for="m in scheduleMinuteMarks" :key="'c-min-' + m">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('minutes', m) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(m).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('minutes', 0, 59, m, 0)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Часы</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('hours')"
+                                                @change="scheduleSetTimeStar('hours', $event.target.checked, 0, 23, 9)">
+                                            <span>Каждый час (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('hours')">
+                                            <template x-for="h in scheduleHourMarks" :key="'c-hour-' + h">
+                                                <button type="button"
+                                                    class="text-[11px] w-10 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('hours', h) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(h).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('hours', 0, 23, h, 9)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День месяца</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleDomIsStar()"
+                                                @change="scheduleSetDomStar($event.target.checked)">
+                                            <span>Каждый день (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-0.5 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleDomIsStar()">
+                                            <template x-for="d in scheduleDomMarks" :key="'c-dom-' + d">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleDomIsOn(d) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="d"
+                                                    @click.prevent="scheduleToggleDom(d)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Месяц</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleMonthIsStar()"
+                                                @change="scheduleSetMonthStar($event.target.checked)">
+                                            <span>Каждый месяц (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleMonthIsStar()">
+                                            <template x-for="mn in scheduleMonthMarks" :key="'c-mon-' + mn">
+                                                <button type="button"
+                                                    class="text-xs px-2 py-1.5 rounded border transition"
+                                                    :class="scheduleMonthIsOn(mn) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    @click.prevent="scheduleToggleMonth(mn)">
+                                                    <span class="sr-only" x-text="mn"></span>
+                                                    <span x-text="scheduleMonthNames[mn - 1]"></span>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День недели</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleDowIsStar()"
+                                                @change="scheduleSetDowStar($event.target.checked)">
+                                            <span>Каждый день недели (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleDowIsStar()">
+                                            <template x-for="(wd, wi) in scheduleWeekdays" :key="'c-dow-' + wi">
+                                                <button type="button"
+                                                    class="text-xs px-3 py-1.5 rounded border transition min-w-[2.75rem]"
+                                                    :class="scheduleDowIsOn(wi) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="wd.label"
+                                                    @click.prevent="scheduleToggleDow(wi)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Год</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleYearIsStar()"
+                                                @change="scheduleSetYearStar($event.target.checked)">
+                                            <span>Каждый год (&ast;)</span>
+                                        </label>
+                                        <div class="flex items-center gap-2" x-show="!scheduleYearIsStar() && !scheduleYearsAreMultiple()">
+                                            <input type="number" min="1970" max="2099" step="1" class="w-36 px-2 py-1.5 border rounded-md font-mono text-sm"
+                                                :value="scheduleYearSingleDisplay()"
+                                                @change="scheduleApplyYearSingle($event.target.value)">
+                                        </div>
+                                        <p class="text-xs text-gray-600" x-show="scheduleYearsAreMultiple()">
+                                            Несколько лет заданы в строке (<span class="font-mono" x-text="scheduleCronModel.years.join(', ')"></span>) — здесь изменится поле после того, как в строке останется одно значение или &ast;.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-sm mb-1">Строка расписания (семь значений через пробел)</label>
+                            <input type="text" x-model="scheduleInput"
+                                @input.debounce.350ms="syncScheduleFromInput"
+                                class="w-full px-3 py-2 border rounded-md font-mono text-sm"
+                                placeholder="сек мин час день месяц день_недели год">
+                            <p class="mt-2 text-xs text-gray-600 leading-relaxed">
+                                По порядку: секунды, минуты, часы (0–23), число месяца (1–31), месяц (1–12), день недели и год.
+                                Звёздочка (&ast;) в поле означает «на каждом допустимом значении». День недели в строке задаётся числом как в этом планировщике:
+                                вс&nbsp;=&nbsp;1, пн&nbsp;=&nbsp;2, … сб&nbsp;=&nbsp;7 — как у кнопок «Пн»… ниже при выключенной галочке «Каждый день недели (&ast;)».
+                                Год — число между 1970 и 2099 или &ast;.<br class="hidden sm:block">
+                                Кнопки выше подходят для обычных списков и диапазонов цифр; шаг вроде <code class="font-mono text-[11px]">*/5</code>, названия месяцев буквами и знаки <code class="font-mono text-[11px]">L&nbsp;#&nbsp;?</code> вводятся только в текстовое поле.
+                                Пример: <code class="font-mono">0&nbsp;30&nbsp;9,12,15&nbsp;1,15&nbsp;5-8&nbsp;2,4,6&nbsp;*</code> — три времени по будням (пн, ср, пт&nbsp;соответствуют 2,&nbsp;4,&nbsp;6).
+                            </p>
                         </div>
                     </div>
 
@@ -260,7 +424,7 @@
 
     <template x-if="showEditModal">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-2xl p-0 relative">
+            <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-0 relative">
                 <div class="border-b px-6 py-4 flex items-center justify-between">
                     <h3 class="text-lg font-bold">Редактировать задачу</h3>
                     <button @click="closeEditModal" type="button"
@@ -344,16 +508,179 @@
                         </div>
                     </div>
 
-                    <div>
-                        <label class="block font-semibold mb-2">Расписание запуска</label>
-                        <input type="text" x-model="scheduleInput" class="w-full px-3 py-2 border rounded-md font-mono"
-                            placeholder="сек мин час день месяц день_недели год">
-                        <div class="mt-2 text-sm text-gray-600">
-                            Укажите 7 значений через пробел:<br>
-                            <code
-                                class="text-xs">секунды (0–59), минуты (0–59), часы (0–23), день месяца (1–31), месяц (1–12), день недели (1–7, Пн=1), год (* или 2025)</code><br>
-                            Пример: <code class="text-xs">0 30 9,12,15 1,15 5-8 1,3,5 *</code> → в 9:30, 12:30 и 15:30,
-                            по понедельникам, средам и пятницам, 1-го и 15-го числа, с мая по август, каждый год
+                    <!-- Расписание: конструктор + строка cron (как при создании) -->
+                    <div class="space-y-5">
+                        <label class="block font-semibold">Расписание запуска</label>
+
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-4">
+                            <p class="text-amber-800 text-sm rounded bg-amber-50 px-2 py-1.5" x-show="scheduleConstructorHint && !scheduleConstructorInSync"
+                                x-text="scheduleConstructorHint"></p>
+
+                            <div class="space-y-5 transition-opacity" :class="{ 'opacity-50 pointer-events-none': !scheduleConstructorInSync }">
+                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Секунды</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('seconds')"
+                                                @change="scheduleSetTimeStar('seconds', $event.target.checked, 0, 59, 0)">
+                                            <span>Каждую секунду (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('seconds')">
+                                            <template x-for="s in scheduleSecondMarks" :key="'e-sec-' + s">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('seconds', s) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(s).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('seconds', 0, 59, s, 0)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Минуты</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('minutes')"
+                                                @change="scheduleSetTimeStar('minutes', $event.target.checked, 0, 59, 0)">
+                                            <span>Каждую минуту (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('minutes')">
+                                            <template x-for="m in scheduleMinuteMarks" :key="'e-min-' + m">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('minutes', m) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(m).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('minutes', 0, 59, m, 0)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                    <div class="flex flex-col gap-2 min-w-0">
+                                        <span class="text-sm font-medium text-gray-700">Часы</span>
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleTimeIsStar('hours')"
+                                                @change="scheduleSetTimeStar('hours', $event.target.checked, 0, 23, 9)">
+                                            <span>Каждый час (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleTimeIsStar('hours')">
+                                            <template x-for="h in scheduleHourMarks" :key="'e-hour-' + h">
+                                                <button type="button"
+                                                    class="text-[11px] w-10 py-1 rounded border transition"
+                                                    :class="scheduleTimeIsOn('hours', h) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="String(h).padStart(2, '0')"
+                                                    @click.prevent="scheduleToggleTime('hours', 0, 23, h, 9)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День месяца</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleDomIsStar()"
+                                                @change="scheduleSetDomStar($event.target.checked)">
+                                            <span>Каждый день (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-0.5 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleDomIsStar()">
+                                            <template x-for="d in scheduleDomMarks" :key="'e-dom-' + d">
+                                                <button type="button"
+                                                    class="text-[11px] w-8 py-1 rounded border transition"
+                                                    :class="scheduleDomIsOn(d) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="d"
+                                                    @click.prevent="scheduleToggleDom(d)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Месяц</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleMonthIsStar()"
+                                                @change="scheduleSetMonthStar($event.target.checked)">
+                                            <span>Каждый месяц (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleMonthIsStar()">
+                                            <template x-for="mn in scheduleMonthMarks" :key="'e-mon-' + mn">
+                                                <button type="button"
+                                                    class="text-xs px-2 py-1.5 rounded border transition"
+                                                    :class="scheduleMonthIsOn(mn) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    @click.prevent="scheduleToggleMonth(mn)">
+                                                    <span class="sr-only" x-text="mn"></span>
+                                                    <span x-text="scheduleMonthNames[mn - 1]"></span>
+                                                </button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День недели</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleDowIsStar()"
+                                                @change="scheduleSetDowStar($event.target.checked)">
+                                            <span>Каждый день недели (&ast;)</span>
+                                        </label>
+                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
+                                            x-show="!scheduleDowIsStar()">
+                                            <template x-for="(wd, wi) in scheduleWeekdays" :key="'e-dow-' + wi">
+                                                <button type="button"
+                                                    class="text-xs px-3 py-1.5 rounded border transition min-w-[2.75rem]"
+                                                    :class="scheduleDowIsOn(wi) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
+                                                    x-text="wd.label"
+                                                    @click.prevent="scheduleToggleDow(wi)"></button>
+                                            </template>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
+                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Год</span>
+                                    <div class="space-y-2 min-w-0">
+                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
+                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
+                                                :checked="scheduleYearIsStar()"
+                                                @change="scheduleSetYearStar($event.target.checked)">
+                                            <span>Каждый год (&ast;)</span>
+                                        </label>
+                                        <div class="flex items-center gap-2" x-show="!scheduleYearIsStar() && !scheduleYearsAreMultiple()">
+                                            <input type="number" min="1970" max="2099" step="1" class="w-36 px-2 py-1.5 border rounded-md font-mono text-sm"
+                                                :value="scheduleYearSingleDisplay()"
+                                                @change="scheduleApplyYearSingle($event.target.value)">
+                                        </div>
+                                        <p class="text-xs text-gray-600" x-show="scheduleYearsAreMultiple()">
+                                            Несколько лет заданы в строке (<span class="font-mono" x-text="scheduleCronModel.years.join(', ')"></span>) — здесь изменится поле после того, как в строке останется одно значение или &ast;.
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div>
+                            <label class="block font-medium text-sm mb-1">Строка расписания (семь значений через пробел)</label>
+                            <input type="text" x-model="scheduleInput"
+                                @input.debounce.350ms="syncScheduleFromInput"
+                                class="w-full px-3 py-2 border rounded-md font-mono text-sm"
+                                placeholder="сек мин час день месяц день_недели год">
+                            <p class="mt-2 text-xs text-gray-600 leading-relaxed">
+                                По порядку: секунды, минуты, часы (0–23), число месяца (1–31), месяц (1–12), день недели и год.
+                                Звёздочка (&ast;) в поле означает «на каждом допустимом значении». День недели в строке задаётся числом как в этом планировщике:
+                                вс&nbsp;=&nbsp;1, пн&nbsp;=&nbsp;2, … сб&nbsp;=&nbsp;7 — как у кнопок «Пн»… ниже при выключенной галочке «Каждый день недели (&ast;)».
+                                Год — число между 1970 и 2099 или &ast;.<br class="hidden sm:block">
+                                Кнопки выше подходят для обычных списков и диапазонов цифр; шаг вроде <code class="font-mono text-[11px]">*/5</code>, названия месяцев буквами и знаки <code class="font-mono text-[11px]">L&nbsp;#&nbsp;?</code> вводятся только в текстовое поле.
+                                Пример: <code class="font-mono">0&nbsp;30&nbsp;9,12,15&nbsp;1,15&nbsp;5-8&nbsp;2,4,6&nbsp;*</code> — три времени по будням (пн, ср, пт&nbsp;соответствуют 2,&nbsp;4,&nbsp;6).
+                            </p>
                         </div>
                     </div>
 

@@ -6,6 +6,10 @@
             {
                 "description_ru": "Поднята версия `oint` до 2.1.0",
                 "description_en": "The `oint` version has been upgraded to 2.1.0"
+            },
+            {
+                "description_ru": "Улучшена форма регламентных заданий в веб-консоли",
+                "description_en": "Improved scheduled jobs form in web console"
             }
         ]
     },

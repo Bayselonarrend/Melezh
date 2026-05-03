@@ -9,9 +9,9 @@ export const schedulerView = () => ({
     tasks: [],
     isLoading: false,
 
-    // Modal
-    showCreateModal: false,
-    showEditModal: false,
+    // Modal (создание / редактирование — одна форма)
+    taskModalOpen: false,
+    taskModalMode: 'create',
     handlers: [],
     isHandlersLoading: true,
     selectedHandlerKey: '',
@@ -34,10 +34,8 @@ export const schedulerView = () => ({
         { label: 'Вс', cron: 1 },
     ],
     scheduleMonthNames: ['янв.', 'февр.', 'мар.', 'апр.', 'мая', 'июн.', 'июл.', 'авг.', 'сен.', 'окт.', 'нояб.', 'дек.'],
-    createError: '',
-    editError: '',
-    isCreating: false,
-    isEditing: false,
+    taskModalError: '',
+    taskModalSaving: false,
     editingTask: null,
 
     init() {
@@ -354,9 +352,11 @@ export const schedulerView = () => ({
     },
 
     async openCreateModal() {
-        this.showCreateModal = true;
-        this.createError = '';
-        this.isCreating = false;
+        this.taskModalMode = 'create';
+        this.taskModalOpen = true;
+        this.taskModalError = '';
+        this.taskModalSaving = false;
+        this.editingTask = null;
         this.selectedHandlerKey = '';
         this.handlerSearch = '';
         this.scheduleInput = '0 0 9 * * * *';
@@ -367,7 +367,7 @@ export const schedulerView = () => ({
             if (!result.success) throw new Error(result.message);
             this.handlers = result.data || [];
         } catch (error) {
-            this.createError = `Ошибка загрузки обработчиков: ${error.message}`;
+            this.taskModalError = `Ошибка загрузки обработчиков: ${error.message}`;
         } finally {
             this.isHandlersLoading = false;
         }
@@ -375,9 +375,10 @@ export const schedulerView = () => ({
     },
 
     async openEditModal(task) {
-        this.showEditModal = true;
-        this.editError = '';
-        this.isEditing = false;
+        this.taskModalMode = 'edit';
+        this.taskModalOpen = true;
+        this.taskModalError = '';
+        this.taskModalSaving = false;
         this.editingTask = task;
         this.selectedHandlerKey = task.handler;
         this.scheduleInput = task.cron;
@@ -389,22 +390,25 @@ export const schedulerView = () => ({
             if (!result.success) throw new Error(result.message);
             this.handlers = result.data || [];
         } catch (error) {
-            this.editError = `Ошибка загрузки обработчиков: ${error.message}`;
+            this.taskModalError = `Ошибка загрузки обработчиков: ${error.message}`;
         } finally {
             this.isHandlersLoading = false;
         }
         this.$nextTick(() => this.syncScheduleFromInput());
     },
 
-    closeCreateModal() {
-        this.showCreateModal = false;
-        this.handlerDropdownOpen = false;
-    },
-
-    closeEditModal() {
-        this.showEditModal = false;
+    closeTaskModal() {
+        this.taskModalOpen = false;
         this.handlerDropdownOpen = false;
         this.editingTask = null;
+    },
+
+    async submitTaskModal() {
+        if (this.taskModalMode === 'create') {
+            await this.createTask();
+        } else {
+            await this.updateTask();
+        }
     },
 
     get filteredHandlers() {
@@ -450,18 +454,18 @@ export const schedulerView = () => ({
 
     async createTask() {
         if (!this.selectedHandlerKey) {
-            this.createError = 'Выберите обработчик';
+            this.taskModalError = 'Выберите обработчик';
             return;
         }
 
         const scheduleValidation = this.validateSchedule(this.scheduleInput);
         if (scheduleValidation) {
-            this.createError = scheduleValidation;
+            this.taskModalError = scheduleValidation;
             return;
         }
 
-        this.isCreating = true;
-        this.createError = '';
+        this.taskModalSaving = true;
+        this.taskModalError = '';
 
         try {
             const payload = {
@@ -478,33 +482,33 @@ export const schedulerView = () => ({
             const result = await handleFetchResponse(response);
             if (!result.success) throw new Error(result.message);
 
-            this.closeCreateModal();
+            this.closeTaskModal();
             await this.loadTasks();
             
             window.dispatchEvent(new CustomEvent('show-success', {
                 detail: { message: 'Задача успешно создана' }
             }));
         } catch (error) {
-            this.createError = `Ошибка создания: ${error.message}`;
+            this.taskModalError = `Ошибка создания: ${error.message}`;
         } finally {
-            this.isCreating = false;
+            this.taskModalSaving = false;
         }
     },
 
     async updateTask() {
         if (!this.selectedHandlerKey) {
-            this.editError = 'Выберите обработчик';
+            this.taskModalError = 'Выберите обработчик';
             return;
         }
 
         const scheduleValidation = this.validateSchedule(this.scheduleInput);
         if (scheduleValidation) {
-            this.editError = scheduleValidation;
+            this.taskModalError = scheduleValidation;
             return;
         }
 
-        this.isEditing = true;
-        this.editError = '';
+        this.taskModalSaving = true;
+        this.taskModalError = '';
 
         try {
             const payload = {
@@ -522,16 +526,16 @@ export const schedulerView = () => ({
             const result = await handleFetchResponse(response);
             if (!result.success) throw new Error(result.message);
 
-            this.closeEditModal();
+            this.closeTaskModal();
             await this.loadTasks();
             
             window.dispatchEvent(new CustomEvent('show-success', {
                 detail: { message: 'Задача успешно обновлена' }
             }));
         } catch (error) {
-            this.editError = `Ошибка обновления: ${error.message}`;
+            this.taskModalError = `Ошибка обновления: ${error.message}`;
         } finally {
-            this.isEditing = false;
+            this.taskModalSaving = false;
         }
     },
 

@@ -147,12 +147,13 @@
         </div>
     </div>
 
-    <template x-if="showCreateModal">
+    <template x-if="taskModalOpen">
         <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
             <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-0 relative">
                 <div class="border-b px-6 py-4 flex items-center justify-between">
-                    <h3 class="text-lg font-bold">Создать задачу</h3>
-                    <button @click="closeCreateModal" type="button"
+                    <h3 class="text-lg font-bold"
+                        x-text="taskModalMode === 'create' ? 'Создать задачу' : 'Редактировать задачу'"></h3>
+                    <button @click="closeTaskModal" type="button"
                         class="text-gray-400 hover:text-gray-600 transition rounded p-1">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
                             stroke="currentColor">
@@ -162,7 +163,15 @@
                     </button>
                 </div>
 
-                <form @submit.prevent="createTask" class="px-6 py-6 space-y-5">
+                <form @submit.prevent="submitTaskModal" class="px-6 py-6 space-y-5">
+                    <template x-if="taskModalMode === 'edit' && editingTask">
+                        <div>
+                            <label class="block font-semibold mb-2">ID задачи</label>
+                            <input type="text" x-model="editingTask.id" readonly
+                                class="w-full px-3 py-2 border rounded-md font-mono bg-gray-100">
+                        </div>
+                    </template>
+
                     <div>
                         <label class="block font-semibold mb-2">Обработчик</label>
                         <div class="relative mt-1" @keydown.escape="closeHandlerDropdown"
@@ -248,7 +257,7 @@
                                         </label>
                                         <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleTimeIsStar('seconds')">
-                                            <template x-for="s in scheduleSecondMarks" :key="'c-sec-' + s">
+                                            <template x-for="s in scheduleSecondMarks" :key="'sch-sec-' + s">
                                                 <button type="button"
                                                     class="text-[11px] w-8 py-1 rounded border transition"
                                                     :class="scheduleTimeIsOn('seconds', s) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -267,7 +276,7 @@
                                         </label>
                                         <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleTimeIsStar('minutes')">
-                                            <template x-for="m in scheduleMinuteMarks" :key="'c-min-' + m">
+                                            <template x-for="m in scheduleMinuteMarks" :key="'sch-min-' + m">
                                                 <button type="button"
                                                     class="text-[11px] w-8 py-1 rounded border transition"
                                                     :class="scheduleTimeIsOn('minutes', m) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -286,7 +295,7 @@
                                         </label>
                                         <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleTimeIsStar('hours')">
-                                            <template x-for="h in scheduleHourMarks" :key="'c-hour-' + h">
+                                            <template x-for="h in scheduleHourMarks" :key="'sch-hour-' + h">
                                                 <button type="button"
                                                     class="text-[11px] w-10 py-1 rounded border transition"
                                                     :class="scheduleTimeIsOn('hours', h) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -308,7 +317,7 @@
                                         </label>
                                         <div class="flex flex-wrap gap-0.5 p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleDomIsStar()">
-                                            <template x-for="d in scheduleDomMarks" :key="'c-dom-' + d">
+                                            <template x-for="d in scheduleDomMarks" :key="'sch-dom-' + d">
                                                 <button type="button"
                                                     class="text-[11px] w-8 py-1 rounded border transition"
                                                     :class="scheduleDomIsOn(d) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -330,7 +339,7 @@
                                         </label>
                                         <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleMonthIsStar()">
-                                            <template x-for="mn in scheduleMonthMarks" :key="'c-mon-' + mn">
+                                            <template x-for="mn in scheduleMonthMarks" :key="'sch-mon-' + mn">
                                                 <button type="button"
                                                     class="text-xs px-2 py-1.5 rounded border transition"
                                                     :class="scheduleMonthIsOn(mn) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -354,7 +363,7 @@
                                         </label>
                                         <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
                                             x-show="!scheduleDowIsStar()">
-                                            <template x-for="(wd, wi) in scheduleWeekdays" :key="'c-dow-' + wi">
+                                            <template x-for="(wd, wi) in scheduleWeekdays" :key="'sch-dow-' + wi">
                                                 <button type="button"
                                                     class="text-xs px-3 py-1.5 rounded border transition min-w-[2.75rem]"
                                                     :class="scheduleDowIsOn(wi) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
@@ -394,297 +403,27 @@
                                 class="w-full px-3 py-2 border rounded-md font-mono text-sm"
                                 placeholder="сек мин час день месяц день_недели год">
                             <p class="mt-2 text-xs text-gray-600 leading-relaxed">
-                                По порядку: секунды, минуты, часы (0–23), число месяца (1–31), месяц (1–12), день недели и год
+                                По порядку: секунды, минуты, часы (0–23), число месяца (1–31), месяц (1–12), день недели и год.
+                                Звёздочка (&ast;) — «каждый допустимый шаг». День недели в строке: вс&nbsp;=1 … сб&nbsp;=7 — совпадает с кнопками&nbsp;«Пн»… при выключенной галочке «Каждый день недели (&ast;)». Год: 1970–2099 или &ast;.
+                                Конструктор — простые числа и списки; шаг <code class="font-mono text-[11px]">*/…</code>, буквы месяцев и <code class="font-mono text-[11px]">L&nbsp;#&nbsp;?</code> — в поле строки.
+                                Пример: <code class="font-mono text-[11px]">0&nbsp;30&nbsp;9,12,15&nbsp;1,15&nbsp;5-8&nbsp;2,4,6&nbsp;*</code> — три времени, пн/ср/пт как 2, 4 и 6.
                             </p>
                         </div>
                     </div>
 
-                    <div class="text-red-600 text-sm" x-show="createError" x-text="createError"></div>
+                    <div class="text-red-600 text-sm" x-show="taskModalError" x-text="taskModalError"></div>
 
                     <div class="flex justify-end space-x-2 pt-2">
-                        <button @click="closeCreateModal" type="button"
+                        <button @click="closeTaskModal" type="button"
                             class="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">
                             Отмена
                         </button>
-                        <button type="submit" :disabled="isCreating"
+                        <button type="submit" :disabled="taskModalSaving"
                             class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition disabled:opacity-50">
-                            <span x-show="!isCreating">Создать</span>
-                            <span x-show="isCreating">Создание...</span>
-                        </button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </template>
-
-    <template x-if="showEditModal">
-        <div class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-40">
-            <div class="bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-0 relative">
-                <div class="border-b px-6 py-4 flex items-center justify-between">
-                    <h3 class="text-lg font-bold">Редактировать задачу</h3>
-                    <button @click="closeEditModal" type="button"
-                        class="text-gray-400 hover:text-gray-600 transition rounded p-1">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                            stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
-                </div>
-
-                <form @submit.prevent="updateTask" class="px-6 py-6 space-y-5">
-                    <div>
-                        <label class="block font-semibold mb-2">ID задачи</label>
-                        <input type="text" x-model="editingTask.id" class="w-full px-3 py-2 border rounded-md font-mono bg-gray-100" readonly>
-                    </div>
-                    <div>
-                        <label class="block font-semibold mb-2">Обработчик</label>
-                        <div class="relative mt-1" @keydown.escape="closeHandlerDropdown"
-                            @click.outside="closeHandlerDropdown">
-                            <button type="button" @click="openHandlerDropdown" :disabled="isHandlersLoading"
-                                class="relative w-full cursor-default rounded-md border border-gray-300 bg-white py-2 pl-3 pr-10 text-left shadow-sm focus:outline-none focus:ring-1 focus:ring-green-500 sm:text-sm"
-                                :class="{
-                      'bg-gray-100 text-gray-400 cursor-not-allowed': isHandlersLoading,
-                      'text-gray-500': !selectedHandlerKey && !isHandlersLoading
-                    }">
-                                <span class="flex items-center">
-                                    <template x-if="selectedHandlerKey && !isHandlersLoading">
-                                        <img :src="`img/libs/${handlers.find(h => h.key === selectedHandlerKey)?.library.replace(/\s+/g, '')}.png`"
-                                            class="h-5 w-5 flex-shrink-0" @error="handleImageError">
-                                    </template>
-                                    <span class="block truncate"
-                                        :class="{ 'ml-3': selectedHandlerKey && !isHandlersLoading }" x-text="isHandlersLoading ? 'Загрузка...' : (
-                    selectedHandlerKey
-                      ? handlers.find(h => h.key === selectedHandlerKey)?.key + ' (' + (handlers.find(h => h.key === selectedHandlerKey)?.library_title || '') + ')'
-                      : 'Выберите обработчик'
-                  )">
-                                    </span>
-                                </span>
-                                <span class="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
-                                    <svg class="h-5 w-5 text-gray-400" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M10 3a.75.75 0 01.55.24l3.25 3.5a.75.75 0 11-1.1 1.02L10 4.852 7.3 7.76a.75.75 0 01-1.1-1.02l3.25-3.5A.75.75 0 0110 3zm-3.76 9.2a.75.75 0 011.06.04l2.7 2.908 2.7-2.908a.75.75 0 111.1 1.02l-3.25 3.5a.75.75 0 01-1.1 0l-3.25-3.5a.75.75 0 01.04-1.06z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </span>
-                            </button>
-
-                            <div x-show="handlerDropdownOpen && !isHandlersLoading" x-transition
-                                class="absolute z-10 mt-1 w-full bg-white shadow-lg rounded-md py-0 text-base ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm max-h-60 overflow-auto">
-                                <div class="sticky top-0 bg-white z-10 p-1 border-b">
-                                    <input type="text" x-model.debounce.200ms="handlerSearch" @click.stop
-                                        x-ref="handlerSearchInput" placeholder="Поиск по ключу или названию..."
-                                        class="w-full px-2 py-1 text-sm border rounded focus:outline-none focus:ring-1 focus:ring-green-500" />
-                                </div>
-                                <template x-for="handler in filteredHandlers" :key="handler.key">
-                                    <button type="button" @click="selectHandler(handler.key)"
-                                        class="relative w-full cursor-default select-none py-2 pl-3 pr-9 hover:bg-gray-100 text-left flex items-center"
-                                        :class="{ 'bg-green-50': selectedHandlerKey === handler.key }">
-                                        <img :src="`img/libs/${handler.library.replace(/\s+/g, '')}.png`"
-                                            class="h-5 w-5 flex-shrink-0" @error="handleImageError">
-                                        <span class="ml-3 block truncate">
-                                            <span class="font-mono" x-text="handler.key"></span>
-                                            <span x-text="' (' + handler.library_title + ')'"></span>
-                                        </span>
-                                        <span x-show="selectedHandlerKey === handler.key"
-                                            class="absolute inset-y-0 right-0 flex items-center pr-4 text-green-600">
-                                            <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                                <path fill-rule="evenodd"
-                                                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                                                    clip-rule="evenodd" />
-                                            </svg>
-                                        </span>
-                                    </button>
-                                </template>
-                                <div x-show="filteredHandlers.length === 0" class="px-3 py-2 text-gray-500 text-sm">
-                                    Ничего не найдено
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Расписание: конструктор + строка cron (как при создании) -->
-                    <div class="space-y-5">
-                        <label class="block font-semibold">Расписание запуска</label>
-
-                        <div class="rounded-lg border border-gray-200 bg-gray-50 p-4 space-y-4">
-                            <p class="text-amber-800 text-sm rounded bg-amber-50 px-2 py-1.5" x-show="scheduleConstructorHint && !scheduleConstructorInSync"
-                                x-text="scheduleConstructorHint"></p>
-
-                            <div class="space-y-5 transition-opacity" :class="{ 'opacity-50 pointer-events-none': !scheduleConstructorInSync }">
-                                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-                                    <div class="flex flex-col gap-2 min-w-0">
-                                        <span class="text-sm font-medium text-gray-700">Секунды</span>
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleTimeIsStar('seconds')"
-                                                @change="scheduleSetTimeStar('seconds', $event.target.checked, 0, 59, 0)">
-                                            <span>Каждую секунду (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleTimeIsStar('seconds')">
-                                            <template x-for="s in scheduleSecondMarks" :key="'e-sec-' + s">
-                                                <button type="button"
-                                                    class="text-[11px] w-8 py-1 rounded border transition"
-                                                    :class="scheduleTimeIsOn('seconds', s) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    x-text="String(s).padStart(2, '0')"
-                                                    @click.prevent="scheduleToggleTime('seconds', 0, 59, s, 0)"></button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col gap-2 min-w-0">
-                                        <span class="text-sm font-medium text-gray-700">Минуты</span>
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleTimeIsStar('minutes')"
-                                                @change="scheduleSetTimeStar('minutes', $event.target.checked, 0, 59, 0)">
-                                            <span>Каждую минуту (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleTimeIsStar('minutes')">
-                                            <template x-for="m in scheduleMinuteMarks" :key="'e-min-' + m">
-                                                <button type="button"
-                                                    class="text-[11px] w-8 py-1 rounded border transition"
-                                                    :class="scheduleTimeIsOn('minutes', m) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    x-text="String(m).padStart(2, '0')"
-                                                    @click.prevent="scheduleToggleTime('minutes', 0, 59, m, 0)"></button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                    <div class="flex flex-col gap-2 min-w-0">
-                                        <span class="text-sm font-medium text-gray-700">Часы</span>
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleTimeIsStar('hours')"
-                                                @change="scheduleSetTimeStar('hours', $event.target.checked, 0, 23, 9)">
-                                            <span>Каждый час (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap content-start gap-0.5 min-h-[10.75rem] p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleTimeIsStar('hours')">
-                                            <template x-for="h in scheduleHourMarks" :key="'e-hour-' + h">
-                                                <button type="button"
-                                                    class="text-[11px] w-10 py-1 rounded border transition"
-                                                    :class="scheduleTimeIsOn('hours', h) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    x-text="String(h).padStart(2, '0')"
-                                                    @click.prevent="scheduleToggleTime('hours', 0, 23, h, 9)"></button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
-                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День месяца</span>
-                                    <div class="space-y-2 min-w-0">
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleDomIsStar()"
-                                                @change="scheduleSetDomStar($event.target.checked)">
-                                            <span>Каждый день (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap gap-0.5 p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleDomIsStar()">
-                                            <template x-for="d in scheduleDomMarks" :key="'e-dom-' + d">
-                                                <button type="button"
-                                                    class="text-[11px] w-8 py-1 rounded border transition"
-                                                    :class="scheduleDomIsOn(d) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    x-text="d"
-                                                    @click.prevent="scheduleToggleDom(d)"></button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
-                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Месяц</span>
-                                    <div class="space-y-2 min-w-0">
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleMonthIsStar()"
-                                                @change="scheduleSetMonthStar($event.target.checked)">
-                                            <span>Каждый месяц (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleMonthIsStar()">
-                                            <template x-for="mn in scheduleMonthMarks" :key="'e-mon-' + mn">
-                                                <button type="button"
-                                                    class="text-xs px-2 py-1.5 rounded border transition"
-                                                    :class="scheduleMonthIsOn(mn) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    @click.prevent="scheduleToggleMonth(mn)">
-                                                    <span class="sr-only" x-text="mn"></span>
-                                                    <span x-text="scheduleMonthNames[mn - 1]"></span>
-                                                </button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
-                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">День недели</span>
-                                    <div class="space-y-2 min-w-0">
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleDowIsStar()"
-                                                @change="scheduleSetDowStar($event.target.checked)">
-                                            <span>Каждый день недели (&ast;)</span>
-                                        </label>
-                                        <div class="flex flex-wrap gap-1 p-1 bg-white rounded border border-gray-200"
-                                            x-show="!scheduleDowIsStar()">
-                                            <template x-for="(wd, wi) in scheduleWeekdays" :key="'e-dow-' + wi">
-                                                <button type="button"
-                                                    class="text-xs px-3 py-1.5 rounded border transition min-w-[2.75rem]"
-                                                    :class="scheduleDowIsOn(wi) ? 'bg-green-600 text-white border-green-600' : 'bg-gray-50 text-gray-700 border-gray-200 hover:bg-gray-100'"
-                                                    x-text="wd.label"
-                                                    @click.prevent="scheduleToggleDow(wi)"></button>
-                                            </template>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="grid grid-cols-1 sm:grid-cols-[9.5rem,1fr] gap-x-4 gap-y-1 items-start">
-                                    <span class="text-sm font-medium text-gray-700 sm:pt-0.5">Год</span>
-                                    <div class="space-y-2 min-w-0">
-                                        <label class="inline-flex items-center gap-2 text-xs text-gray-600">
-                                            <input type="checkbox" class="rounded border-gray-300 text-green-600 focus:ring-green-500 shrink-0"
-                                                :checked="scheduleYearIsStar()"
-                                                @change="scheduleSetYearStar($event.target.checked)">
-                                            <span>Каждый год (&ast;)</span>
-                                        </label>
-                                        <div class="flex items-center gap-2" x-show="!scheduleYearIsStar() && !scheduleYearsAreMultiple()">
-                                            <input type="number" min="1970" max="2099" step="1" class="w-36 px-2 py-1.5 border rounded-md font-mono text-sm"
-                                                :value="scheduleYearSingleDisplay()"
-                                                @change="scheduleApplyYearSingle($event.target.value)">
-                                        </div>
-                                        <p class="text-xs text-gray-600" x-show="scheduleYearsAreMultiple()">
-                                            Несколько лет заданы в строке (<span class="font-mono" x-text="scheduleCronModel.years.join(', ')"></span>) — здесь изменится поле после того, как в строке останется одно значение или &ast;.
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div>
-                            <label class="block font-medium text-sm mb-1">Строка расписания (семь значений через пробел)</label>
-                            <input type="text" x-model="scheduleInput"
-                                @input.debounce.350ms="syncScheduleFromInput"
-                                class="w-full px-3 py-2 border rounded-md font-mono text-sm"
-                                placeholder="сек мин час день месяц день_недели год">
-                            <p class="mt-2 text-xs text-gray-600 leading-relaxed">
-                                По порядку: секунды, минуты, часы (0–23), число месяца (1–31), месяц (1–12), день недели и год
-                            </p>
-                        </div>
-                    </div>
-
-                    <div class="text-red-600 text-sm" x-show="editError" x-text="editError"></div>
-
-                    <div class="flex justify-end space-x-2 pt-2">
-                        <button @click="closeEditModal" type="button"
-                            class="px-4 py-2 rounded-md border border-gray-300 text-gray-600 hover:bg-gray-100 transition">
-                            Отмена
-                        </button>
-                        <button type="submit" :disabled="isEditing"
-                            class="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600 transition disabled:opacity-50">
-                            <span x-show="!isEditing">Сохранить</span>
-                            <span x-show="isEditing">Сохранение...</span>
+                            <span x-show="!taskModalSaving"
+                                x-text="taskModalMode === 'create' ? 'Создать' : 'Сохранить'"></span>
+                            <span x-show="taskModalSaving"
+                                x-text="taskModalMode === 'create' ? 'Создание...' : 'Сохранение...'"></span>
                         </button>
                     </div>
                 </form>

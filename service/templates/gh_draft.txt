@@ -23,6 +23,9 @@
 |<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/master/media/pins/8.png" width="32"/>| RPM-package (Melezh, Fedora/RHEL) | [melezh-%3-1.noarch_ru.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_ru.rpm) | [melezh-%3-1.noarch_en.rpm](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3-1.noarch_en.rpm) |
 |<img src="https://raw.githubusercontent.com/Bayselonarrend/Melezh/master/media/pins/9.png" width="32"/>| OSPX (Melezh, OneScript) | [melezh-%3_ru.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_ru.ospx) | [melezh-%3_en.ospx](https://github.com/Bayselonarrend/Melezh/releases/download/%3/melezh-%3_en.ospx) | 
 
+| 🪞 Зеркало/Mirror: [SourceCraft/Yandex Disk](https://sourcecraft.dev/bayselonarrend/melezh/releases/%3) |
+|-|
+
 <hr>
 
 OneScript (RU version):

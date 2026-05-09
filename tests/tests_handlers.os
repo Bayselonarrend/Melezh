@@ -23,6 +23,7 @@
 	Результат = OPI_ЗапросыHTTP
 	.НовыйЗапрос()
 	.Инициализировать(СтрШаблон("http://localhost:%1/echo_get", Порт))
+	.МаксимумПопыток(10)
 	.УстановитьПараметрыURL(Новый Структура("field3,field2", "New field3", "New field2"))
 	.ОбработатьЗапрос("GET")
 	.ВернутьОтветКакJSONКоллекцию();
@@ -71,6 +72,7 @@
 	Результат = OPI_ЗапросыHTTP
 	.НовыйЗапрос()
 	.Инициализировать(СтрШаблон("http://localhost:%1/echo_json", Порт))
+	.МаксимумПопыток(10)
 	.УстановитьJsonТело(Новый Структура("field3,field2", "New field3", "New field2"))
 	.ОбработатьЗапрос("POST")
 	.ВернутьОтветКакJSONКоллекцию();
@@ -121,6 +123,7 @@
 	Результат = OPI_ЗапросыHTTP
 	.НовыйЗапрос()
 	.Инициализировать(СтрШаблон("http://localhost:%1/echo_form", Порт))
+	.МаксимумПопыток(10)
 	.УстановитьFormТело(Новый Структура("field3,field2", "New field3", "New field2"))
 	.ОбработатьЗапрос("POST")
 	.ВернутьОтветКакJSONКоллекцию();
@@ -171,6 +174,7 @@
 	Результат = OPI_ЗапросыHTTP
 	.НовыйЗапрос()
 	.Инициализировать(СтрШаблон("http://localhost:%1/echo_form", Порт))
+	.МаксимумПопыток(10)
 	.НачатьЗаписьТелаMultipart()
 	.ДобавитьФайлMultipartFormData("field1", "FILE1.png", "https://hut.openintegrations.dev/test_data/picture.jpg", "image/png")
 	.ДобавитьФайлMultipartFormData("field2", "FILE2.png", "https://hut.openintegrations.dev/test_data/picture.jpg", "image/png")

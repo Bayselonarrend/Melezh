@@ -155,3 +155,21 @@ This option is not displayed in the list of arguments within the web interface a
 :::important  
 When implementing custom extensions — particularly those involving `melezhcontext` — it is strongly recommended to use the OneScript version of Melezh during development. This enables running the project in debug mode (e.g., in VSCode) and setting breakpoints to inspect runtime values and context data.
 :::
+
+## Process context
+
+In addition to the Kestrel web server context, extension code can access the global object `Melezh`, which provides several helper APIs in the current Melezh process:
+
++ `CallHandler(Val Path, Val Parameters)` — invokes another configured handler from the handler list by its path key
+
+```bsl
+
+// Same as invoking the handler via HTTP: http://localhost:<port>/myhandler
+
+Result = Melezh.CallHandler("myhandler", New Structure("param1", "value1"));
+
+```
+
++ `WriteToCache(Val Name, Val Value)` — stores a value in the global cache. The value remains until the server restarts or it is removed explicitly
++ `GetFromCache(Val Name)` — returns a value by the name used when writing
++ `DeleteFromCache(Val Name)` — removes a value from the cache by name

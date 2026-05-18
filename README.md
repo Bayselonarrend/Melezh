@@ -6,7 +6,7 @@
 
 # Melezh
 
-[![OpenIntegrations](media/addon.svg)](https://openintegrations.dev/) [![OpenYellow](https://img.shields.io/endpoint?url=https://openyellow.org/data/badges/6/976752838.json)](https://openyellow.org/grid?data=top&repo=976752838) [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) [![Boosty](media/boosty.svg)](https://boosty.to/bayselonarrend)
+[![OpenIntegrations](media/addon.svg)](https://openintegrations.dev/) [![OpenYellow](https://img.shields.io/endpoint?url=https://openyellow.org/data/badges/6/976752838.json)](https://openyellow.org/grid?data=top&repo=976752838) [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) [![Telegram](https://img.shields.io/badge/Telegram-@openintegrations-2CA5E0?logo=Telegram&logoColor=white)](https://t.me/openintegrations) [![Boosty](media/boosty.svg)](https://boosty.to/bayselonarrend)
 
 Серверная версия Открытого пакета интеграций, предоставляющая единый настраиваемый HTTP API для доступа к его библиотекам и произвольным `.os` скриптам (расширениям), с возможностью установки значений по умолчанию, веб-консолью и встроенным логированием входящих запросов
 

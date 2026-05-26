@@ -8,7 +8,7 @@
 
 [![OpenIntegrations](media/addon.svg)](https://openintegrations.dev/) [![OpenYellow](https://img.shields.io/endpoint?url=https://openyellow.org/data/badges/6/976752838.json)](https://openyellow.org/grid?data=top&repo=976752838) [![OneScript](media/oscript.svg)](https://github.com/EvilBeaver/OneScript) [![Telegram](https://img.shields.io/badge/Telegram-@openintegrations-2CA5E0?logo=Telegram&logoColor=white)](https://t.me/openintegrations) [![Boosty](media/boosty.svg)](https://boosty.to/bayselonarrend)
 
-Серверная платформа, предоставляющая единый настраиваемый HTTP API для обработкой запросов при помощи произвольного `.os` кода или готовых функций Открытого пакета интеграций. Система содержит множетсво инструментов для быстрого и гибкого создания своего сервиса, а также дальнейшей его поддержки и администрирования
+Серверная платформа, предоставляющая единый настраиваемый HTTP API для обработкой запросов при помощи произвольного `.os` кода или готовых функций Открытого пакета интеграций. Система содержит множетсво готовых инструментов для быстрого и гибкого создания своего сервиса, а также его дальнейшей поддержки и администрирования
 
 ## Принцип работы
 

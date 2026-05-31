@@ -19,6 +19,9 @@
 	
 	ВыполнитьПрямуюЗамену(Версия, ПредыдущаяВерсия, "./ci/pipelines/opm_push.jenkinsfile");
 	ВыполнитьПрямуюЗамену(Версия, ПредыдущаяВерсия, "./ci/pipelines/release.jenkinsfile");
+	ВыполнитьПрямуюЗамену(Версия, ПредыдущаяВерсия, "./ci/pipelines/docker.jenkinsfile");
+	ВыполнитьПрямуюЗамену(Версия, ПредыдущаяВерсия, "./service/docker/release/en/Dockerfile");
+	ВыполнитьПрямуюЗамену(Версия, ПредыдущаяВерсия, "./service/docker/release/ru/Dockerfile");
 
 	МакетЗамены = "VERSION=%1";
 	ВыполнитьПрямуюЗамену(СтрШаблон(МакетЗамены, Версия), СтрШаблон(МакетЗамены, ПредыдущаяВерсия), "./service/docker/buildpush.bat");

@@ -18,6 +18,7 @@
 	Обработчик = Новый DraftMethods(ДанныеПроекта);
 	Обработчик = Новый CLIMethods(ДанныеПроекта);
 	Обработчик = Новый DictionariesMethods(ДанныеПроекта);
+	Обработчик = Новый Versioning(ДанныеПроекта);
 	Обработчик = Новый LocalizationMethods(ДанныеПроекта);
 	Обработчик = Новый AlternativeNamesMethods(ДанныеПроекта);
 	Обработчик = Новый DocsGenerator(ДанныеПроекта);

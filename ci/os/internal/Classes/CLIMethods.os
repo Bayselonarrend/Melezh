@@ -13,7 +13,7 @@
         ДанныеПроекта = ДанныеПроекта_;
     КонецЕсли;
 
-    CommonTools.СообщитьПроцесс("Generating CLI version from Oint");
+    CommonTools.СообщитьПроцесс("Generating CLI version from Melezh");
 
     СформироватьCLI();
 

@@ -141,6 +141,12 @@
           "id": "00000000-0000-4000-8000-000000000052",
           "command": "waitForElementPresent",
           "target": "xpath=//tr[.//*[contains(text(),'selenium_ui_crud')]]",
+          "value": "15000"
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000053",
+          "command": "pause",
+          "target": "1500",
           "value": ""
         },
         {
@@ -498,9 +504,21 @@
           "value": ""
         },
         {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a",
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a0",
           "command": "executeScript",
-          "target": "var d=new Date(); var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); window.location.hash='#logs?handler=echo_get&date='+ds; return ds;",
+          "target": "return fetch('/echo_get?field2=selenium&field3=selenium').then(function(r){return r.json();});",
+          "value": ""
+        },
+        {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a1",
+          "command": "pause",
+          "target": "500",
+          "value": ""
+        },
+        {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a",
+          "command": "click",
+          "target": "xpath=//a[contains(.,'Логи') or contains(.,'Logs')]",
           "value": ""
         },
         {
@@ -510,9 +528,33 @@
           "value": "15000"
         },
         {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c",
+          "command": "click",
+          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
+          "value": ""
+        },
+        {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c2",
+          "command": "type",
+          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
+          "value": "echo_get"
+        },
+        {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456d",
+          "command": "executeScript",
+          "target": "var input=document.querySelector('input[type=date]'); if(!input){return false;} var d=new Date(); input.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); input.dispatchEvent(new Event('input',{bubbles:true})); input.dispatchEvent(new Event('change',{bubbles:true})); return true;",
+          "value": ""
+        },
+        {
+          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456e",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Применить фильтр') or contains(.,'Apply filter')]",
+          "value": ""
+        },
+        {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456f",
           "command": "waitForElementPresent",
-          "target": "xpath=//th[contains(.,'Время') or contains(.,'Time')] | //p[contains(.,'не найдены') or contains(.,'not found')]",
+          "target": "xpath=//th[contains(.,'Время') or contains(.,'Time')]",
           "value": "15000"
         },
         {

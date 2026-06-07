@@ -79,12 +79,6 @@
       "name": "Wrong password",
       "commands": [
         {
-          "id": "c3d4e5f6-a7b8-9012-cdef-123456789013",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "c3d4e5f6-a7b8-9012-cdef-123456789014",
           "command": "open",
           "target": "/ui",
@@ -120,12 +114,6 @@
       "id": "d4e5f6a7-b8c9-0123-def0-234567890123",
       "name": "Login and logout",
       "commands": [
-        {
-          "id": "d4e5f6a7-b8c9-0123-def0-234567890124",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "d4e5f6a7-b8c9-0123-def0-234567890125",
           "command": "run",
@@ -163,12 +151,6 @@
       "name": "Handlers page",
       "commands": [
         {
-          "id": "e5f6a7b8-c9d0-1234-ef01-345678901235",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "e5f6a7b8-c9d0-1234-ef01-345678901236",
           "command": "run",
           "target": "_Login",
@@ -205,12 +187,6 @@
       "name": "Logs page",
       "commands": [
         {
-          "id": "f6a7b8c9-d0e1-2345-f012-456789012346",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "f6a7b8c9-d0e1-2345-f012-456789012347",
           "command": "run",
           "target": "_Login",
@@ -240,12 +216,6 @@
       "id": "a7b8c9d0-e1f2-3456-0123-567890123456",
       "name": "Settings page",
       "commands": [
-        {
-          "id": "a7b8c9d0-e1f2-3456-0123-567890123457",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "a7b8c9d0-e1f2-3456-0123-567890123458",
           "command": "run",
@@ -277,12 +247,6 @@
       "name": "Scheduler page",
       "commands": [
         {
-          "id": "b8c9d0e1-f2a3-4567-1234-678901234568",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "b8c9d0e1-f2a3-4567-1234-678901234569",
           "command": "run",
           "target": "_Login",
@@ -306,12 +270,6 @@
       "id": "c9d0e1f2-a3b4-5678-2345-789012345678",
       "name": "Extensions page",
       "commands": [
-        {
-          "id": "c9d0e1f2-a3b4-5678-2345-789012345679",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "c9d0e1f2-a3b4-5678-2345-78901234567a",
           "command": "run",

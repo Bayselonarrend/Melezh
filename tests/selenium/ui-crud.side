@@ -85,32 +85,14 @@
       "commands": [
         {
           "id": "00000000-0000-4000-8000-000000000021",
-          "command": "open",
-          "target": "/ui#handlers",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000022",
-          "command": "waitForText",
-          "target": "xpath=//h2[contains(.,'Панель обработчиков')]",
-          "value": "Панель обработчиков"
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000023",
-          "command": "chooseOkOnNextConfirmation",
-          "target": "",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000024",
-          "command": "runScript",
-          "target": "var row = document.evaluate(\"//tr[.//*[contains(text(),'selenium_ui_crud')]]\", document, null, XPathResult.FIRST_ORDERED_NODE_TYPE, null).singleNodeValue; if (row) { var btn = row.querySelector('button.text-red-400'); if (btn) btn.click(); }",
+          "command": "executeScript",
+          "target": "return fetch('api/deleteHandler',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:'selenium_ui_crud'})}).then(function(r){return r.json();}).catch(function(){return null;});",
           "value": ""
         },
         {
           "id": "00000000-0000-4000-8000-000000000025",
           "command": "pause",
-          "target": "1000",
+          "target": "500",
           "value": ""
         }
       ]
@@ -252,15 +234,15 @@
           "value": ""
         },
         {
-          "id": "00000000-0000-4000-8000-000000000053",
-          "command": "chooseOkOnNextConfirmation",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "00000000-0000-4000-8000-000000000054",
           "command": "click",
           "target": "xpath=//tr[.//*[contains(text(),'selenium_ui_crud')]]//button[contains(@class,'text-red-400')]",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000054-confirm",
+          "command": "acceptConfirmation",
+          "target": "",
           "value": ""
         },
         {
@@ -281,12 +263,6 @@
       "id": "f3a4b5c6-d7e8-9012-f3a4-b5c6d7e89012",
       "name": "Create and delete handler",
       "commands": [
-        {
-          "id": "f3a4b5c6-d7e8-9012-f3a4-b5c6d7e89013",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "f3a4b5c6-d7e8-9012-f3a4-b5c6d7e89014",
           "command": "run",
@@ -317,12 +293,6 @@
       "id": "a4b5c6d7-e8f9-0123-a4b5-c6d7e8f90123",
       "name": "Toggle handler status",
       "commands": [
-        {
-          "id": "a4b5c6d7-e8f9-0123-a4b5-c6d7e8f90124",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "a4b5c6d7-e8f9-0123-a4b5-c6d7e8f90125",
           "command": "run",
@@ -377,12 +347,6 @@
       "id": "b5c6d7e8-f9a0-1234-b5c6-d7e8f9a01234",
       "name": "Edit handler method",
       "commands": [
-        {
-          "id": "b5c6d7e8-f9a0-1234-b5c6-d7e8f9a01235",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "b5c6d7e8-f9a0-1234-b5c6-d7e8f9a01236",
           "command": "run",
@@ -456,12 +420,6 @@
       "name": "Handler form validation",
       "commands": [
         {
-          "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b12346",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b12347",
           "command": "run",
           "target": "_Login",
@@ -497,12 +455,6 @@
       "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23456",
       "name": "Create and delete scheduler task",
       "commands": [
-        {
-          "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23457",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23458",
           "command": "run",
@@ -588,15 +540,15 @@
           "value": ""
         },
         {
-          "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23466",
-          "command": "chooseOkOnNextConfirmation",
-          "target": "",
-          "value": ""
-        },
-        {
           "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23467",
           "command": "click",
           "target": "xpath=//tr[.//td[contains(.,'selenium_ui_crud')]]//button[contains(@class,'text-red-400')]",
+          "value": ""
+        },
+        {
+          "id": "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23467-confirm",
+          "command": "acceptConfirmation",
+          "target": "",
           "value": ""
         },
         {
@@ -617,12 +569,6 @@
       "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34567",
       "name": "Load logs for echo_get",
       "commands": [
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34568",
-          "command": "deleteAllCookies",
-          "target": "",
-          "value": ""
-        },
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34569",
           "command": "run",

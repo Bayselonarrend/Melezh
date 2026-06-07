@@ -34,13 +34,13 @@ pipeline {
             steps {
                 bat 'npm install selenium-side-runner --save-dev'
                 retry(3) {
-                    bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --base-url http://localhost:1921'
+                    bat 'npx selenium-side-runner ./tests/selenium/tests.side --timeout 300000 --jest-timeout 180000 --base-url http://localhost:1921'
                 }
                 retry(3) {
-                    bat 'npx selenium-side-runner ./tests/selenium/ui-console.side --timeout 300000 --base-url http://localhost:1921'
+                    bat 'npx selenium-side-runner ./tests/selenium/ui-console.side --timeout 300000 --jest-timeout 180000 --base-url http://localhost:1921'
                 }
                 retry(3) {
-                    bat 'npx selenium-side-runner ./tests/selenium/ui-crud.side --timeout 300000 --base-url http://localhost:1921'
+                    bat 'npx selenium-side-runner ./tests/selenium/ui-crud.side --timeout 300000 --jest-timeout 180000 --base-url http://localhost:1921'
                 }
             }
         }

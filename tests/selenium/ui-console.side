@@ -1,0 +1,343 @@
+{
+  "id": "a1b2c3d4-e5f6-7890-abcd-ef1234567890",
+  "version": "3.0",
+  "name": "Melezh UI Console",
+  "url": "http://localhost:1921",
+  "urls": [
+    "http://localhost:1921"
+  ],
+  "plugins": [],
+  "suites": [
+    {
+      "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
+      "name": "Console RU",
+      "parallel": false,
+      "persistSession": false,
+      "tests": [
+        "c3d4e5f6-a7b8-9012-cdef-123456789012",
+        "d4e5f6a7-b8c9-0123-def0-234567890123",
+        "e5f6a7b8-c9d0-1234-ef01-345678901234",
+        "f6a7b8c9-d0e1-2345-f012-456789012345",
+        "a7b8c9d0-e1f2-3456-0123-567890123456",
+        "b8c9d0e1-f2a3-4567-1234-678901234567",
+        "c9d0e1f2-a3b4-5678-2345-789012345678"
+      ],
+      "timeout": 60000
+    }
+  ],
+  "tests": [
+    {
+      "id": "00000000-0000-4000-8000-000000000001",
+      "name": "_Login",
+      "commands": [
+        {
+          "id": "00000000-0000-4000-8000-000000000011",
+          "command": "open",
+          "target": "/ui",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000012",
+          "command": "waitForElementPresent",
+          "target": "id=password",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000013",
+          "command": "click",
+          "target": "id=password",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000014",
+          "command": "type",
+          "target": "id=password",
+          "value": "admin"
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000015",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Войти')]",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000016",
+          "command": "waitForElementPresent",
+          "target": "id=view-container",
+          "value": ""
+        },
+        {
+          "id": "00000000-0000-4000-8000-000000000017",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Главная панель')]",
+          "value": "Главная панель"
+        }
+      ]
+    },
+    {
+      "id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "name": "Wrong password",
+      "commands": [
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789013",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789014",
+          "command": "open",
+          "target": "/ui",
+          "value": ""
+        },
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789015",
+          "command": "waitForElementPresent",
+          "target": "id=password",
+          "value": ""
+        },
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789016",
+          "command": "type",
+          "target": "id=password",
+          "value": "wrong-password"
+        },
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789017",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Войти')]",
+          "value": ""
+        },
+        {
+          "id": "c3d4e5f6-a7b8-9012-cdef-123456789018",
+          "command": "waitForText",
+          "target": "css=.bg-red-50",
+          "value": "Wrong password!"
+        }
+      ]
+    },
+    {
+      "id": "d4e5f6a7-b8c9-0123-def0-234567890123",
+      "name": "Login and logout",
+      "commands": [
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890124",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890125",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890126",
+          "command": "waitForElementPresent",
+          "target": "xpath=//button[contains(.,'Выход')]",
+          "value": ""
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890127",
+          "command": "click",
+          "target": "xpath=//button[contains(.,'Выход')]",
+          "value": ""
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890128",
+          "command": "waitForElementPresent",
+          "target": "id=password",
+          "value": ""
+        },
+        {
+          "id": "d4e5f6a7-b8c9-0123-def0-234567890129",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Вход в панель управления')]",
+          "value": "Вход в панель управления"
+        }
+      ]
+    },
+    {
+      "id": "e5f6a7b8-c9d0-1234-ef01-345678901234",
+      "name": "Handlers page",
+      "commands": [
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-345678901235",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-345678901236",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-345678901237",
+          "command": "click",
+          "target": "linkText=Обработчики",
+          "value": ""
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-345678901238",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Панель обработчиков')]",
+          "value": "Панель обработчиков"
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-345678901239",
+          "command": "waitForText",
+          "target": "xpath=//th[contains(.,'Ключ')]",
+          "value": "Ключ"
+        },
+        {
+          "id": "e5f6a7b8-c9d0-1234-ef01-34567890123a",
+          "command": "waitForText",
+          "target": "xpath=//th[contains(.,'Метод')]",
+          "value": "Метод"
+        }
+      ]
+    },
+    {
+      "id": "f6a7b8c9-d0e1-2345-f012-456789012345",
+      "name": "Logs page",
+      "commands": [
+        {
+          "id": "f6a7b8c9-d0e1-2345-f012-456789012346",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "f6a7b8c9-d0e1-2345-f012-456789012347",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "f6a7b8c9-d0e1-2345-f012-456789012348",
+          "command": "click",
+          "target": "linkText=Логи",
+          "value": ""
+        },
+        {
+          "id": "f6a7b8c9-d0e1-2345-f012-456789012349",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Просмотр логов')]",
+          "value": "Просмотр логов"
+        },
+        {
+          "id": "f6a7b8c9-d0e1-2345-f012-45678901234a",
+          "command": "waitForText",
+          "target": "xpath=//h3[contains(.,'Фильтр')]",
+          "value": "Фильтр"
+        }
+      ]
+    },
+    {
+      "id": "a7b8c9d0-e1f2-3456-0123-567890123456",
+      "name": "Settings page",
+      "commands": [
+        {
+          "id": "a7b8c9d0-e1f2-3456-0123-567890123457",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "a7b8c9d0-e1f2-3456-0123-567890123458",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "a7b8c9d0-e1f2-3456-0123-567890123459",
+          "command": "click",
+          "target": "linkText=Настройки",
+          "value": ""
+        },
+        {
+          "id": "a7b8c9d0-e1f2-3456-0123-56789012345a",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Настройки')]",
+          "value": "Настройки"
+        },
+        {
+          "id": "a7b8c9d0-e1f2-3456-0123-56789012345b",
+          "command": "waitForElementPresent",
+          "target": "xpath=//button[contains(.,'Сохранить')]",
+          "value": ""
+        }
+      ]
+    },
+    {
+      "id": "b8c9d0e1-f2a3-4567-1234-678901234567",
+      "name": "Scheduler page",
+      "commands": [
+        {
+          "id": "b8c9d0e1-f2a3-4567-1234-678901234568",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "b8c9d0e1-f2a3-4567-1234-678901234569",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "b8c9d0e1-f2a3-4567-1234-67890123456a",
+          "command": "click",
+          "target": "linkText=Планировщик",
+          "value": ""
+        },
+        {
+          "id": "b8c9d0e1-f2a3-4567-1234-67890123456b",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Планировщик заданий')]",
+          "value": "Планировщик заданий"
+        }
+      ]
+    },
+    {
+      "id": "c9d0e1f2-a3b4-5678-2345-789012345678",
+      "name": "Extensions page",
+      "commands": [
+        {
+          "id": "c9d0e1f2-a3b4-5678-2345-789012345679",
+          "command": "deleteAllCookies",
+          "target": "",
+          "value": ""
+        },
+        {
+          "id": "c9d0e1f2-a3b4-5678-2345-78901234567a",
+          "command": "run",
+          "target": "_Login",
+          "value": ""
+        },
+        {
+          "id": "c9d0e1f2-a3b4-5678-2345-78901234567b",
+          "command": "click",
+          "target": "linkText=Расширения",
+          "value": ""
+        },
+        {
+          "id": "c9d0e1f2-a3b4-5678-2345-78901234567c",
+          "command": "waitForText",
+          "target": "xpath=//h2[contains(.,'Панель расширений')]",
+          "value": "Панель расширений"
+        }
+      ]
+    }
+  ],
+  "snapshot": {
+    "dependencies": {},
+    "tests": [],
+    "jest": {
+      "extraGlobals": []
+    }
+  }
+}

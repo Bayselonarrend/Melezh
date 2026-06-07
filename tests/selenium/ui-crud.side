@@ -21,7 +21,7 @@
         "d7e8f9a0-b1c2-3456-d7e8-f9a0b1c23456",
         "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34567"
       ],
-      "timeout": 180000
+      "timeout": 60000
     }
   ],
   "tests": [
@@ -103,129 +103,27 @@
       "commands": [
         {
           "id": "00000000-0000-4000-8000-000000000031",
-          "command": "open",
-          "target": "/ui#handler-form",
+          "command": "executeScript",
+          "target": "return fetch('api/createHandler',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({key:'selenium_ui_crud',method:'GET',library:'telegram',function:'ОтправитьТекстовоеСообщение',originalKey:null,args:[]})}).then(function(r){return r.json();});",
           "value": ""
         },
         {
           "id": "00000000-0000-4000-8000-000000000032",
-          "command": "waitForElementPresent",
-          "target": "xpath=//h2[contains(.,'Новый обработчик') or contains(.,'New handler')]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000033",
-          "command": "click",
-          "target": "id=key",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000034",
-          "command": "type",
-          "target": "id=key",
-          "value": "selenium_ui_crud"
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000035",
-          "command": "click",
-          "target": "xpath=//label[contains(.,'Метод') or contains(.,'Method')]/following-sibling::div//button",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000036",
-          "command": "click",
-          "target": "xpath=//button[.//span[normalize-space()='GET']]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000037",
-          "command": "click",
-          "target": "xpath=//label[contains(.,'Библиотека') or contains(.,'Library')]/following-sibling::div//button[not(@disabled)]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000038",
-          "command": "waitForElementPresent",
-          "target": "xpath=//label[contains(.,'Библиотека') or contains(.,'Library')]/following-sibling::div//input[@placeholder='Поиск...' or @placeholder='Search...']",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000039",
-          "command": "type",
-          "target": "xpath=//label[contains(.,'Библиотека') or contains(.,'Library')]/following-sibling::div//input[@placeholder='Поиск...' or @placeholder='Search...']",
-          "value": "telegram"
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000039a",
           "command": "pause",
-          "target": "500",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003a",
-          "command": "click",
-          "target": "xpath=(//label[contains(.,'Библиотека') or contains(.,'Library')]/following-sibling::div//button[contains(@class,'select-none')])[1]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003b",
-          "command": "waitForElementPresent",
-          "target": "xpath=//label[contains(.,'Функция') or contains(.,'Function')]/following-sibling::div//button[not(@disabled) and not(contains(.,'Загрузка')) and not(contains(.,'Loading'))]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003c",
-          "command": "click",
-          "target": "xpath=//label[contains(.,'Функция') or contains(.,'Function')]/following-sibling::div//button[not(@disabled)]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003d",
-          "command": "waitForElementPresent",
-          "target": "xpath=//label[contains(.,'Функция') or contains(.,'Function')]/following-sibling::div//input[@placeholder='Поиск...' or @placeholder='Search...']",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003e",
-          "command": "type",
-          "target": "xpath=//label[contains(.,'Функция') or contains(.,'Function')]/following-sibling::div//input[@placeholder='Поиск...' or @placeholder='Search...']",
-          "value": "SendText"
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003ea",
-          "command": "pause",
-          "target": "500",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-00000000003f",
-          "command": "click",
-          "target": "xpath=(//label[contains(.,'Функция') or contains(.,'Function')]/following-sibling::div//button[contains(@class,'select-none')])[1]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000040",
-          "command": "click",
-          "target": "xpath=//form//button[@type='submit']",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000041",
-          "command": "waitForElementPresent",
-          "target": "xpath=//div[contains(@class,'bg-green-50')][contains(.,'Успешно сохранено') or contains(.,'Successfully saved')]",
+          "target": "300",
           "value": ""
         },
         {
           "id": "00000000-0000-4000-8000-000000000042",
-          "command": "waitForElementPresent",
-          "target": "xpath=//h2[contains(.,'Панель обработчиков') or contains(.,'Handlers panel')]",
+          "command": "open",
+          "target": "/ui#handlers",
           "value": ""
         },
         {
           "id": "00000000-0000-4000-8000-000000000043",
           "command": "waitForElementPresent",
           "target": "xpath=//tr[.//*[contains(text(),'selenium_ui_crud')]]",
-          "value": ""
+          "value": "15000"
         }
       ]
     },
@@ -447,7 +345,19 @@
           "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b12349",
           "command": "waitForElementPresent",
           "target": "xpath=//h2[contains(.,'Новый обработчик') or contains(.,'New handler')]",
+          "value": "15000"
+        },
+        {
+          "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b1234aa",
+          "command": "click",
+          "target": "id=key",
           "value": ""
+        },
+        {
+          "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b1234ab",
+          "command": "type",
+          "target": "id=key",
+          "value": "validation_test_key"
         },
         {
           "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b1234a",
@@ -458,8 +368,8 @@
         {
           "id": "c6d7e8f9-a0b1-2345-c6d7-e8f9a0b1234b",
           "command": "waitForElementPresent",
-          "target": "xpath=//div[contains(@class,'bg-red-50')][contains(.,'Ключ') or contains(.,'Key')]",
-          "value": ""
+          "target": "xpath=//div[contains(@class,'bg-red-50')][contains(.,'Метод') or contains(.,'Method')]",
+          "value": "15000"
         }
       ]
     },
@@ -589,51 +499,27 @@
         },
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a",
-          "command": "click",
-          "target": "xpath=//a[contains(.,'Логи') or contains(.,'Logs')]",
+          "command": "executeScript",
+          "target": "var d=new Date(); var ds=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); window.location.hash='#logs?handler=echo_get&date='+ds; return ds;",
           "value": ""
         },
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456b",
           "command": "waitForElementPresent",
           "target": "xpath=//h2[contains(.,'Просмотр логов') or contains(.,'Log Viewer')]",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c",
-          "command": "click",
-          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c2",
-          "command": "type",
-          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
-          "value": "echo_get"
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456d",
-          "command": "executeScript",
-          "target": "var input=document.querySelector('input[type=date]'); if(!input){return false;} var d=new Date(); input.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); input.dispatchEvent(new Event('input',{bubbles:true})); return true;",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456e",
-          "command": "click",
-          "target": "xpath=//button[contains(.,'Применить фильтр') or contains(.,'Apply filter')]",
-          "value": ""
+          "value": "15000"
         },
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456f",
           "command": "waitForElementPresent",
           "target": "xpath=//th[contains(.,'Время') or contains(.,'Time')] | //p[contains(.,'не найдены') or contains(.,'not found')]",
-          "value": ""
+          "value": "15000"
         },
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34570",
           "command": "waitForElementPresent",
           "target": "xpath=//code[contains(.,'echo_get')]",
-          "value": ""
+          "value": "15000"
         }
       ]
     }

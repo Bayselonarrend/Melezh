@@ -1116,6 +1116,9 @@ Procedure ChangeNameRegister(Synonym)
 	NamesMap.Insert("disk", "Disk");
 	NamesMap.Insert("market", "Market");
 	NamesMap.Insert("metrika", "Metrika");
+	NamesMap.Insert("Click house", "ClickHouse");
+	NamesMap.Insert("Green API", "GreenAPI (WhatsApp)");
+	NamesMap.Insert("Green max", "GreenAPI (Max)");
 	
 	For Each Name In NamesMap Do
 		Synonym = StrReplace(Synonym, Name.Key, Name.Value);

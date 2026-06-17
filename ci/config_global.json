@@ -33,11 +33,23 @@
    },
    "onecConfig": {
     "description": "1C:Enterprise configurator exe path",
-    "value": "C:/Program Files (x86)/1cv8/8.3.26.1656/bin/1cv8.exe"
+    "value": "C:/Program Files/1cv8/8.3.26.1656/bin/1cv8.exe"
    },
    "onecClient": {
     "description": "1C:Enterprise client exe path",
-    "value": "C:/Program Files (x86)/1cv8/8.3.26.1656/bin/1cv8c.exe"
+    "value": "C:/Program Files/1cv8/8.3.26.1656/bin/1cv8c.exe"
+   },
+   "vrunnerPath": {
+    "description": "vanessa-runner (vrunner) executable path",
+    "value": "D:/OneScript/bin/vrunner.bat"
+   },
+   "ibsrvPath": {
+    "description": "1C autonomous server (ibsrv) executable path",
+    "value": "C:/Program Files/1cv8/8.3.26.1656/bin/ibsrv.exe"
+   },
+   "ibsrvPort": {
+    "description": "1C autonomous server HTTP port",
+    "value": "8314"
    },
    "osPath": {
     "description": "OneScript exe path",

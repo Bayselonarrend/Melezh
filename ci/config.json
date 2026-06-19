@@ -4,7 +4,7 @@
         "value": {
             "version": {
                 "description": "Current project version",
-                "value": "0.14.0"
+                "value": "0.15.0"
             },
             "repoUrl": {
                 "description": "Repository URL",

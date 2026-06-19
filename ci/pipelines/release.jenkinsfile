@@ -3,7 +3,7 @@ pipeline {
         label 'windows'
     }
     parameters {
-        string(name: 'MELEZH_VERSION', description: 'Melezh version', defaultValue: '0.14.0')
+        string(name: 'MELEZH_VERSION', description: 'Melezh version', defaultValue: '0.15.0')
     }
     stages {
         stage('Release') {

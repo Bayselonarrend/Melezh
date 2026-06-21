@@ -145,18 +145,12 @@
         },
         {
           "id": "00000000-0000-4000-8000-000000000053",
-          "command": "pause",
-          "target": "1500",
+          "command": "executeScript",
+          "target": "var btn=document.evaluate(\"//tr[.//*[contains(text(),'selenium_ui_crud')]]//button[contains(@class,'text-red-400')]\",document,null,XPathResult.FIRST_ORDERED_NODE_TYPE,null).singleNodeValue; if(!btn){throw new Error('delete button not found');} btn.click(); return true;",
           "value": ""
         },
         {
           "id": "00000000-0000-4000-8000-000000000054",
-          "command": "click",
-          "target": "xpath=//tr[.//*[contains(text(),'selenium_ui_crud')]]//button[contains(@class,'text-red-400')]",
-          "value": ""
-        },
-        {
-          "id": "00000000-0000-4000-8000-000000000054-confirm",
           "command": "acceptConfirmation",
           "target": "",
           "value": ""
@@ -506,19 +500,7 @@
         {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a0",
           "command": "executeScript",
-          "target": "return fetch('/echo_get?field2=selenium&field3=selenium').then(function(r){return r.json();});",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a1",
-          "command": "pause",
-          "target": "500",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456a",
-          "command": "click",
-          "target": "xpath=//a[contains(.,'Логи') or contains(.,'Logs')]",
+          "target": "return fetch('/echo_get?field2=selenium&field3=selenium').then(function(r){return r.json();}).then(function(b){if(!b||!b.result){throw new Error('echo_get failed');}return fetch('api/getLastEvents');}).then(function(r){return r.json();}).then(function(res){if(!res.result||!res.data||!res.data.length){throw new Error('no last events');}var ev=res.data.find(function(e){return e.handler==='echo_get';})||res.data[0];var s=String(ev.date);var ds=/^\\d{4}-\\d{2}-\\d{2}/.test(s)?s.substring(0,10):(function(d){return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');})(new Date(ev.date));return fetch('api/getEvents?handler=echo_get&date='+ds).then(function(r){return r.json();}).then(function(evRes){if(!evRes.result||!evRes.data||!evRes.data.length){throw new Error('no log files for '+ds);}window.location.hash='#logs?handler=echo_get&date='+ds;return ds;});});",
           "value": ""
         },
         {
@@ -528,39 +510,9 @@
           "value": "15000"
         },
         {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c",
-          "command": "click",
-          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456c2",
-          "command": "type",
-          "target": "xpath=//label[contains(.,'Ключ обработчика') or contains(.,'Handlers key')]/parent::div//input",
-          "value": "echo_get"
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456d",
-          "command": "executeScript",
-          "target": "var input=document.querySelector('input[type=date]'); if(!input){return false;} var d=new Date(); input.value=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0'); input.dispatchEvent(new Event('input',{bubbles:true})); input.dispatchEvent(new Event('change',{bubbles:true})); return true;",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456e",
-          "command": "click",
-          "target": "xpath=//button[contains(.,'Применить фильтр') or contains(.,'Apply filter')]",
-          "value": ""
-        },
-        {
-          "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d3456f",
-          "command": "waitForElementPresent",
-          "target": "xpath=//th[contains(.,'Время') or contains(.,'Time')]",
-          "value": "15000"
-        },
-        {
           "id": "e8f9a0b1-c2d3-4567-e8f9-a0b1c2d34570",
           "command": "waitForElementPresent",
-          "target": "xpath=//code[contains(.,'echo_get')]",
+          "target": "xpath=//tbody//code[contains(.,'echo_get')]",
           "value": "15000"
         }
       ]

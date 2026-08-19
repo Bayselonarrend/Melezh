@@ -1,5 +1,5 @@
 Function GetVersion() Export
-  Return "0.15.0";
+  Return "0.16.0";
 EndFunction
 
 Function GetComposition() Export

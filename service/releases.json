@@ -1,5 +1,14 @@
 [
-       {
+    {
+        "version": "0.16.0",
+        "changes": [
+            {
+                "description_ru": "Поднята версия `oint` до 2.4.0",
+                "description_en": "The `oint` version has been upgraded to 2.4.0"
+            }
+        ]
+    },
+    {
         "version": "0.15.0",
         "changes": [
             {
@@ -7,7 +16,7 @@
                 "description_en": "The `oint` version has been upgraded to 2.3.0"
             }
         ]
-    }, 
+    },
     {
         "version": "0.14.0",
         "changes": [

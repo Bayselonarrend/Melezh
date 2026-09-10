@@ -1,3 +1,9 @@
+> [!WARNING]
+> **At this moment, this project is frozen due to a lack of time for its support and the absence of a clear understanding of its development course** <br><br>
+> What seemed like a good idea at first — wedging Melezh development pipelines into the existing OpenIntegrations pipelines — backfired. Melezh slows down the release of new versions of the main library and complicates its maintenance process. And all this under conditions where resources are not always sufficient even for that. At this point, I would like to focus entirely on OpenIntegrations as a more promising project and reduce the amount of other workload that is not directly related to it
+>
+> Perhaps one day this project will come back to life. But for now, it would be better to honestly admit that maintaining it through gritted teeth as part of OpenIntegrations objectively makes no sense and there is no desire to do so
+
 ![image](/media/cover_s.png)
 
 # Melezh
